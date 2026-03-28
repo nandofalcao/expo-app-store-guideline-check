@@ -1,0 +1,252 @@
+#!/usr/bin/env bash
+# scan-project.sh — Orquestrador principal do Mobile App Compliance Checker
+# Uso: bash scan-project.sh [diretório-do-projeto]
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="${1:-.}"
+PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
+REPORT_DIR="${PROJECT_DIR}/.compliance-report"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+REPORT_FILE="${REPORT_DIR}/report_${TIMESTAMP}.md"
+RESULTS_DIR="${REPORT_DIR}/results_${TIMESTAMP}"
+
+# Cores para output no terminal
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+log_info()  { echo -e "${BLUE}ℹ${NC}  $*"; }
+log_ok()    { echo -e "${GREEN}✅${NC} $*"; }
+log_warn()  { echo -e "${YELLOW}⚠️${NC}  $*"; }
+log_error() { echo -e "${RED}🔴${NC} $*"; }
+log_bold()  { echo -e "${BOLD}$*${NC}"; }
+
+# ─── Detecção de Tipo de Projeto ──────────────────────────────────────────────
+
+detect_project_type() {
+  local dir="$1"
+
+  if [ ! -f "${dir}/package.json" ]; then
+    echo "unknown"
+    return
+  fi
+
+  # Expo Managed ou Bare
+  if [ -f "${dir}/app.json" ]; then
+    local has_expo_key
+    has_expo_key=$(node -e "
+      try {
+        const a = require('${dir}/app.json');
+        console.log(a.expo ? 'yes' : 'no');
+      } catch(e) { console.log('no'); }
+    " 2>/dev/null || echo "no")
+
+    if [ "$has_expo_key" = "yes" ]; then
+      if [ -d "${dir}/ios" ] || [ -d "${dir}/android" ]; then
+        echo "expo-bare"
+      else
+        echo "expo-managed"
+      fi
+      return
+    fi
+  fi
+
+  # app.config.js/ts
+  if [ -f "${dir}/app.config.js" ] || [ -f "${dir}/app.config.ts" ]; then
+    echo "expo-bare"
+    return
+  fi
+
+  # React Native puro
+  if grep -q '"react-native"' "${dir}/package.json" 2>/dev/null; then
+    echo "react-native"
+    return
+  fi
+
+  echo "unknown"
+}
+
+collect_basic_info() {
+  local dir="$1"
+  APP_NAME="Unknown"
+  APP_VERSION="Unknown"
+  APP_SDK_VERSION="Unknown"
+  PLATFORMS=""
+
+  if [ -f "${dir}/app.json" ]; then
+    APP_NAME=$(node -e "
+      try {
+        const a = require('${dir}/app.json');
+        console.log((a.expo && a.expo.name) || a.name || 'Unknown');
+      } catch(e) { console.log('Unknown'); }
+    " 2>/dev/null || echo "Unknown")
+
+    APP_VERSION=$(node -e "
+      try {
+        const a = require('${dir}/app.json');
+        console.log((a.expo && a.expo.version) || a.version || 'Unknown');
+      } catch(e) { console.log('Unknown'); }
+    " 2>/dev/null || echo "Unknown")
+
+    APP_SDK_VERSION=$(node -e "
+      try {
+        const a = require('${dir}/app.json');
+        console.log((a.expo && a.expo.sdkVersion) || 'Unknown');
+      } catch(e) { console.log('Unknown'); }
+    " 2>/dev/null || echo "Unknown")
+  elif [ -f "${dir}/package.json" ]; then
+    APP_NAME=$(node -e "
+      try {
+        const p = require('${dir}/package.json');
+        console.log(p.name || 'Unknown');
+      } catch(e) { console.log('Unknown'); }
+    " 2>/dev/null || echo "Unknown")
+  fi
+
+  PLATFORMS=""
+  [ -d "${dir}/ios" ] && PLATFORMS="${PLATFORMS}ios "
+  [ -d "${dir}/android" ] && PLATFORMS="${PLATFORMS}android"
+  # Para Expo Managed, assumir ambas se não houver pastas nativas
+  if [ -z "$PLATFORMS" ] && [ "$PROJECT_TYPE" = "expo-managed" ]; then
+    PLATFORMS="ios android"
+  fi
+}
+
+# ─── Execução de Checks ───────────────────────────────────────────────────────
+
+run_check() {
+  local check_name="$1"
+  local script_file="${SCRIPT_DIR}/${check_name}.sh"
+  local output_file="${RESULTS_DIR}/${check_name}.json"
+
+  if [ ! -f "$script_file" ]; then
+    log_warn "Script não encontrado: $script_file"
+    return
+  fi
+
+  echo -n "  Verificando $check_name... "
+  if bash "$script_file" "$PROJECT_DIR" > "$output_file" 2>/dev/null; then
+    local critical warning
+    critical=$(node -e "try{const r=require('${output_file}');console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    warning=$(node -e "try{const r=require('${output_file}');console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+
+    if [ "${critical:-0}" -gt 0 ] 2>/dev/null; then
+      echo -e "${RED}${critical} crítico(s)${NC}"
+    elif [ "${warning:-0}" -gt 0 ] 2>/dev/null; then
+      echo -e "${YELLOW}${warning} alerta(s)${NC}"
+    else
+      echo -e "${GREEN}OK${NC}"
+    fi
+  else
+    echo -e "${YELLOW}Aviso: check retornou erros${NC}"
+    # Criar JSON vazio válido para não quebrar o report
+    echo '{"check":"'"$check_name"'","results":[],"summary":{"critical":0,"warning":0,"info":0,"ok":0}}' > "$output_file"
+  fi
+}
+
+# ─── Main ─────────────────────────────────────────────────────────────────────
+
+main() {
+  echo ""
+  log_bold "📱 Mobile App Compliance Checker"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  log_info "Projeto: $PROJECT_DIR"
+
+  # Verificar se é um projeto válido
+  if [ ! -f "${PROJECT_DIR}/package.json" ]; then
+    log_error "package.json não encontrado em: $PROJECT_DIR"
+    log_error "Execute este script na raiz do projeto React Native/Expo."
+    exit 1
+  fi
+
+  # Detectar tipo de projeto
+  PROJECT_TYPE=$(detect_project_type "$PROJECT_DIR")
+  log_info "Tipo de projeto detectado: ${BOLD}${PROJECT_TYPE}${NC}"
+
+  if [ "$PROJECT_TYPE" = "unknown" ]; then
+    log_warn "Não foi possível detectar o tipo de projeto. Continuando com verificações básicas."
+  fi
+
+  # Coletar informações básicas
+  collect_basic_info "$PROJECT_DIR"
+  log_info "App: ${BOLD}${APP_NAME}${NC} v${APP_VERSION}"
+  [ "$APP_SDK_VERSION" != "Unknown" ] && log_info "Expo SDK: $APP_SDK_VERSION"
+  [ -n "$PLATFORMS" ] && log_info "Plataformas: $PLATFORMS"
+
+  # Criar diretórios de saída
+  mkdir -p "$RESULTS_DIR"
+
+  echo ""
+  log_bold "🔍 Executando verificações..."
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  # Verificações core (sempre rodam)
+  run_check "check-expo-config"
+  run_check "check-permissions"
+  run_check "check-security"
+  run_check "check-dependencies"
+
+  # Verificações específicas de plataforma
+  if echo "$PLATFORMS" | grep -q "ios"; then
+    run_check "check-privacy-manifest"
+  fi
+  if echo "$PLATFORMS" | grep -q "android"; then
+    run_check "check-data-safety"
+  fi
+
+  # Gerar relatório consolidado
+  echo ""
+  log_bold "📊 Gerando relatório..."
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  bash "${SCRIPT_DIR}/generate-report.sh" \
+    "$PROJECT_DIR" \
+    "$RESULTS_DIR" \
+    "$REPORT_FILE" \
+    "$APP_NAME" \
+    "$APP_VERSION" \
+    "$PROJECT_TYPE" \
+    "$PLATFORMS"
+
+  echo ""
+  log_ok "Relatório gerado: ${BOLD}${REPORT_FILE}${NC}"
+  echo ""
+
+  # Mostrar resumo no terminal
+  TOTAL_CRITICAL=0
+  TOTAL_WARNING=0
+  TOTAL_INFO=0
+  TOTAL_OK=0
+
+  for json_file in "${RESULTS_DIR}"/*.json; do
+    [ -f "$json_file" ] || continue
+    c=$(node -e "try{const r=require('${json_file}');console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    w=$(node -e "try{const r=require('${json_file}');console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    i=$(node -e "try{const r=require('${json_file}');console.log(r.summary.info||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    o=$(node -e "try{const r=require('${json_file}');console.log(r.summary.ok||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    TOTAL_CRITICAL=$((TOTAL_CRITICAL + ${c:-0}))
+    TOTAL_WARNING=$((TOTAL_WARNING + ${w:-0}))
+    TOTAL_INFO=$((TOTAL_INFO + ${i:-0}))
+    TOTAL_OK=$((TOTAL_OK + ${o:-0}))
+  done
+
+  log_bold "📋 Resumo:"
+  [ "$TOTAL_CRITICAL" -gt 0 ] && log_error "Críticos: $TOTAL_CRITICAL"
+  [ "$TOTAL_WARNING" -gt 0 ] && log_warn "Alertas: $TOTAL_WARNING"
+  [ "$TOTAL_INFO" -gt 0 ] && log_info "Informações: $TOTAL_INFO"
+  log_ok "OK: $TOTAL_OK"
+
+  echo ""
+  if [ "$TOTAL_CRITICAL" -gt 0 ]; then
+    log_error "Corrija os problemas CRÍTICOS antes de submeter às lojas."
+    exit 1
+  else
+    log_ok "Nenhum problema crítico encontrado. Revise os alertas antes de submeter."
+  fi
+}
+
+main "$@"
