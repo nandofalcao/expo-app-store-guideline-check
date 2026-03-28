@@ -67,11 +67,11 @@ check_ios_permission() {
 
   # Módulo detectado — verificar se a permissão está declarada
   local val
-  val=$(node -e "
+  val=$(SCAN_FILE="$APP_JSON" SCAN_KEY="$perm_key" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
-      const v = expo.ios && expo.ios.infoPlist && expo.ios.infoPlist['${perm_key}'];
+      const v = expo.ios && expo.ios.infoPlist && expo.ios.infoPlist[process.env.SCAN_KEY];
       process.stdout.write(v !== undefined && v !== null ? String(v) : '__MISSING__');
     } catch(e) { process.stdout.write('__MISSING__'); }
   " 2>/dev/null || echo "__MISSING__")
@@ -178,9 +178,9 @@ if [ "$HAS_ANDROID_MANIFEST" = true ]; then
 else
   # Sem AndroidManifest — verificar via app.json
   if [ -f "$APP_JSON" ]; then
-    ANDROID_PERMS=$(node -e "
+    ANDROID_PERMS=$(SCAN_FILE="$APP_JSON" node -e "
       try {
-        const a = require('${APP_JSON}');
+        const a = require(process.env.SCAN_FILE);
         const expo = a.expo || a;
         const perms = expo.android && expo.android.permissions;
         if (Array.isArray(perms)) {

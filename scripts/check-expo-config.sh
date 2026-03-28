@@ -52,11 +52,11 @@ fi
 
 # Extrair valores do app.json via node
 get_val() {
-  node -e "
+  SCAN_FILE="$APP_JSON" SCAN_KEY="${1}" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
-      const path = '${1}'.split('.');
+      const path = process.env.SCAN_KEY.split('.');
       let val = expo;
       for (const k of path) { val = val && val[k]; }
       if (val === undefined || val === null) {
@@ -71,11 +71,11 @@ get_val() {
 }
 
 get_array() {
-  node -e "
+  SCAN_FILE="$APP_JSON" SCAN_KEY="${1}" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
-      const path = '${1}'.split('.');
+      const path = process.env.SCAN_KEY.split('.');
       let val = expo;
       for (const k of path) { val = val && val[k]; }
       if (Array.isArray(val)) {

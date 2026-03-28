@@ -44,9 +44,9 @@ fi
 
 # ─── DEP-001: Versão do React Native ─────────────────────────────────────────
 
-RN_VERSION=$(node -e "
+RN_VERSION=$(SCAN_FILE="$PKG_JSON" node -e "
   try {
-    const p = require('${PKG_JSON}');
+    const p = require(process.env.SCAN_FILE);
     const v = (p.dependencies && p.dependencies['react-native']) ||
               (p.devDependencies && p.devDependencies['react-native']) || '__MISSING__';
     process.stdout.write(v.replace(/[\^~>=<]/g, '').split('.').slice(0,2).join('.') || '__MISSING__');
@@ -71,9 +71,9 @@ fi
 
 # ─── DEP-002: Expo SDK Version ────────────────────────────────────────────────
 
-EXPO_VERSION=$(node -e "
+EXPO_VERSION=$(SCAN_FILE="$PKG_JSON" node -e "
   try {
-    const p = require('${PKG_JSON}');
+    const p = require(process.env.SCAN_FILE);
     const v = (p.dependencies && p.dependencies['expo']) ||
               (p.devDependencies && p.devDependencies['expo']) || '__MISSING__';
     const clean = v.replace(/[\^~>=<]/g, '');
@@ -217,9 +217,9 @@ fi
 # ─── DEP-006: Licenças de dependências ───────────────────────────────────────
 
 # Verificar presença de pacotes com licenças GPL (incompatíveis com App Store)
-GPL_PACKAGES=$(node -e "
+GPL_PACKAGES=$(SCAN_FILE="$PKG_JSON" node -e "
   try {
-    const p = require('${PKG_JSON}');
+    const p = require(process.env.SCAN_FILE);
     const deps = {...(p.dependencies||{}), ...(p.devDependencies||{})};
     const gplPkgs = Object.keys(deps).filter(d => d.includes('gpl') || d.includes('GPL'));
     process.stdout.write(gplPkgs.join(', ') || '__NONE__');

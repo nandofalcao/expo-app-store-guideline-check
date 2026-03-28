@@ -39,9 +39,9 @@ PKG_JSON="${PROJECT_DIR}/package.json"
 TARGET_SDK="unknown"
 
 if [ -f "$APP_JSON" ]; then
-  TARGET_SDK=$(node -e "
+  TARGET_SDK=$(SCAN_FILE="$APP_JSON" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
       const sdk = expo.android && expo.android.targetSdkVersion;
       process.stdout.write(sdk ? String(sdk) : '__MISSING__');
@@ -120,11 +120,9 @@ declare -a CRASH_SDKS=(
   "react-native-bugsnag:Bugsnag"
 )
 
-CRASH_FOUND=false
 for sdk_entry in "${CRASH_SDKS[@]}"; do
   IFS=':' read -r sdk_name sdk_display <<< "$sdk_entry"
   if grep -q "\"$sdk_name\"" "$PKG_JSON" 2>/dev/null; then
-    CRASH_FOUND=true
     info_r "DS-003" "google" \
       "SDK de crash reporting detectado: $sdk_display" \
       "${sdk_display} coleta dados de diagnóstico (crash logs, device info). Declare na Data Safety Section." \

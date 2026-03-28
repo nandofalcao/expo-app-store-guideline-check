@@ -47,9 +47,9 @@ fi
 
 HAS_EXPO_PRIVACY_MANIFEST=false
 if [ -f "$APP_JSON" ]; then
-  val=$(node -e "
+  val=$(SCAN_FILE="$APP_JSON" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
       const pm = expo.ios && expo.ios.privacyManifests;
       process.stdout.write(pm ? 'yes' : 'no');
@@ -99,13 +99,13 @@ for api_entry in "${REQUIRED_APIS[@]}"; do
   DECLARED=false
 
   if [ "$HAS_EXPO_PRIVACY_MANIFEST" = true ] && [ -f "$APP_JSON" ]; then
-    check=$(node -e "
+    check=$(SCAN_FILE="$APP_JSON" SCAN_API="$api_type" node -e "
       try {
-        const a = require('${APP_JSON}');
+        const a = require(process.env.SCAN_FILE);
         const expo = a.expo || a;
         const pm = expo.ios && expo.ios.privacyManifests;
-        const apis = pm && pm.NSPrivacyAccessedAPITypes || [];
-        const found = apis.some(a => a.NSPrivacyAccessedAPIType === '${api_type}');
+        const apis = (pm && pm.NSPrivacyAccessedAPITypes) || [];
+        const found = apis.some(a => a.NSPrivacyAccessedAPIType === process.env.SCAN_API);
         process.stdout.write(found ? 'yes' : 'no');
       } catch(e) { process.stdout.write('no'); }
     " 2>/dev/null || echo "no")
@@ -168,9 +168,9 @@ if [ "$USES_TRACKING" = true ]; then
 
   # NSUserTrackingUsageDescription
   if [ -f "$APP_JSON" ]; then
-    val=$(node -e "
+    val=$(SCAN_FILE="$APP_JSON" node -e "
       try {
-        const a = require('${APP_JSON}');
+        const a = require(process.env.SCAN_FILE);
         const expo = a.expo || a;
         const v = expo.ios && expo.ios.infoPlist && expo.ios.infoPlist.NSUserTrackingUsageDescription;
         process.stdout.write(v || '__MISSING__');
@@ -194,9 +194,9 @@ fi
 
 # Se tem Privacy Manifest, verificar se NSPrivacyCollectedDataTypes está preenchido
 if [ "$HAS_EXPO_PRIVACY_MANIFEST" = true ] && [ -f "$APP_JSON" ]; then
-  val=$(node -e "
+  val=$(SCAN_FILE="$APP_JSON" node -e "
     try {
-      const a = require('${APP_JSON}');
+      const a = require(process.env.SCAN_FILE);
       const expo = a.expo || a;
       const pm = expo.ios && expo.ios.privacyManifests;
       const collected = pm && pm.NSPrivacyCollectedDataTypes;

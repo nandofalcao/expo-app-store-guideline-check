@@ -38,9 +38,9 @@ detect_project_type() {
   # Expo Managed ou Bare
   if [ -f "${dir}/app.json" ]; then
     local has_expo_key
-    has_expo_key=$(node -e "
+    has_expo_key=$(SCAN_FILE="${dir}/app.json" node -e "
       try {
-        const a = require('${dir}/app.json');
+        const a = require(process.env.SCAN_FILE);
         console.log(a.expo ? 'yes' : 'no');
       } catch(e) { console.log('no'); }
     " 2>/dev/null || echo "no")
@@ -78,30 +78,30 @@ collect_basic_info() {
   PLATFORMS=""
 
   if [ -f "${dir}/app.json" ]; then
-    APP_NAME=$(node -e "
+    APP_NAME=$(SCAN_FILE="${dir}/app.json" node -e "
       try {
-        const a = require('${dir}/app.json');
+        const a = require(process.env.SCAN_FILE);
         console.log((a.expo && a.expo.name) || a.name || 'Unknown');
       } catch(e) { console.log('Unknown'); }
     " 2>/dev/null || echo "Unknown")
 
-    APP_VERSION=$(node -e "
+    APP_VERSION=$(SCAN_FILE="${dir}/app.json" node -e "
       try {
-        const a = require('${dir}/app.json');
+        const a = require(process.env.SCAN_FILE);
         console.log((a.expo && a.expo.version) || a.version || 'Unknown');
       } catch(e) { console.log('Unknown'); }
     " 2>/dev/null || echo "Unknown")
 
-    APP_SDK_VERSION=$(node -e "
+    APP_SDK_VERSION=$(SCAN_FILE="${dir}/app.json" node -e "
       try {
-        const a = require('${dir}/app.json');
+        const a = require(process.env.SCAN_FILE);
         console.log((a.expo && a.expo.sdkVersion) || 'Unknown');
       } catch(e) { console.log('Unknown'); }
     " 2>/dev/null || echo "Unknown")
   elif [ -f "${dir}/package.json" ]; then
-    APP_NAME=$(node -e "
+    APP_NAME=$(SCAN_FILE="${dir}/package.json" node -e "
       try {
-        const p = require('${dir}/package.json');
+        const p = require(process.env.SCAN_FILE);
         console.log(p.name || 'Unknown');
       } catch(e) { console.log('Unknown'); }
     " 2>/dev/null || echo "Unknown")
@@ -131,8 +131,8 @@ run_check() {
   echo -n "  Verificando $check_name... "
   if bash "$script_file" "$PROJECT_DIR" > "$output_file" 2>/dev/null; then
     local critical warning
-    critical=$(node -e "try{const r=require('${output_file}');console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-    warning=$(node -e "try{const r=require('${output_file}');console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    critical=$(SCAN_FILE="$output_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    warning=$(SCAN_FILE="$output_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
 
     if [ "${critical:-0}" -gt 0 ] 2>/dev/null; then
       echo -e "${RED}${critical} crítico(s)${NC}"
@@ -224,10 +224,10 @@ main() {
 
   for json_file in "${RESULTS_DIR}"/*.json; do
     [ -f "$json_file" ] || continue
-    c=$(node -e "try{const r=require('${json_file}');console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-    w=$(node -e "try{const r=require('${json_file}');console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-    i=$(node -e "try{const r=require('${json_file}');console.log(r.summary.info||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-    o=$(node -e "try{const r=require('${json_file}');console.log(r.summary.ok||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    c=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    w=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    i=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.info||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+    o=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.ok||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
     TOTAL_CRITICAL=$((TOTAL_CRITICAL + ${c:-0}))
     TOTAL_WARNING=$((TOTAL_WARNING + ${w:-0}))
     TOTAL_INFO=$((TOTAL_INFO + ${i:-0}))

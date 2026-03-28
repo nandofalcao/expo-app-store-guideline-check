@@ -27,22 +27,17 @@ collect_by_severity() {
 
   for json_file in "${RESULTS_DIR}"/*.json; do
     [ -f "$json_file" ] || continue
-    node -e "
+    SCAN_FILE="$json_file" SCAN_SEVERITY="$severity" SCAN_CATEGORY="$category_filter" node -e "
       try {
-        const data = require('${json_file}');
+        const data = require(process.env.SCAN_FILE);
+        const sev = process.env.SCAN_SEVERITY;
+        const cat = process.env.SCAN_CATEGORY;
         const results = data.results || [];
         results.forEach(r => {
-          const matchSeverity = r.severity === '${severity}';
-          const matchCategory = '${category_filter}' === '' ||
-            r.category === '${category_filter}' ||
-            r.category === 'both';
+          const matchSeverity = r.severity === sev;
+          const matchCategory = cat === '' || r.category === cat || r.category === 'both';
           if (matchSeverity && matchCategory) {
-            const icon = {
-              CRITICAL: '🔴',
-              WARNING: '⚠️',
-              INFO: 'ℹ️',
-              OK: '✅'
-            }[r.severity] || '';
+            const icon = {CRITICAL:'🔴',WARNING:'⚠️',INFO:'ℹ️',OK:'✅'}[r.severity] || '';
             console.log('- ' + icon + ' **' + r.title + '**');
             if (r.description) console.log('  ' + r.description);
             if (r.fix) console.log('  > **Correção:** ' + r.fix);
@@ -61,14 +56,13 @@ collect_ok_items() {
 
   for json_file in "${RESULTS_DIR}"/*.json; do
     [ -f "$json_file" ] || continue
-    node -e "
+    SCAN_FILE="$json_file" SCAN_CATEGORY="$category_filter" node -e "
       try {
-        const data = require('${json_file}');
+        const data = require(process.env.SCAN_FILE);
+        const cat = process.env.SCAN_CATEGORY;
         const results = data.results || [];
         results.forEach(r => {
-          const matchCategory = '${category_filter}' === '' ||
-            r.category === '${category_filter}' ||
-            r.category === 'both';
+          const matchCategory = cat === '' || r.category === cat || r.category === 'both';
           if (r.severity === 'OK' && matchCategory) {
             console.log('- ✅ ' + r.title);
           }
@@ -81,10 +75,10 @@ collect_ok_items() {
 # Contar totais
 for json_file in "${RESULTS_DIR}"/*.json; do
   [ -f "$json_file" ] || continue
-  c=$(node -e "try{const r=require('${json_file}');console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-  w=$(node -e "try{const r=require('${json_file}');console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-  i=$(node -e "try{const r=require('${json_file}');console.log(r.summary.info||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
-  o=$(node -e "try{const r=require('${json_file}');console.log(r.summary.ok||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+  c=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+  w=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+  i=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.info||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
+  o=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.ok||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
   TOTAL_CRITICAL=$((TOTAL_CRITICAL + ${c:-0}))
   TOTAL_WARNING=$((TOTAL_WARNING + ${w:-0}))
   TOTAL_INFO=$((TOTAL_INFO + ${i:-0}))
