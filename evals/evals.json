@@ -1,0 +1,310 @@
+{
+  "version": "1.0",
+  "description": "Casos de teste para mobile-app-compliance-checker",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Projeto Expo mínimo sem configuração de privacidade",
+      "description": "App Expo com app.json básico sem Privacy Manifest, sem usage descriptions",
+      "project_fixture": {
+        "app.json": {
+          "expo": {
+            "name": "MeuApp",
+            "slug": "meu-app",
+            "version": "1.0.0",
+            "ios": {
+              "bundleIdentifier": "com.empresa.meuapp"
+            },
+            "android": {
+              "package": "com.empresa.meuapp",
+              "versionCode": 1
+            }
+          }
+        },
+        "package.json": {
+          "name": "meu-app",
+          "dependencies": {
+            "expo": "~52.0.0",
+            "react-native": "0.76.0",
+            "expo-camera": "~16.0.0"
+          }
+        }
+      },
+      "expected_findings": [
+        {
+          "id": "EXPO-005",
+          "severity": "CRITICAL",
+          "description": "Privacy Manifest não configurado"
+        },
+        {
+          "id": "EXPO-006",
+          "severity": "CRITICAL",
+          "description": "URL da Política de Privacidade não encontrada"
+        },
+        {
+          "id": "EXPO-014",
+          "severity": "CRITICAL",
+          "description": "NSCameraUsageDescription ausente (câmera detectada)"
+        }
+      ],
+      "should_not_find": [
+        {
+          "id": "EXPO-001",
+          "description": "Bundle Identifier está configurado"
+        },
+        {
+          "id": "EXPO-002",
+          "description": "Package Android está configurado"
+        }
+      ]
+    },
+    {
+      "id": "TC-002",
+      "name": "Projeto Expo bem configurado",
+      "description": "App Expo com todas as configurações de privacidade corretas",
+      "project_fixture": {
+        "app.json": {
+          "expo": {
+            "name": "MeuApp",
+            "slug": "meu-app",
+            "version": "1.0.0",
+            "scheme": "meuapp",
+            "privacyPolicyUrl": "https://meuapp.com/privacidade",
+            "icon": "./assets/icon.png",
+            "splash": {
+              "image": "./assets/splash.png",
+              "backgroundColor": "#ffffff"
+            },
+            "orientation": "portrait",
+            "ios": {
+              "bundleIdentifier": "com.empresa.meuapp",
+              "buildNumber": "1",
+              "supportsTablet": false,
+              "privacyManifests": {
+                "NSPrivacyTracking": false,
+                "NSPrivacyAccessedAPITypes": [
+                  {
+                    "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                    "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+                  },
+                  {
+                    "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+                    "NSPrivacyAccessedAPITypeReasons": ["C617.1"]
+                  },
+                  {
+                    "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+                    "NSPrivacyAccessedAPITypeReasons": ["35F9.1"]
+                  },
+                  {
+                    "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+                    "NSPrivacyAccessedAPITypeReasons": ["E174.1"]
+                  }
+                ]
+              },
+              "infoPlist": {
+                "NSCameraUsageDescription": "Usamos a câmera para você fotografar produtos."
+              }
+            },
+            "android": {
+              "package": "com.empresa.meuapp",
+              "versionCode": 1,
+              "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+              }
+            }
+          }
+        },
+        "package.json": {
+          "name": "meu-app",
+          "dependencies": {
+            "expo": "~52.0.0",
+            "react-native": "0.76.0",
+            "expo-camera": "~16.0.0",
+            "expo-secure-store": "~14.0.0"
+          }
+        }
+      },
+      "expected_findings": [],
+      "should_not_find": [
+        {
+          "id": "EXPO-001",
+          "severity": "CRITICAL"
+        },
+        {
+          "id": "EXPO-005",
+          "severity": "CRITICAL"
+        },
+        {
+          "id": "EXPO-006",
+          "severity": "CRITICAL"
+        }
+      ]
+    },
+    {
+      "id": "TC-003",
+      "name": "Segurança — AsyncStorage com tokens",
+      "description": "Detectar uso de AsyncStorage para dados sensíveis",
+      "source_code_fixtures": {
+        "src/auth/authStore.ts": "import AsyncStorage from '@react-native-async-storage/async-storage';\nawait AsyncStorage.setItem('authToken', token);\nawait AsyncStorage.setItem('userPassword', password);"
+      },
+      "expected_findings": [
+        {
+          "id": "SEC-001",
+          "severity": "CRITICAL",
+          "description": "AsyncStorage com dados sensíveis"
+        }
+      ]
+    },
+    {
+      "id": "TC-004",
+      "name": "Segurança — API key hardcoded",
+      "description": "Detectar API keys hardcoded no código-fonte",
+      "source_code_fixtures": {
+        "src/config/api.ts": "const api_key = 'sk-1234567890abcdefghijklmnopqrstuvwxyz';\nconst secret_key = 'AbCdEfGhIjKlMnOpQrStUvWxYz123456789012';"
+      },
+      "expected_findings": [
+        {
+          "id": "SEC-003",
+          "severity": "CRITICAL",
+          "description": "API keys hardcoded"
+        }
+      ]
+    },
+    {
+      "id": "TC-005",
+      "name": "Dependências — Expo SDK desatualizado",
+      "description": "Detectar versão antiga do Expo SDK",
+      "project_fixture": {
+        "package.json": {
+          "name": "meu-app",
+          "dependencies": {
+            "expo": "~49.0.0",
+            "react-native": "0.72.0"
+          }
+        }
+      },
+      "expected_findings": [
+        {
+          "id": "DEP-002",
+          "severity": "CRITICAL",
+          "description": "Expo SDK desatualizado"
+        }
+      ]
+    },
+    {
+      "id": "TC-006",
+      "name": "Permissões — iOS sem usage descriptions",
+      "description": "Detectar uso de câmera sem NSCameraUsageDescription",
+      "project_fixture": {
+        "app.json": {
+          "expo": {
+            "name": "MeuApp",
+            "ios": {
+              "bundleIdentifier": "com.empresa.meuapp"
+            }
+          }
+        },
+        "package.json": {
+          "dependencies": {
+            "expo-image-picker": "~15.0.0"
+          }
+        }
+      },
+      "expected_findings": [
+        {
+          "id": "PERM-001",
+          "severity": "CRITICAL",
+          "description": "NSCameraUsageDescription ausente"
+        },
+        {
+          "id": "PERM-004",
+          "severity": "CRITICAL",
+          "description": "NSPhotoLibraryUsageDescription ausente"
+        }
+      ]
+    },
+    {
+      "id": "TC-007",
+      "name": "Privacy Manifest — tracking sem ATT",
+      "description": "App com Firebase Analytics mas sem ATT implementado",
+      "project_fixture": {
+        "package.json": {
+          "dependencies": {
+            "expo": "~52.0.0",
+            "@react-native-firebase/analytics": "^20.0.0"
+          }
+        }
+      },
+      "expected_findings": [
+        {
+          "id": "PRIV-003",
+          "severity": "CRITICAL",
+          "description": "App Tracking Transparency não implementado"
+        }
+      ]
+    },
+    {
+      "id": "TC-008",
+      "name": "Data Safety — Target SDK baixo",
+      "description": "Detectar targetSdkVersion menor que 34",
+      "project_fixture": {
+        "app.json": {
+          "expo": {
+            "android": {
+              "package": "com.empresa.app",
+              "targetSdkVersion": 33
+            }
+          }
+        },
+        "package.json": {
+          "dependencies": {
+            "expo": "~52.0.0"
+          }
+        }
+      },
+      "expected_findings": [
+        {
+          "id": "DS-001",
+          "severity": "CRITICAL",
+          "description": "Target SDK Version muito baixo"
+        }
+      ]
+    },
+    {
+      "id": "TC-009",
+      "name": "Segurança — .env sem .gitignore",
+      "description": "Detectar .env não protegido pelo .gitignore",
+      "file_fixtures": {
+        ".env": "API_KEY=sk-real-key-here\nDB_PASSWORD=minha_senha",
+        ".gitignore": "node_modules/\n.expo/\n"
+      },
+      "expected_findings": [
+        {
+          "id": "SEC-004",
+          "severity": "CRITICAL",
+          "description": "Arquivo .env não está no .gitignore"
+        }
+      ]
+    },
+    {
+      "id": "TC-010",
+      "name": "Relatório final — projeto com múltiplos problemas",
+      "description": "Verificar que o relatório consolida corretamente múltiplos problemas de checks diferentes",
+      "expected_report_sections": [
+        "Resumo Executivo",
+        "Apple App Store",
+        "Google Play Store",
+        "Segurança de Dados",
+        "Próximos Passos"
+      ],
+      "expected_report_format": "markdown"
+    }
+  ],
+  "evaluation_criteria": {
+    "precision": "Porcentagem de findings reportados que são reais problemas (sem falsos positivos)",
+    "recall": "Porcentagem de problemas reais detectados (sem falsos negativos)",
+    "actionability": "Cada finding deve ter título, descrição, fix sugerido e referência",
+    "report_quality": "Relatório final deve ter as seções esperadas e ser legível"
+  }
+}
