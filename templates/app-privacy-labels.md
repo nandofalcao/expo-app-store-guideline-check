@@ -1,10 +1,10 @@
 # Guide: Filling Out App Privacy Labels — Apple App Store
 
 > Updated: 2026-03-28
-> Access: **App Store Connect >[Your App] > App Privacy**
+> Access: **App Store Connect > [Your App] > App Privacy**
 
 Privacy Labels are displayed on the app's page in the App Store before the user downloads it.
-They are mandatoryand must accurately reflect the data collected.
+They are mandatory and must accurately reflect the data collected.
 
 ---
 
@@ -171,7 +171,7 @@ Data Used to Track You:
 For each declared data type, inform the purpose:
 
 | Purpose | Description |
-||-----------|-----------|
+|-----------|-----------|
 | Third-Party Advertising | Display third-party ads |
 | Developer's Advertising or Marketing | Your own marketing |
 | Analytics | Understand app usage |
@@ -197,7 +197,7 @@ For each declared data type, inform the purpose:
 ## Common SDKs → Privacy Labels
 
 | SDK | Typical Categories |
-||-----|-------------------|
+|-----|-------------------|
 | Firebase Analytics | Product Interaction (Linked or Not Linked) |
 | Firebase Crashlytics | Crash Data (Not Linked) |
 | Sentry | Crash Data, Performance Data (Not Linked) |

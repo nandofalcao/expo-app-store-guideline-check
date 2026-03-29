@@ -161,7 +161,7 @@
 - Reviewers cannot use the app due to network/API errors
 
 **Solutions:**
-- Keep the production environment stable throughout the review period (up to7 days)
+- Keep the production environment stable throughout the review period (up to 7 days)
 - If using feature flags, ensure all features are enabled for the reviewer
 - Monitor uptime with alerts
 - Provide reviewer location IPs for whitelisting if necessary (Apple uses IPs in Cupertino, CA)
