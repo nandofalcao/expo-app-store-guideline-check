@@ -1,228 +1,228 @@
-# Guia: Preencher App Privacy Labels — Apple App Store
+# Guide: Filling Out App Privacy Labels — Apple App Store
 
-> Atualizado: 2026-03-28
-> Acesse: **App Store Connect > [Seu App] > App Privacy**
+> Updated: 2026-03-28
+> Access: **App Store Connect >[Your App] > App Privacy**
 
-As Privacy Labels são exibidas na página do app na App Store antes de o usuário fazer download.
-São obrigatórias e devem refletir com precisão os dados coletados.
-
----
-
-## As Três Categorias Principais
-
-### 1. Data Used to Track You (Dados usados para rastrear você)
-Dados **combinados com dados de outros apps, sites ou apps de terceiros** para fins de publicidade,
-ou compartilhados com data brokers.
-
-**Declare aqui se:**
-- O app usa IDFA (Identifier for Advertisers)
-- O app usa cookies para cross-app tracking
-- O app compartilha dados com plataformas de advertising
-- O app usa SDKs de atribuição (Branch, Adjust, Appsflyer)
-
-**Exige:** App Tracking Transparency (ATT) para iOS 14.5+
-
-### 2. Data Linked to You (Dados vinculados a você)
-Dados coletados e **associados à identidade do usuário** (conta, nome, email, etc.)
-
-**Declare aqui se:**
-- O app tem sistema de login/conta
-- Os dados podem ser rastreados de volta ao usuário
-
-### 3. Data Not Linked to You (Dados não vinculados a você)
-Dados coletados mas **não associados** à identidade do usuário (anônimos ou pseudoanonimizados).
-
-**Declare aqui se:**
-- Crash logs sem informações de identificação
-- Analytics com IDs anônimos
-- Diagnósticos técnicos
+Privacy Labels are displayed on the app's page in the App Store before the user downloads it.
+They are mandatoryand must accurately reflect the data collected.
 
 ---
 
-## Tipos de Dados — Quando Declarar
+## The Three Main Categories
 
-### Contact Info (Informações de Contato)
-| Tipo | Linked | Not Linked | Track |
+### 1. Data Used to Track You
+Data **combined with data from other apps, websites, or third-party apps** for advertising purposes,
+or shared with data brokers.
+
+**Declare here if:**
+- The app uses IDFA (Identifier for Advertisers)
+- The app uses cookies for cross-app tracking
+- The app shares data with advertising platforms
+- The app uses attribution SDKs (Branch, Adjust, Appsflyer)
+
+**Requires:** App Tracking Transparency (ATT) for iOS 14.5+
+
+### 2. Data Linked to You
+Data collected and **associated with the user's identity** (account, name, email, etc.)
+
+**Declare here if:**
+- The app has a login/account system
+- Data can be traced back to the user
+
+### 3. Data Not Linked to You
+Data collected but **not associated** with the user's identity (anonymous or pseudo-anonymized).
+
+**Declare here if:**
+- Crash logs without identifying information
+- Analytics with anonymous IDs
+- Technical diagnostics
+
+---
+
+## Data Types — When to Declare
+
+### Contact Info
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Name | ✓ se tem perfil | | |
-| Email Address | ✓ se usa email para login | | |
-| Phone Number | ✓ se coleta telefone | | |
-| Physical Address | ✓ se coleta endereço | | |
-| Other User Contact Info | ✓ se coleta outros dados de contato | | |
+| Name | ✓ if has profile | | |
+| Email Address | ✓ if uses email for login | | |
+| Phone Number | ✓ if collects phone | | |
+| Physical Address | ✓ if collects address | | |
+| Other User Contact Info | ✓ if collects other contact data | | |
 
 ### Health & Fitness
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Health | ✓ se app de saúde com conta | | |
-| Fitness | ✓ se app fitness com conta | | |
+| Health | ✓ if health app with account | | |
+| Fitness | ✓ if fitness app with account | | |
 
 ### Financial Info
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Payment Info | ✓ se armazena dados de pagamento | | |
+| Payment Info | ✓ if stores payment data | | |
 | Credit Info | | | |
-| Other Financial Info | ✓ se armazena histórico de transações | | |
+| Other Financial Info | ✓ if stores transaction history | | |
 
 ### Location
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Precise Location | ✓ se armazenada com conta | ✓ se anônima | ✓ se para publicidade |
-| Coarse Location | ✓ se armazenada com conta | ✓ se anônima | |
+| Precise Location | ✓ if stored with account | ✓ if anonymous | ✓ if for advertising |
+| Coarse Location | ✓ if stored with account | ✓ if anonymous | |
 
 ### Sensitive Info
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Sensitive Info | ✓ se coleta dados sensíveis (raça, religião, etc.) | | |
+| Sensitive Info | ✓ if collects sensitive data (race, religion, etc.) | | |
 
 ### Contacts
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Contacts | ✓ se sincroniza ou armazena contatos | | |
+| Contacts | ✓ if syncs or stores contacts | | |
 
 ### User Content
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Emails or Text Messages | ✓ se app tem chat | | |
-| Photos or Videos | ✓ se armazena fotos enviadas pelo usuário | | |
-| Audio Data | ✓ se armazena gravações | | |
-| Gameplay Content | ✓ se tem conteúdo de jogo | | |
-| Customer Support | ✓ se tem chat de suporte | | |
-| Other User Content | ✓ se tem outros UGC | | |
+| Emails or Text Messages | ✓ if app has chat | | |
+| Photos or Videos | ✓ if stores user-uploaded photos | | |
+| Audio Data | ✓ if stores recordings | | |
+| Gameplay Content | ✓ if has game content | | |
+| Customer Support | ✓ if has support chat | | |
+| Other User Content | ✓ if has other UGC | | |
 
 ### Browsing History
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Browsing History | ✓ se rastreia URLs em WebView | | |
+| Browsing History | ✓ if tracks URLs in WebView | | |
 
 ### Search History
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Search History | ✓ se armazena buscas do usuário | | |
+| Search History | ✓ if stores user searches | | |
 
 ### Identifiers
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| User ID | ✓ para quase todos os apps com conta | | |
-| Device ID | | ✓ para analytics anônimos | ✓ se para advertising (IDFA) |
+| User ID | ✓ for almost all apps with account | | |
+| Device ID | | ✓ for anonymous analytics | ✓ if for advertising (IDFA) |
 
 ### Purchases
-| Tipo | Linked | Not Linked | Track |
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Purchase History | ✓ se armazena histórico de IAP | | |
+| Purchase History | ✓ if stores IAP history | | |
 
-### Usage Data (Mais comum)
-| Tipo | Linked | Not Linked | Track |
+### Usage Data (Most common)
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Product Interaction | ✓ se analytics vinculado à conta | ✓ se analytics anônimo | |
-| Advertising Data | | | ✓ sempre |
-| Other Usage Data | ✓ ou ✓ dependendo do caso | | |
+| Product Interaction | ✓ if analytics linked to account | ✓ if anonymous analytics | |
+| Advertising Data | | | ✓ always |
+| Other Usage Data | ✓ or ✓ depending on case | | |
 
-### Diagnostics (Muito comum — Sentry/Crashlytics)
-| Tipo | Linked | Not Linked | Track |
+### Diagnostics (Very common — Sentry/Crashlytics)
+| Type | Linked | Not Linked | Track |
 |------|--------|------------|-------|
-| Crash Data | | ✓ geralmente anônimo | |
-| Performance Data | | ✓ geralmente anônimo | |
-| Other Diagnostic Data | | ✓ geralmente anônimo | |
+| Crash Data | | ✓ usually anonymous | |
+| Performance Data | | ✓ usually anonymous | |
+| Other Diagnostic Data | | ✓ usually anonymous | |
 
 ---
 
-## Exemplos por Tipo de App
+## Examples by App Type
 
-### App simples sem conta (ex: calculadora, app offline)
+### Simple app without account (e.g., calculator, offline app)
 ```
 Data Not Collected ✅
-(sem coleta de dados)
+(no data collection)
 ```
 
-### App com conta + Firebase Analytics + Sentry
+### App with account + Firebase Analytics + Sentry
 ```
 Data Linked to You:
-  - User ID (Account identifier gerado internamente)
+  - User ID (Account identifier generated internally)
   - Email Address (login)
-  - Product Interaction (Firebase Analytics → eventos do app)
+  - Product Interaction (Firebase Analytics → app events)
 
 Data Not Linked to You:
-  - Crash Data (Sentry — sem PII se configurado corretamente)
+  - Crash Data (Sentry — no PII if configured correctly)
   - Performance Data (Sentry)
 ```
 
-### App de social + câmera + localização
+### Social app + camera + location
 ```
 Data Linked to You:
-  - Name (perfil)
+  - Name (profile)
   - Email Address (login)
-  - Photos or Videos (fotos enviadas)
-  - Precise Location (se geotag nas fotos)
+  - Photos or Videos (uploaded photos)
+  - Precise Location (if geotag in photos)
   - User ID
   - Product Interaction (analytics)
 
 Data Not Linked to You:
   - Crash Data
-  - Coarse Location (se analytics de região)
+  - Coarse Location (if region analytics)
 
 Data Used to Track You:
-  (apenas se usa IDFA para advertising)
+  (only if uses IDFA for advertising)
 ```
 
 ---
 
-## Finalidades dos Dados
+## Data Purposes
 
-Para cada tipo de dado declarado, informar a finalidade:
+For each declared data type, inform the purpose:
 
-| Finalidade | Descrição |
-|-----------|-----------|
-| Third-Party Advertising | Mostrar anúncios de terceiros |
-| Developer's Advertising or Marketing | Seu próprio marketing |
-| Analytics | Entender uso do app |
-| Product Personalization | Personalizar experiência |
-| App Functionality | Necessário para o app funcionar |
-| Other Purposes | Outros fins específicos |
-
----
-
-## Processo de Preenchimento
-
-1. **Acesse** App Store Connect > [App] > App Privacy
-2. **Clique** em "Edit" ou "Get Started"
-3. Para cada tipo de dado que o app coleta:
-   - Selecione a categoria
-   - Indique se é Linked, Not Linked, ou Tracking
-   - Selecione a(s) finalidade(s)
-   - Indique se é obrigatório ou opcional para o app
-4. **Salve** e publique junto com a próxima versão
+| Purpose | Description |
+||-----------|-----------|
+| Third-Party Advertising | Display third-party ads |
+| Developer's Advertising or Marketing | Your own marketing |
+| Analytics | Understand app usage |
+| Product Personalization | Personalize experience |
+| App Functionality | Required for app to function |
+| Other Purposes | Other specific purposes |
 
 ---
 
-## SDKs Comuns → Privacy Labels
+## Filling Process
 
-| SDK | Categorias Típicas |
-|-----|-------------------|
-| Firebase Analytics | Product Interaction (Linked ou Not Linked) |
+1. **Access** App Store Connect > [App] > App Privacy
+2. **Click** "Edit" or "Get Started"
+3. For each data type the app collects:
+   - Select the category
+   - Indicate if it's Linked, Not Linked, or Tracking
+   - Select the purpose(s)
+   - Indicate if it's required or optional for the app
+4. **Save** and publish with the next version
+
+---
+
+## Common SDKs → Privacy Labels
+
+| SDK | Typical Categories |
+||-----|-------------------|
+| Firebase Analytics | Product Interaction (Linked or Not Linked) |
 | Firebase Crashlytics | Crash Data (Not Linked) |
 | Sentry | Crash Data, Performance Data (Not Linked) |
 | Firebase Authentication | User ID, Email (Linked) |
-| expo-notifications | Device ID (Linked se push token armazenado) |
-| expo-location | Precise/Coarse Location (Linked ou Not Linked) |
+| expo-notifications | Device ID (Linked if push token stored) |
+| expo-location | Precise/Coarse Location (Linked or Not Linked) |
 | Google Sign-In | Name, Email, User ID (Linked) |
-| Apple Sign-In | Email (opcionalmente), User ID (Linked) |
+| Apple Sign-In | Email (optionally), User ID (Linked) |
 
 ---
 
-## Dicas Importantes
+## Important Tips
 
-1. **Privacy Labels ≠ Privacy Policy** — Labels são um resumo visual, não o documento completo
-2. **Deve ser consistente com a Privacy Policy** — dados declarados em um devem estar no outro
-3. **Atualizar com cada versão** que introduza nova coleta de dados
-4. **Apple verifica** — Privacy Labels incorretas são motivo de rejeição
-5. **"Not Collected" não é uma opção** — se não coleta, simplesmente não declara aquela categoria
-6. **Tracking** exige ATT — se declarar "Used to Track You", deve ter ATT implementado
+1. **Privacy Labels ≠ Privacy Policy** — Labels are a visual summary, not the complete document
+2. **Must be consistent with Privacy Policy** — data declared in one must be in the other
+3. **Update with each version** that introduces new data collection
+4. **Apple verifies** — incorrect Privacy Labels are grounds for rejection
+5. **"Not Collected" is not an option** — if not collected, simply don't declare that category
+6. **Tracking requires ATT** — if declaring "Used to Track You", must have ATT implemented
 
 ---
 
-## Após Preencher
+## After Filling Out
 
-- [ ] Revisar contra a Privacy Policy para consistência
-- [ ] Verificar que ATT está implementado se declarou "Used to Track You"
-- [ ] Guardar screenshot das configurações para referência futura
-- [ ] Rever a cada novo SDK ou feature adicionada ao app
+- [ ] Review against Privacy Policy for consistency
+- [ ] Verify that ATT is implemented if declared "Used to Track You"
+- [ ] Save screenshot of settings for future reference
+- [ ] Review whenever a new SDK or feature is added to the app

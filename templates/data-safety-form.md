@@ -1,252 +1,252 @@
-# Guia: Preencher Data Safety Section — Google Play
+# Guide: Filling Out Data Safety Section — Google Play
 
-> Atualizado: 2026-03-28
-> Fonte: https://support.google.com/googleplay/android-developer/answer/10787469
+> Updated: 2026-03-28
+> Source: https://support.google.com/googleplay/android-developer/answer/10787469
 
-O formulário Data Safety é **obrigatório** para publicar no Google Play.
-Acesse: **Google Play Console > [Seu App] > App content > Data safety**
+The Data Safety form is **mandatory** for publishing on Google Play.
+Access: **Google Play Console > [Your App] > App content > Data safety**
 
 ---
 
-## Visão Geral do Processo
+## Process Overview
 
 ```
-1. Coleta de dados → 2. Uso de dados → 3. Compartilhamento → 4. Práticas de segurança
+1. Data collection → 2. Data usage → 3. Sharing → 4. Security practices
 ```
 
 ---
 
-## Seção 1: Coleta e Uso de Dados
+## Section 1: Data Collection and Use
 
-### Pergunta: "O app coleta ou compartilha algum tipo de dado obrigatório do usuário?"
+### Question: "Does the app collect or share any required user data types?"
 
-**Resposta baseada no tipo de app:**
-- App sem backend, sem analytics, sem crashes: provavelmente **NÃO**
-- A maioria dos apps React Native com Firebase/Sentry: **SIM**
-
----
-
-## Categorias de Dados — Como Mapear
-
-### 📍 Localização
-
-| Subcategoria | Quando declarar |
-|-------------|-----------------|
-| Localização aproximada | App usa `expo-location` com `Accuracy.Low/Balanced` |
-| Localização precisa | App usa `expo-location` com `Accuracy.High/BestForNavigation` |
-
-**Perguntas adicionais:**
-- Processada em tempo real? Se localiza em segundo plano = SIM
-- Compartilhada com terceiros? Se envia para servidor ou analytics = SIM
-- Obrigatória para funcionar? Se sem localização o app não funciona = SIM
+**Answer based on app type:**
+- App without backend, without analytics, without crashes: probably **NO**
+- Most React Native apps with Firebase/Sentry: **YES**
 
 ---
 
-### 👤 Informações Pessoais
+## Data Categories — How to Map
 
-| Subcategoria | Quando declarar |
+### 📍 Location
+
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Nome | Tem cadastro com nome |
-| Endereço de email | Login por email ou cadastro |
-| IDs de usuário | Gera ID único por usuário |
-| Endereço (físico) | Tem entrega ou endereço de cobrança |
-| Número de telefone | Verificação por SMS ou WhatsApp |
-| Raça e etnia | [Se relevante para o app] |
-| Crenças políticas ou religiosas | [Se relevante] |
-| Orientação sexual | [Se relevante] |
-| Outras informações | Nome de usuário, foto de perfil, data de nascimento |
+| Approximate location | App uses `expo-location` with `Accuracy.Low/Balanced` |
+| Precise location | App uses `expo-location` with `Accuracy.High/BestForNavigation` |
+
+**Additional questions:**
+- Processed in real time? If location in background = YES
+- Shared with third parties? If sent to server or analytics = YES
+- Required to function? If app doesn't work without location = YES
 
 ---
 
-### 💳 Informações Financeiras
+### 👤 Personal Information
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Informações de pagamento | App processa pagamentos diretamente |
-| Histórico de compras | Armazena histórico de compras (IAP) |
-| Score de crédito | [Fintech] |
-| Outras finanças | Saldo, transações, etc. |
-
-**Nota:** Se usa Google Play Billing, o Google trata o pagamento — declare apenas se armazena histórico.
+| Name | Has registration with name |
+| Email address | Login by email or registration |
+| User IDs | Generates unique ID per user |
+| Address (physical) | Has delivery or billing address |
+| Phone number | Verification by SMS or WhatsApp |
+| Race and ethnicity | [If relevant to the app] |
+| Political or religious beliefs | [If relevant] |
+| Sexual orientation | [If relevant] |
+| Other information | Username, profile photo, date of birth |
 
 ---
 
-### 🏥 Saúde e Condicionamento Físico
+### 💳 Financial Information
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Informações de saúde | App coleta dados de saúde (pressão, glicose, etc.) |
-| Informações de condicionamento | Passos, exercícios, calorias, sono |
+| Payment information | App processes payments directly |
+| Purchase history | Stores purchase history (IAP) |
+| Credit score | [Fintech] |
+| Other finances | Balance, transactions, etc. |
+
+**Note:** If using Google Play Billing, Google handles the payment — declare only if storing history.
 
 ---
 
-### 📨 Mensagens
+### 🏥 Health and Fitness
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Emails | App lê emails do dispositivo |
-| SMS ou MMS | App lê SMS |
-| Outras mensagens no app | App tem chat interno |
+| Health information | App collects health data (blood pressure, glucose, etc.) |
+| Fitness information | Steps, exercises, calories, sleep |
 
 ---
 
-### 📸 Fotos e Vídeos
+### 📨 Messages
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Fotos | App lê/armazena fotos do usuário |
-| Vídeos | App lê/armazena vídeos do usuário |
-
-**Quando declarar:** Se usa `expo-image-picker` e ENVIA as fotos para um servidor.
-Se as fotos ficam apenas no dispositivo: provavelmente não precisa declarar.
+| Emails | App reads device emails |
+| SMS or MMS | App reads SMS |
+| Other in-app messages | App has internal chat |
 
 ---
 
-### 🔊 Arquivos de Áudio
+### 📸 Photos and Videos
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Gravações de voz ou som | App grava áudio do usuário |
-| Arquivos de música | App acessa biblioteca de músicas |
-| Outros arquivos de áudio | |
+| Photos | App reads/stores user photos |
+| Videos | App reads/stores user videos |
+
+**When to declare:** If using `expo-image-picker` and SENDS the photos to a server.
+If photos stay only on device: probably no need to declare.
 
 ---
 
-### 📂 Arquivos e Documentos
+### 🔊 Audio Files
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Arquivos e documentos | App acessa e/ou armazena documentos do usuário |
+| Voice or sound recordings | App records user audio |
+| Music files | App accesses music library |
+| Other audio files | |
 
 ---
 
-### 📅 Calendário
+### 📂 Files and Documents
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Eventos de calendário | App lê ou escreve no calendário (`expo-calendar`) |
+| Files and documents | App accesses and/or stores user documents |
 
 ---
 
-### 👥 Contatos
+### 📅 Calendar
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Contatos | App lê lista de contatos (`expo-contacts`) |
+| Calendar events | App reads or writes to calendar (`expo-calendar`) |
 
 ---
 
-### 📊 Atividade no App
+### 👥 Contacts
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Interações com o app | Firebase Analytics, Amplitude, etc. coletam isso |
-| Histórico de pesquisas no app | App tem busca interna com histórico |
-| Outros conteúdos gerados pelo usuário | Posts, comentários, avaliações |
+| Contacts | App reads contact list (`expo-contacts`) |
 
 ---
 
-### 🌐 Histórico de Navegação na Web
+### 📊 App Activity
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Histórico de navegação na web | App usa WebView e rastreia URLs visitadas |
+| App interactions | Firebase Analytics, Amplitude, etc. collect this |
+| In-app search history | App has internal search with history |
+| Other user-generated content | Posts, comments, reviews |
 
 ---
 
-### 📈 Informações e Desempenho do App
+### 🌐 Web Browsing History
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| Logs de falha | **Sentry, Firebase Crashlytics** — declare sempre |
-| Diagnósticos | Dados de performance, tempos de carregamento |
+| Web browsing history | App uses WebView and tracks visited URLs |
 
 ---
 
-### 📱 IDs de Dispositivo ou Outros
+### 📈 App Information and Performance
 
-| Subcategoria | Quando declarar |
+| Subcategory | When to declare |
 |-------------|-----------------|
-| ID do dispositivo | Advertising ID (GAID) — SDKs de anúncio usam isso |
+| Crash logs | **Sentry, Firebase Crashlytics** — always declare |
+| Diagnostics | Performance data, load times |
 
-**SDKs que usam Advertising ID:** Google AdMob, Firebase Analytics (em alguns casos),
+---
+
+### 📱 Device IDs or Other
+
+| Subcategory | When to declare |
+|-------------|-----------------|
+| Device ID | Advertising ID (GAID) — ad SDKs use this |
+
+**SDKs that use Advertising ID:** Google AdMob, Firebase Analytics (in some cases),
 Branch, Adjust, Appsflyer, Amplitude.
 
 ---
 
-## Práticas de Segurança
+## Security Practices
 
-### Dados criptografados em trânsito?
-- **SIM** se usa HTTPS em todas as APIs (deve ser SIM)
+### Data encrypted in transit?
+- **YES** if using HTTPS on all APIs (should be YES)
 
-### Você fornece uma maneira de os usuários solicitarem que seus dados sejam excluídos?
-- **SIM** se implementou Account Deletion (obrigatório Apple, recomendado Google)
-- Especificar se é automático (dentro do app) ou por solicitação (email)
+### Do you provide a way for users to request their data be deleted?
+- **YES** if Account Deletion is implemented (mandatory for Apple, recommended for Google)
+- Specify if automatic (within the app) or by request (email)
 
 ---
 
-## Exemplos Práticos por Tipo de App
+## Practical Examples by App Type
 
-### App de Controle Pessoal (sem conta, sem analytics)
+### Personal Control App (no account, no analytics)
 ```
-Coleta dados? NÃO
-```
-
-### App com Firebase + Sentry (sem localização, sem câmera)
-```
-✅ Logs de falha (Sentry/Crashlytics)
-✅ Diagnósticos (performance)
-✅ Atividade no app (Firebase Analytics)
-✅ IDs de dispositivo (Firebase — se usa Analytics)
-
-Todos usados para melhorar o app.
-Não compartilhados com terceiros (além dos próprios SDKs).
-Criptografados em trânsito: SIM
-Exclusão de dados: SIM (se implementou account deletion)
+Collects data? NO
 ```
 
-### App com Câmera + Localização + Login
+### App with Firebase + Sentry (no location, no camera)
+```
+✅ Crash logs (Sentry/Crashlytics)
+✅ Diagnostics (performance)
+✅ App activity (Firebase Analytics)
+✅ Device IDs (Firebase — if using Analytics)
+
+All used to improve the app.
+Not shared with third parties (besides the SDKs themselves).
+Encrypted in transit: YES
+Data deletion: YES (if account deletion implemented)
+```
+
+### App with Camera + Location + Login
 ```
 ✅ Email (login)
-✅ ID de usuário (gerado internamente)
-✅ Fotos (se enviadas ao servidor)
-✅ Localização aproximada ou precisa
-✅ Atividade no app (analytics)
-✅ Logs de falha (crash reporting)
+✅ User ID (generated internally)
+✅ Photos (if sent to server)
+✅ Approximate or precise location
+✅ App activity (analytics)
+✅ Crash logs (crash reporting)
 
-Localização: obrigatória para funcionar? Depende do app.
-Fotos: compartilhadas com terceiros? Depende.
+Location: required to function? Depends on the app.
+Photos: shared with third parties? Depends.
 ```
 
 ---
 
-## Dicas Finais
+## Final Tips
 
-1. **Seja preciso, não excessivo** — declare o que coleta de fato, não o que pode vir a coletar
-2. **Consistência é obrigatória** — Data Safety deve bater com a Privacy Policy
-3. **Atualizar após novos SDKs** — cada novo SDK pode requerer nova declaração
-4. **Google pode auditar** — apps com Data Safety inconsistente podem ser removidos
-5. **Salvar rascunho** — o formulário permite salvar rascunhos antes de publicar
+1. **Be precise, not excessive** — declare what you actually collect, not what you might collect
+2. **Consistency is mandatory** — Data Safety must match the Privacy Policy
+3. **Update after new SDKs** — each new SDK may require a new declaration
+4. **Google may audit** — apps with inconsistent Data Safety may be removed
+5. **Save draft** — the form allows saving drafts before publishing
 
 ---
 
-## SDKs Comuns → Data Safety
+## Common SDKs → Data Safety
 
-| SDK | Dados que coleta | Categorias a declarar |
+| SDK | Data it collects | Categories to declare |
 |-----|-----------------|----------------------|
-| Firebase Analytics | Eventos, propriedades de usuário | App activity, Device IDs |
+| Firebase Analytics | Events, user properties | App activity, Device IDs |
 | Firebase Crashlytics | Crashes, stack traces, device info | App info & performance |
 | Sentry | Errors, device info, breadcrumbs | App info & performance |
-| Amplitude | Eventos, sessões, user properties | App activity |
-| Google AdMob | Advertising ID, comportamento | Device IDs, App activity |
-| Branch | Device ID, atribuição | Device IDs, App activity |
+| Amplitude | Events, sessions, user properties | App activity |
+| Google AdMob | Advertising ID, behavior | Device IDs, App activity |
+| Branch | Device ID, attribution | Device IDs, App activity |
 | Expo Notifications | Push token | Device IDs |
 
 ---
 
-## Após Preencher
+## After Filling Out
 
-- [ ] Revisar com a Privacy Policy para consistência
-- [ ] Salvar e publicar no Play Console
-- [ ] Guardar cópia local em `docs/data-safety.md` do projeto
-- [ ] Rever a cada novo SDK adicionado ao projeto
+- [ ] Review with Privacy Policy for consistency
+- [ ] Save and publish in Play Console
+- [ ] Keep local copy in `docs/data-safety.md` in the project
+- [ ] Review each time a new SDK is added to the project
