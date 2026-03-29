@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "description": "Casos de teste para mobile-app-compliance-checker",
+  "description": "Test cases for mobile-app-compliance-checker",
   "test_cases": [
     {
       "id": "TC-001",
-      "name": "Projeto Expo mínimo sem configuração de privacidade",
-      "description": "App Expo com app.json básico sem Privacy Manifest, sem usage descriptions",
+      "name": "Minimal Expo project without privacy configuration",
+      "description": "Expo app with basic app.json without Privacy Manifest, without usage descriptions",
       "project_fixture": {
         "app.json": {
           "expo": {
-            "name": "MeuApp",
+            "name": "MyApp",
             "slug": "meu-app",
             "version": "1.0.0",
             "ios": {
@@ -34,38 +34,38 @@
         {
           "id": "EXPO-005",
           "severity": "CRITICAL",
-          "description": "Privacy Manifest não configurado"
+          "description": "Privacy Manifest not configured"
         },
         {
           "id": "EXPO-006",
           "severity": "CRITICAL",
-          "description": "URL da Política de Privacidade não encontrada"
+          "description": "Privacy Policy URL not found"
         },
         {
           "id": "EXPO-014",
           "severity": "CRITICAL",
-          "description": "NSCameraUsageDescription ausente (câmera detectada)"
+          "description": "NSCameraUsageDescription missing (camera detected)"
         }
       ],
       "should_not_find": [
         {
           "id": "EXPO-001",
-          "description": "Bundle Identifier está configurado"
+          "description": "Bundle Identifier is configured"
         },
         {
           "id": "EXPO-002",
-          "description": "Package Android está configurado"
+          "description": "Android Package is configured"
         }
       ]
     },
     {
       "id": "TC-002",
-      "name": "Projeto Expo bem configurado",
-      "description": "App Expo com todas as configurações de privacidade corretas",
+      "name": "Well configured Expo project",
+      "description": "Expo app with all correct privacy configurations",
       "project_fixture": {
         "app.json": {
           "expo": {
-            "name": "MeuApp",
+            "name": "MyApp",
             "slug": "meu-app",
             "version": "1.0.0",
             "scheme": "meuapp",
@@ -102,7 +102,7 @@
                 ]
               },
               "infoPlist": {
-                "NSCameraUsageDescription": "Usamos a câmera para você fotografar produtos."
+                "NSCameraUsageDescription": "We use the camera for you to photograph products."
               }
             },
             "android": {
@@ -143,8 +143,8 @@
     },
     {
       "id": "TC-003",
-      "name": "Segurança — AsyncStorage com tokens",
-      "description": "Detectar uso de AsyncStorage para dados sensíveis",
+      "name": "Security — AsyncStorage with tokens",
+      "description": "Detect AsyncStorage usage for sensitive data",
       "source_code_fixtures": {
         "src/auth/authStore.ts": "import AsyncStorage from '@react-native-async-storage/async-storage';\nawait AsyncStorage.setItem('authToken', token);\nawait AsyncStorage.setItem('userPassword', password);"
       },
@@ -152,14 +152,14 @@
         {
           "id": "SEC-001",
           "severity": "CRITICAL",
-          "description": "AsyncStorage com dados sensíveis"
+          "description": "AsyncStorage with sensitive data"
         }
       ]
     },
     {
       "id": "TC-004",
-      "name": "Segurança — API key hardcoded",
-      "description": "Detectar API keys hardcoded no código-fonte",
+      "name": "Security — Hardcoded API key",
+      "description": "Detect hardcoded API keys in source code",
       "source_code_fixtures": {
         "src/config/api.ts": "const api_key = 'sk-1234567890abcdefghijklmnopqrstuvwxyz';\nconst secret_key = 'AbCdEfGhIjKlMnOpQrStUvWxYz123456789012';"
       },
@@ -167,14 +167,14 @@
         {
           "id": "SEC-003",
           "severity": "CRITICAL",
-          "description": "API keys hardcoded"
+          "description": "Hardcoded API keys"
         }
       ]
     },
     {
       "id": "TC-005",
-      "name": "Dependências — Expo SDK desatualizado",
-      "description": "Detectar versão antiga do Expo SDK",
+      "name": "Dependencies — Outdated Expo SDK",
+      "description": "Detect old Expo SDK version",
       "project_fixture": {
         "package.json": {
           "name": "meu-app",
@@ -188,18 +188,18 @@
         {
           "id": "DEP-002",
           "severity": "CRITICAL",
-          "description": "Expo SDK desatualizado"
+          "description": "Outdated Expo SDK"
         }
       ]
     },
     {
       "id": "TC-006",
-      "name": "Permissões — iOS sem usage descriptions",
-      "description": "Detectar uso de câmera sem NSCameraUsageDescription",
+      "name": "Permissions — iOS without usage descriptions",
+      "description": "Detect camera usage without NSCameraUsageDescription",
       "project_fixture": {
         "app.json": {
           "expo": {
-            "name": "MeuApp",
+            "name": "MyApp",
             "ios": {
               "bundleIdentifier": "com.empresa.meuapp"
             }
@@ -215,19 +215,19 @@
         {
           "id": "PERM-001",
           "severity": "CRITICAL",
-          "description": "NSCameraUsageDescription ausente"
+          "description": "NSCameraUsageDescription missing"
         },
         {
           "id": "PERM-004",
           "severity": "CRITICAL",
-          "description": "NSPhotoLibraryUsageDescription ausente"
+          "description": "NSPhotoLibraryUsageDescription missing"
         }
       ]
     },
     {
       "id": "TC-007",
-      "name": "Privacy Manifest — tracking sem ATT",
-      "description": "App com Firebase Analytics mas sem ATT implementado",
+      "name": "Privacy Manifest — tracking without ATT",
+      "description": "App with Firebase Analytics but without ATT implemented",
       "project_fixture": {
         "package.json": {
           "dependencies": {
@@ -240,14 +240,14 @@
         {
           "id": "PRIV-003",
           "severity": "CRITICAL",
-          "description": "App Tracking Transparency não implementado"
+          "description": "App Tracking Transparency not implemented"
         }
       ]
     },
     {
       "id": "TC-008",
-      "name": "Data Safety — Target SDK baixo",
-      "description": "Detectar targetSdkVersion menor que 34",
+      "name": "Data Safety — Low Target SDK",
+      "description": "Detect targetSdkVersion lower than 34",
       "project_fixture": {
         "app.json": {
           "expo": {
@@ -267,44 +267,44 @@
         {
           "id": "DS-001",
           "severity": "CRITICAL",
-          "description": "Target SDK Version muito baixo"
+          "description": "Target SDK Version too low"
         }
       ]
     },
     {
       "id": "TC-009",
-      "name": "Segurança — .env sem .gitignore",
-      "description": "Detectar .env não protegido pelo .gitignore",
+      "name": "Security — .env without .gitignore",
+      "description": "Detect .env not protected by .gitignore",
       "file_fixtures": {
-        ".env": "API_KEY=sk-real-key-here\nDB_PASSWORD=minha_senha",
+        ".env": "API_KEY=sk-real-key-here\nDB_PASSWORD=my_password",
         ".gitignore": "node_modules/\n.expo/\n"
       },
       "expected_findings": [
         {
           "id": "SEC-004",
           "severity": "CRITICAL",
-          "description": "Arquivo .env não está no .gitignore"
+          "description": ".env file not in .gitignore"
         }
       ]
     },
     {
       "id": "TC-010",
-      "name": "Relatório final — projeto com múltiplos problemas",
-      "description": "Verificar que o relatório consolida corretamente múltiplos problemas de checks diferentes",
+      "name": "Final report — project with multiple issues",
+      "description": "Verify that the report correctly consolidates multiple issues from different checks",
       "expected_report_sections": [
-        "Resumo Executivo",
+        "Executive Summary",
         "Apple App Store",
         "Google Play Store",
-        "Segurança de Dados",
-        "Próximos Passos"
+        "Data Security",
+        "Next Steps"
       ],
       "expected_report_format": "markdown"
     }
   ],
   "evaluation_criteria": {
-    "precision": "Porcentagem de findings reportados que são reais problemas (sem falsos positivos)",
-    "recall": "Porcentagem de problemas reais detectados (sem falsos negativos)",
-    "actionability": "Cada finding deve ter título, descrição, fix sugerido e referência",
-    "report_quality": "Relatório final deve ter as seções esperadas e ser legível"
+    "precision": "Percentage of reported findings that are real issues (no false positives)",
+    "recall": "Percentage of real issues detected (no false negatives)",
+    "actionability": "Each finding must have title, description, suggested fix, and reference",
+    "report_quality": "Final report must have expected sections and be readable"
   }
 }
