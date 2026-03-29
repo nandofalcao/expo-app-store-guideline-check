@@ -1,185 +1,185 @@
-# Diretrizes Apple App Store — Referência Condensada
+# Apple AppStore Guidelines — Condensed Reference
 
-> Última atualização: 2026-03-28
-> Fonte oficial: https://developer.apple.com/app-store/review/guidelines/
-> Próximos requisitos: https://developer.apple.com/news/upcoming-requirements/
-
----
-
-## Requisitos Ativos (2025/2026)
-
-| Requisito | Prazo | Status |
-|-----------|-------|--------|
-| Privacy Manifest (PrivacyInfo.xcprivacy) | Desde maio/2024 | **Obrigatório** |
-| iOS 18 SDK mínimo para novos apps | Abril/2026 | **Obrigatório** |
-| Account Deletion (se criação de conta) | Desde junho/2023 | **Obrigatório** |
-| App Tracking Transparency | Desde iOS 14.5 | **Obrigatório se tracking** |
+> Last updated: 2026-03-28
+> Official source: https://developer.apple.com/app-store/review/guidelines/
+> Upcoming requirements: https://developer.apple.com/news/upcoming-requirements/
 
 ---
 
-## 1. Safety (Segurança do Usuário)
+## Active Requirements (2025/2026)
 
-### 1.1 Conteúdo Objectionável
-- Sem conteúdo pornográfico, violento, preconceituoso ou que promova atividades ilegais
-- Conteúdo com nudez artística deve ser classificado adequadamente (17+)
+| Requirement | Deadline | Status |
+|-------------|----------|--------|
+| Privacy Manifest (PrivacyInfo.xcprivacy) | Since May/2024 | **Mandatory** |
+| iOS 18 SDK minimum for new apps | April/2026 | **Mandatory** |
+| Account Deletion (if account creation) | Since June/2023 | **Mandatory** |
+| App Tracking Transparency | Since iOS 14.5 | **Mandatory if tracking** |
 
-### 1.2 Conteúdo Gerado por Usuário (UGC)
-- **Obrigatório:** Botão de Report/Block para conteúdo de outros usuários
-- **Obrigatório:** Mecanismo de moderação de conteúdo
-- **Obrigatório:** Filtro de material ofensivo
-- Apps de chat/fórum precisam de sistema de denúncia funcional
+---
 
-### 1.3 Kids Category (Apps para Crianças)
-- Sem analytics de terceiros (exceto COPPA-compliant)
-- Sem publicidade de terceiros
-- Sem compras dentro do app sem aprovação parental explícita
-- Sem links externos sem aprovação parental
-- Política de privacidade específica para menores
+## 1. Safety (User Safety)
+
+### 1.1 Objectionable Content
+- No pornographic, violent, discriminatory content or content that promotes illegal activities
+- Content with artistic nudity must be properly rated (17+)
+
+### 1.2 User Generated Content (UGC)
+- **Mandatory:** Report/Block button for content from other users
+- **Mandatory:** Content moderation mechanism
+- **Mandatory:** Offensive material filter
+- Chat/forum apps need a functional reporting system
+
+### 1.3 Kids Category (Apps for Children)
+- No third-party analytics (except COPPA-compliant)
+- No third-party advertising
+- No in-app purchases without explicit parental approval
+- No external links without parental approval
+- Specific privacy policy for minors
 
 ### 1.5 Developer Information
-- Conta de desenvolvedor válida e verificada
-- Informações de contato atualizadas
+- Valid and verified developer account
+- Up-to-date contact information
 
 ---
 
-## 2. Performance (Desempenho)
+## 2. Performance
 
 ### 2.1 App Completeness
-- **Rejeição mais comum:** App com crashes óbvios, botões que não funcionam, telas em branco
-- Sem funcionalidades "Em breve" ou "Coming Soon" em UI
-- Backend deve estar ativo e acessível durante review
-- Demo accounts devem funcionar durante todo o período de review
+- **Most common rejection:** App with obvious crashes, non-working buttons, blank screens
+- No "Coming Soon" features in UI
+- Backend must be active and accessible during review
+- Demo accounts must work throughout the entire review period
 
 ### 2.2 Beta Testing
-- Apps em beta devem usar TestFlight, não a App Store
-- Não distribuir versões de teste pela App Store
+- Apps in beta must use TestFlight, not the App Store
+- Do not distribute test versions through the App Store
 
 ### 2.3 Accurate Metadata
-- Screenshots devem refletir o app real (não mockups genéricos)
-- Descrição deve corresponder à funcionalidade real
-- Nome do app não deve conter palavras-chave spam
-- Sem mentions de concorrentes no nome ou descrição
-- Ícone não pode imitar ícones de outros apps ou marcas
+- Screenshots must reflect the actual app (not generic mockups)
+- Description must match actual functionality
+- App name must not contain keyword spam
+- No mentions of competitors in name or description
+- Icon cannot imitate icons from other apps or brands
 
 ### 2.4 Hardware Compatibility
-- **2.4.1:** Definir explicitamente se suporta iPad (`supportsTablet`)
-- Apps universais devem funcionar bem em todos os tamanhos suportados
-- Suporte a 64-bit obrigatório (já atendido por React Native moderno)
+- **2.4.1:** Explicitly define if iPad is supported (`supportsTablet`)
+- Universal apps must work well on all supported sizes
+- 64-bit support required (already met by modern React Native)
 
 ### 2.5 Software Requirements
-- Somente APIs públicas do iOS — sem private APIs
-- Expo e React Native usam apenas APIs públicas (geralmente OK)
-- Verificar se plugins nativos customizados não usam private APIs
+- Only public iOS APIs — no private APIs
+- Expo and React Native only use public APIs (generally OK)
+- Verify that custom native plugins don't use private APIs
 
 ---
 
-## 3. Business (Modelos de Negócio)
+## 3. Business (Business Models)
 
-### 3.1 Payments — CRÍTICO
-- **Todo conteúdo digital consumível dentro do app** deve usar In-App Purchase (IAP)
-- Não redirecionar usuário para comprar fora do app para conteúdo digital
-- **Exceções:** compras físicas, serviços prestados fora do app, B2B com aprovação
+### 3.1 Payments — CRITICAL
+- **All consumable digital content within the app** must use In-App Purchase (IAP)
+- Do not redirect user to purchase outside the app for digital content
+- **Exceptions:** physical purchases, services rendered outside the app, B2B with approval
 
 ### 3.1.1 In-App Purchase Rules
-- Preços devem ser visíveis antes da compra
-- Sem preços "por tempo limitado" enganosos
-- Consumíveis vs não-consumíveis devem ser classificados corretamente
+- Prices must be visible before purchase
+- No misleading "limited time" prices
+- Consumables vs non-consumables must be correctly classified
 
 ### 3.1.2 Subscriptions
-- **Obrigatório:** Botão "Restore Purchases" funcional
-- Termos de assinatura claros (preço, duração, renovação automática)
-- Cancelamento deve ser fácil
-- Trial periods claramente comunicados
+- **Mandatory:** Functional "Restore Purchases" button
+- Clear subscription terms (price, duration, automatic renewal)
+- Cancellation must be easy
+- Trial periods clearly communicated
 
 ### 3.2 Other Business Models
-- Freemium: funcionalidade básica deve funcionar sem pagamento
-- Apps gratuitos não podem solicitar pagamento para usar
+- Freemium: basic functionality must work without payment
+- Free apps cannot request payment to use
 
 ---
 
 ## 4. Design
 
 ### 4.1 Copycats
-- Sem ícones que imitam apps famosos (Instagram, WhatsApp, etc.)
-- Sem nomes que causem confusão com outros apps
-- Design original — não copiar UI de outros apps
+- No icons that imitate famous apps (Instagram, WhatsApp, etc.)
+- No names that cause confusion with other apps
+- Original design — do not copy UI from other apps
 
 ### 4.2 Minimum Functionality
-- App deve ter funcionalidade nativa significativa
-- **WebView wrappers** sem valor adicional são rejeitados
-- Sem apps que são apenas um link para website
+- App must have significant native functionality
+- **WebView wrappers** without additional value are rejected
+- No apps that are just a link to a website
 
 ### 4.5 Apple Sites and Services
-- Não usar APIs da Apple de formas não documentadas
-- Não implicar afiliação com a Apple
+- Do not use Apple APIs in undocumented ways
+- Do not imply affiliation with Apple
 
 ---
 
 ## 5. Legal
 
-### 5.1 Privacy — SEÇÃO MAIS IMPORTANTE
+### 5.1 Privacy — MOST IMPORTANT SECTION
 
 #### 5.1.1 Data Collection and Storage
-- **Privacy Policy obrigatória** — URL configurada no App Store Connect
-- Privacy Policy deve estar acessível dentro do app
-- Privacy Manifest (`PrivacyInfo.xcprivacy`) obrigatório
-- Coletar apenas dados necessários para a funcionalidade
-- Dados de saúde/fitness só para funcionalidades de saúde
-- **Sem dados de usuário para publicidade sem consentimento explícito**
+- **Privacy Policy required** — URL configured in App Store Connect
+- Privacy Policy must be accessible within the app
+- Privacy Manifest (`PrivacyInfo.xcprivacy`) required
+- Collect only data necessary for functionality
+- Health/fitness data only for health functionalities
+- **No user data for advertising without explicit consent**
 
-#### 5.1.1(ix) Account Deletion — CRÍTICO
-Se o app permite criação de conta:
-- **Obrigatório:** Mecanismo de exclusão de conta dentro do app
-- Deve excluir ou anonimizar todos os dados do usuário
-- Disponível sem entrar em contato com suporte
+#### 5.1.1(ix) Account Deletion — CRITICAL
+If the app allows account creation:
+- **Mandatory:** Account deletion mechanism within the app
+- Must delete or anonymize all user data
+- Available without contacting support
 
 #### 5.1.2 Data Use and Sharing
-- Declarar todos os dados coletados nas Privacy Labels (App Store Connect)
-- Não compartilhar dados com terceiros sem disclosure
-- Dados de localização: limitar ao mínimo necessário
+- Declare all collected data in Privacy Labels (App Store Connect)
+- Do not share data with third parties without disclosure
+- Location data: limit to minimum necessary
 
 #### Privacy Labels (App Store Connect)
-Declarar cada tipo de dado:
-- **Data Used to Track You:** dados usados para tracking cross-app
-- **Data Linked to You:** dados associados à identidade do usuário
-- **Data Not Linked to You:** dados coletados de forma anônima
+Declare each type of data:
+- **Data Used to Track You:** data used for cross-app tracking
+- **Data Linked to You:** data associated with user identity
+- **Data Not Linked to You:** data collected anonymously
 
 #### App Tracking Transparency (ATT)
-- **Obrigatório desde iOS 14.5** se o app usa tracking
-- Deve solicitar permissão antes de acessar IDFA
-- Sem tracking se usuário negar
+- **Mandatory since iOS 14.5** if the app uses tracking
+- Must request permission before accessing IDFA
+- No tracking if user denies
 
 ### 5.2 Intellectual Property
-- Sem uso não autorizado de marcas registradas
-- Direitos autorais respeitados (músicas, imagens, fontes)
+- No unauthorized use of registered trademarks
+- Copyrights respected (music, images, fonts)
 
 ### 5.3 Gaming, Gambling
-- Cassinos e apostas requerem licença no país
-- Simulated gambling (moeda virtual) = classificação 17+
+- Casinos and betting require national license
+- Simulated gambling (virtual currency) = 17+ rating
 
 ### 5.4 VPN Apps
-- Requerem justificativa clara e não podem coletar dados do usuário
+- Require clear justification and cannot collect user data
 
 ### 5.6 Developer Code of Conduct
-- Não enganar usuários com comportamento inesperado
-- Não coletar dados sem consentimento
-- Não usar técnicas dark patterns para compras
+- Do not deceive users with unexpected behavior
+- Do not collect data without consent
+- Do not use dark patterns for purchases
 
 ---
 
-## Privacy Manifest — Detalhes Técnicos
+## Privacy Manifest — Technical Details
 
-### APIs que exigem declaração de motivo:
+### APIs that require reason declaration:
 
-| API | Reason Codes Disponíveis |
-|-----|--------------------------|
+| API | Available Reason Codes |
+|-----|------------------------|
 | `NSPrivacyAccessedAPICategoryUserDefaults` | C617.1, AC6B.1, CA92.1, 1C8F.1 |
 | `NSPrivacyAccessedAPICategoryFileTimestamp` | C617.1, 3B52.1, 0A2A.1 |
 | `NSPrivacyAccessedAPICategorySystemBootTime` | 35F9.1 |
 | `NSPrivacyAccessedAPICategoryDiskSpace` | E174.1, 85F4.1 |
 | `NSPrivacyAccessedAPICategoryActiveKeyboards` | 3EC4.1, 54BD.1 |
 
-### Exemplo no app.json (Expo):
+### Example in app.json (Expo):
 ```json
 {
   "expo": {
@@ -205,20 +205,20 @@ Declarar cada tipo de dado:
 
 ---
 
-## Motivos de Rejeição Mais Comuns (Apple)
+## Most Common Rejection Reasons (Apple)
 
-1. **Crash durante review** — teste em device real antes de submeter
-2. **Privacy Manifest ausente ou incompleto**
-3. **Metadata incorreto** — screenshots desatualizados ou não refletem o app
-4. **Sem demo account** — fornecer credenciais no App Review Notes
-5. **Sem Account Deletion** — se o app tem criação de conta
-6. **Usage Descriptions muito genéricas** — descrever o propósito real
-7. **Backend inativo** durante review
-8. **Funcionalidades incompletas** no build submetido
+1. **Crash during review** — test on real device before submitting
+2. **Privacy Manifest missing or incomplete**
+3. **Incorrect metadata** — outdated screenshots or don't reflect the app
+4. **No demo account** — provide credentials in App Review Notes
+5. **No Account Deletion** — if the app has account creation
+6. **Usage Descriptions too generic** — describe the real purpose
+7. **Inactive backend** during review
+8. **Incomplete features** in the submitted build
 
 ---
 
-## Recursos de Conformidade (Apple)
+## Compliance Resources (Apple)
 
 - [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - [Privacy Manifest Files](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files)

@@ -1,224 +1,224 @@
-# LGPD e Privacidade — Referência para Apps Mobile
+# LGPD and Privacy — Reference for Mobile Apps
 
-> Última atualização: 2026-03-28
-> Lei 13.709/2018: https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm
+> Last updated: 2026-03-28
+> Law 13.709/2018: https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm
 > ANPD: https://www.gov.br/anpd/pt-br
 
-> **AVISO LEGAL:** Este documento fornece referências técnicas para conformidade com a LGPD.
-> Não substitui assessoria jurídica especializada. Consulte um advogado para conformidade legal completa.
+> **LEGAL NOTICE:** This document provides technical references for LGPD compliance.
+> It does not replace specialized legal advice. Consult a lawyer for complete legal compliance.
 
 ---
 
-## Os 10 Princípios da LGPD (Art. 6º)
+## The 10 LGPD Principles (Art. 6º)
 
-### 1. Finalidade
-- Dados coletados apenas para propósitos **específicos, explícitos e legítimos**
-- Não usar dados para finalidades incompatíveis com o informado
-- **Aplicação em apps:** declarar na Privacy Policy exatamente para que serve cada dado
+### 1. Purpose
+- Data collected only for **specific, explicit, and legitimate** purposes
+- Do not use data for purposes incompatible with what was informed
+- **Application in apps:** declare in the Privacy Policy exactly what each data is for
 
-### 2. Adequação
-- Tratamento compatível com as finalidades informadas ao titular
-- Contexto do tratamento deve ser coerente com o que o usuário espera
-- **Aplicação em apps:** não usar dados de localização coletados para navegação para fins de marketing
+### 2. Adequacy
+- Processing compatible with the purposes informed to the data subject
+- Context of processing must be consistent with what the user expects
+- **Application in apps:** do not use location data collected for navigation for marketing purposes
 
-### 3. Necessidade (Data Minimization)
-- Coletar apenas os dados **mínimos necessários** para a finalidade declarada
-- Princípio fundamental: se não precisa, não coleta
-- **Aplicação em apps:** não solicitar permissão de câmera se o app não usa câmera
+### 3. Necessity (Data Minimization)
+- Collect only the **minimum necessary** data for the declared purpose
+- Fundamental principle: if you don't need it, don't collect it
+- **Application in apps:** do not request camera permission if the app doesn't use the camera
 
-### 4. Livre Acesso
-- Titular tem direito de consultar seus dados **gratuitamente, a qualquer momento**
-- Acesso fácil e sem obstáculos
-- **Aplicação em apps:** botão "Ver meus dados" acessível, preferencialmente dentro do app
+### 4. Free Access
+- Data subject has the right to access their data **freely, at any time**
+- Easy and unobstructed access
+- **Application in apps:** accessible "View my data" button, preferably within the app
 
-### 5. Qualidade dos Dados
-- Dados devem ser **exatos, claros, relevantes e atualizados**
-- Mecanismo para o titular corrigir dados incorretos
-- **Aplicação em apps:** tela de edição de perfil funcional, dados desatualizados devem ser atualizáveis
+### 5. Data Quality
+- Data must be **accurate, clear, relevant, and up-to-date**
+- Mechanism for the data subject to correct incorrect data
+- **Application in apps:** functional profile editing screen, outdated data must be updateable
 
-### 6. Transparência
-- Informações **claras, precisas e facilmente acessíveis** sobre o tratamento
-- Identificação do controlador e do DPO
-- **Aplicação em apps:** Privacy Policy em linguagem clara, acessível no menu do app
+### 6. Transparency
+- **Clear, precise, and easily accessible** information about processing
+- Identification of the controller and DPO
+- **Application in apps:** Privacy Policy in clear language, accessible in the app menu
 
-### 7. Segurança
-- Medidas técnicas e administrativas para **proteger dados** de acessos não autorizados
-- Prevenção de destruição, perda, alteração, comunicação indevida
-- **Aplicação em apps:** encriptação, HTTPS, armazenamento seguro, sem API keys expostas
+### 7. Security
+- Technical and administrative measures to **protect data** from unauthorized access
+- Prevention of destruction, loss, alteration, improper disclosure
+- **Application in apps:** encryption, HTTPS, secure storage, no exposed API keys
 
-### 8. Prevenção
-- Medidas para **prevenir danos** ao titular
-- Adotar medidas antes que incidentes ocorram
-- **Aplicação em apps:** security audit regular, pentest, monitoramento de incidentes
+### 8. Prevention
+- Measures to **prevent harm** to the data subject
+- Adopt measures before incidents occur
+- **Application in apps:** regular security audits, pentests, incident monitoring
 
-### 9. Não Discriminação
-- Tratamento não discriminatório baseado em dados pessoais
-- Proibido usar dados para discriminação ilícita, abusiva, ou de grupos vulneráveis
-- **Aplicação em apps:** não usar dados de perfil para recusar serviços ilegalmente
+### 9. Non-Discrimination
+- Non-discriminatory processing based on personal data
+- Prohibited use of data for unlawful, abusive discrimination, or against vulnerable groups
+- **Application in apps:** do not use profile data to illegally refuse services
 
-### 10. Responsabilização e Prestação de Contas
-- Demonstrar adoção de medidas eficazes de conformidade
-- Documentar processos de tratamento
-- **Aplicação em apps:** manter registro de atividades de tratamento (ROPA)
+### 10. Accountability
+- Demonstrate adoption of effective compliance measures
+- Document processing activities
+- **Application in apps:** maintain Record of Processing Activities (ROPA)
 
 ---
 
-## Bases Legais para Tratamento (Art. 7º)
+## Legal Bases for Processing (Art. 7º)
 
-Cada operação de coleta de dados precisa de uma base legal:
+Each data collection operation needs a legal basis:
 
-| Base Legal | Quando Usar |
+| Legal Basis | When to Use |
 |-----------|-------------|
-| **Consentimento** | Tratamentos opcionais (marketing, analytics opcionais) |
-| **Execução de contrato** | Dados necessários para o serviço (ex: email para login) |
-| **Obrigação legal** | Dados exigidos por lei |
-| **Interesse legítimo** | Segurança, prevenção de fraude, melhorias do serviço |
-| **Proteção de crédito** | Scores de crédito |
+| **Consent** | Optional processing (marketing, optional analytics) |
+| **Contract execution** | Data necessary for the service (e.g., email for login) |
+| **Legal obligation** | Data required by law |
+| **Legitimate interest** | Security, fraud prevention, service improvements |
+| **Credit protection** | Credit scores |
 
-### Consentimento (Art. 8º)
-- Deve ser **livre, informado e inequívoco**
-- Em **destaque** — não no meio de um bloco de texto
-- Para propósitos específicos — não "consinto com tudo"
-- **Revogável a qualquer momento** com facilidade igual à do consentimento
-- **Não pode ser pré-marcado** (opt-out não serve como consentimento)
+### Consent (Art. 8º)
+- Must be **free, informed, and unambiguous**
+- **Highlighted** — not buried in a block of text
+- For specific purposes — not "I consent to everything"
+- **Revocable at any time** with the same ease as giving consent
+- **Cannot be pre-checked** (opt-out does not constitute consent)
 
 ---
 
-## Direitos dos Titulares (Art. 18)
+## Data Subject Rights (Art. 18)
 
-O app deve fornecer mecanismos para exercer estes direitos:
+The app must provide mechanisms to exercise these rights:
 
-| Direito | Prazo de Resposta | Como Implementar |
+| Right | Response Period | How to Implement |
 |---------|-------------------|------------------|
-| Confirmação de tratamento | 15 dias | Tela "Meus Dados" |
-| Acesso aos dados | 15 dias | Export de dados ou visualização |
-| Correção de dados | Sem prazo específico | Edição de perfil |
-| Anonimização / Bloqueio | Sem prazo específico | Botão de suspensão de conta |
-| Portabilidade | Sem prazo específico | Export em formato legível |
-| Eliminação dos dados | Sem prazo específico | **Account Deletion** |
-| Revogação de consentimento | Imediato | Toggle de consentimento |
-| Revisão de decisões automatizadas | 15 dias | Canal de contato |
+| Confirmation of processing | 15 days | "My Data" screen |
+| Access to data | 15 days | Data export or view |
+| Data correction | No specific deadline | Profile editing |
+| Anonymization / Blocking | No specific deadline | Account suspension button |
+| Portability | No specific deadline | Export in readable format |
+| Data deletion | No specific deadline | **Account Deletion** |
+| Consent revocation | Immediate | Consent toggle |
+| Review of automated decisions | 15 days | Contact channel |
 
-### Account Deletion — Implementação Técnica
-- **Obrigatório para lojas:** Apple (obrigatório desde 2023) e Google (fortemente recomendado)
-- Deve estar acessível **dentro do app** (não apenas por email)
-- Excluir ou anonimizar **todos os dados** (incluindo backups, salvo obrigação legal)
-- Confirmar exclusão por email/notificação
+### Account Deletion — Technical Implementation
+- **Mandatory for app stores:** Apple (mandatory since 2023) and Google (strongly recommended)
+- Must be accessible **within the app** (not just via email)
+- Delete or anonymize **all data** (including backups, except legal obligations)
+- Confirm deletion via email/notification
 
 ---
 
-## Requisitos Técnicos para Apps
+## Technical Requirements for Apps
 
-### Política de Privacidade
-**Conteúdo mínimo obrigatório:**
-- Dados coletados e finalidade de cada um
-- Base legal para cada tipo de tratamento
-- Compartilhamento com terceiros (nomear SDKs e parceiros)
-- Retenção de dados (por quanto tempo cada dado é mantido)
-- Direitos do titular e como exercê-los
-- Como entrar em contato com o DPO
-- Como solicitar exclusão de dados
-- Data da última atualização
+### Privacy Policy
+**Mandatory minimum content:**
+- Data collected and purpose for each
+- Legal basis for each type of processing
+- Sharing with third parties (name SDKs and partners)
+- Data retention (how long each data is kept)
+- Data subject rights and how to exercise them
+- How to contact the DPO
+- How to request data deletion
+- Date of last update
 
-**Onde disponibilizar:**
-- URL pública (para App Store Connect e Google Play Console)
-- Dentro do app (acessível sem login)
-- Na tela de cadastro/onboarding (antes de coletar dados)
+**Where to make available:**
+- Public URL (for App Store Connect and Google Play Console)
+- Within the app (accessible without login)
+- On registration/onboarding screen (before collecting data)
 
-### Consentimento — UX Recomendada
+### Consent — Recommended UX
 ```
-Tela de onboarding:
-[Título claro]
-[Descrição do que é coletado e por quê]
-[Link para Privacy Policy completa]
-[Botão: "Concordar e Continuar"]
-[Botão: "Ver configurações de privacidade"]
+Onboarding screen:
+[Clear title]
+[Description of what is collected and why]
+[Link to full Privacy Policy]
+[Button: "Agree and Continue"]
+[Button: "View privacy settings"]
 ```
 
-Nunca:
-- Pré-selecionar consentimento
-- Esconder opção de recusar
-- Tornar difícil revogar consentimento
+Never:
+- Pre-select consent
+- Hide the option to refuse
+- Make it difficult to revoke consent
 
-### Segurança Técnica
-- **Encriptação em trânsito:** TLS 1.2+ (HTTPS obrigatório)
-- **Encriptação em repouso:** para dados sensíveis (use expo-secure-store)
-- **Acesso mínimo:** princípio do menor privilégio para APIs/banco de dados
-- **Logs:** sem dados pessoais em logs de produção
-- **Backups:** política de retenção e exclusão nos backups
-- **Autenticação:** senhas com hash (bcrypt/Argon2), não armazenar em texto claro
-- **Tokens:** validade limitada, renovação segura
+### Technical Security
+- **Encryption in transit:** TLS 1.2+ (HTTPS mandatory)
+- **Encryption at rest:** for sensitive data (use expo-secure-store)
+- **Minimum access:** principle of least privilege for APIs/databases
+- **Logs:** no personal data in production logs
+- **Backups:** retention and deletion policy in backups
+- **Authentication:** hashed passwords (bcrypt/Argon2), do not store in plain text
+- **Tokens:** limited validity, secure renewal
 
-### DPO (Encarregado de Dados) — Art. 41
-- Obrigatório para controladores de dados
-- Pode ser pessoa física, jurídica, ou prestador de serviços
-- Deve ser identificado publicamente (nome e contato na Privacy Policy)
-- Canal de comunicação direto com titulares e ANPD
+### DPO (Data Protection Officer) — Art. 41
+- Mandatory for data controllers
+- Can be an individual, legal entity, or service provider
+- Must be publicly identified (name and contact in Privacy Policy)
+- Direct communication channel with data subjects and ANPD
 
-### Notificação de Incidentes — Art. 48
-- Em caso de vazamento ou acesso indevido:
-- Notificar a **ANPD** em prazo razoável (72h é referência europeia, LGPD não especifica)
-- Notificar **titulares afetados** se puder causar dano relevante
-- Incluir: natureza dos dados, titulares afetados, medidas tomadas
-
----
-
-## Crianças e Adolescentes (Art. 14)
-
-- Dados de menores de 18 anos: **consentimento dos pais ou responsáveis legais**
-- Crianças (até 12 anos): tratamento somente com **consentimento específico** dos pais
-- Sem coleta de dados além do mínimo necessário para participação
-- Sem compartilhamento com terceiros sem consentimento parental
+### Incident Notification — Art. 48
+- In case of breach or unauthorized access:
+- Notify **ANPD** within a reasonable time (72h is European reference, LGPD does not specify)
+- Notify **affected data subjects** if it can cause relevant harm
+- Include: nature of data, affected subjects, measures taken
 
 ---
 
-## Transferência Internacional de Dados (Art. 33)
+## Children and Adolescents (Art. 14)
 
-Se dados são enviados para servidores fora do Brasil (AWS, Google Cloud, Firebase, etc.):
-- País destino deve ter nível de proteção adequado (Art. 33, I) **ou**
-- Cláusulas contratuais padrão com o prestador **ou**
-- Consentimento específico e destacado do titular
+- Data of minors under 18 years: **consent from parents or legal guardians**
+- Children (up to 12 years): processing only with **specific consent** from parents
+- No data collection beyond the minimum necessary for participation
+- No sharing with third parties without parental consent
 
-**Na prática:** A maioria dos grandes provedores (AWS, GCP, Azure, Firebase) possui
-certificações e cláusulas contratuais que atendem esse requisito. Documente.
+---
+
+## International Data Transfer (Art. 33)
+
+If data is sent to servers outside Brazil (AWS, Google Cloud, Firebase, etc.):
+- Destination country must have adequate protection level (Art. 33, I) **or**
+- Standard contractual clauses with the provider **or**
+- Specific and highlighted consent from the data subject
+
+**In practice:** Most major providers (AWS, GCP, Azure, Firebase) have
+certifications and contractual clauses that meet this requirement. Document it.
 
 ---
 
 ## LGPD vs Apple/Google Requirements
 
-| Requisito | LGPD | Apple | Google Play |
+| Requirement | LGPD | Apple | Google Play |
 |-----------|------|-------|-------------|
-| Privacy Policy | Obrigatório | Obrigatório | Obrigatório |
-| Account Deletion | Obrigatório (eliminação) | Obrigatório (desde 2023) | Fortemente recomendado |
-| Consentimento | Obrigatório (bases legais) | ATT para tracking | Data Safety disclosure |
-| Acesso aos dados | Obrigatório (15 dias) | Não especificado | Não especificado |
-| DPO | Obrigatório | Não requerido | Não requerido |
-| Notificação de incidente | Obrigatório | Não especificado | Não especificado |
+| Privacy Policy | Mandatory | Mandatory | Mandatory |
+| Account Deletion | Mandatory (deletion) | Mandatory (since 2023) | Strongly recommended |
+| Consent | Mandatory (legal bases) | ATT for tracking | Data Safety disclosure |
+| Access to data | Mandatory (15 days) | Not specified | Not specified |
+| DPO | Mandatory | Not required | Not required |
+| Incident notification | Mandatory | Not specified | Not specified |
 
 ---
 
-## Checklist de Conformidade LGPD
+## LGPD Compliance Checklist
 
-- [ ] Privacy Policy completa, em português, acessível no app e via URL pública
-- [ ] Mapeamento de dados (quais dados, por quê, por quanto tempo, com quem)
-- [ ] Base legal documentada para cada tipo de tratamento
-- [ ] Consentimento explícito antes de coletar dados não-essenciais
-- [ ] Tela de gerenciamento de privacidade/consentimento no app
-- [ ] Account deletion funcional e acessível dentro do app
-- [ ] Mecanismo de acesso aos dados do usuário
-- [ ] Mecanismo de exportação de dados (portabilidade)
-- [ ] DPO identificado na Privacy Policy com canal de contato
-- [ ] Encriptação de dados sensíveis em repouso e em trânsito
-- [ ] Política de retenção de dados definida e implementada
-- [ ] Processo de resposta a incidentes documentado
-- [ ] Contratos de processamento de dados com terceiros (SDKs, APIs)
-- [ ] Revisão periódica de conformidade (mínimo anual)
+- [ ] Complete Privacy Policy, in the local language, accessible in the app and via public URL
+- [ ] Data mapping (what data, why, for how long, with whom)
+- [ ] Documented legal basis for each type of processing
+- [ ] Explicit consent before collecting non-essential data
+- [ ] Privacy/consent management screen in the app
+- [ ] Functional and accessible account deletion within the app
+- [ ] Mechanism for accessing user data
+- [ ] Data export mechanism (portability)
+- [ ] DPO identified in Privacy Policy with contact channel
+- [ ] Encryption of sensitive data at rest and in transit
+- [ ] Defined and implemented data retention policy
+- [ ] Documented incident response process
+- [ ] Data processing contracts with third parties (SDKs, APIs)
+- [ ] Periodic compliance review (at least annual)
 
 ---
 
-## Recursos
+## Resources
 
-- [Lei 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
-- [ANPD — Guias Orientativos](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
-- [ANPD — Resolução CD/ANPD nº 4/2023 (Fiscalização)](https://www.gov.br/anpd/pt-br)
-- [ISO/IEC 27001](https://www.iso.org/isoiec-27001-information-security.html) — referência de segurança
+- [Law 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
+- [ANPD — Guidance Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
+- [ANPD — Resolution CD/ANPD nº 4/2023 (Enforcement)](https://www.gov.br/anpd/pt-br)
+- [ISO/IEC 27001](https://www.iso.org/isoiec-27001-information-security.html) — security reference

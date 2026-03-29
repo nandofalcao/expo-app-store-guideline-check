@@ -1,331 +1,331 @@
-# Motivos Comuns de Rejeição — Apple e Google Play
+# Common Rejection Reasons — Apple and Google Play
 
-> Última atualização: 2026-03-28
-> Baseado em casos reais e documentação oficial das lojas
+> Last updated: 2026-03-28
+> Based on real cases and official store documentation
 
 ---
 
 ## Top 10 — Apple App Store
 
-### 1. Crashes e Bugs Óbvios
-**Frequência:** Muito Alta
+### 1. Crashes and Obvious Bugs
+**Frequency:** Very High
 **Guideline:** 2.1 App Completeness
 
-**Sintomas:**
-- App trava durante o fluxo principal
-- Telas em branco ou que não carregam
-- Botões que não funcionam
-- Backend offline durante review
+**Symptoms:**
+- App crashes during main flow
+- Blank screens or screens that don't load
+- Buttons that don't work
+- Backend offline during review
 
-**Soluções:**
-- Testar em device real (não apenas simulador)
-- Testar em iPad se app é universal
-- Garantir que o backend está ativo e acessível durante todo período de review
-- Usar TestFlight com beta testers externos antes de submeter
-- Testar com conta de demo limpa (sem dados de desenvolvimento)
+**Solutions:**
+- Test on real device (not just simulator)
+- Test on iPad if app is universal
+- Ensure backend is active and accessible throughout the entire review period
+- Use TestFlight with external beta testers before submitting
+- Test with a clean demo account (without development data)
 
 ---
 
-### 2. Privacy Manifest Ausente ou Incompleto
-**Frequência:** Alta (desde 2024)
+### 2. Privacy Manifest Missing or Incomplete
+**Frequency:** High (since 2024)
 **Guideline:** Apple Privacy Requirements 2024
 
-**Sintomas:**
+**Symptoms:**
 - ITMS-91053: Missing API declaration
-- Rejeição indicando APIs não declaradas
-- Build rejeitado na validação do Xcode/EAS
+- Rejection indicating undeclared APIs
+- Build rejected during Xcode/EAS validation
 
-**Soluções:**
-- Adicionar `expo.ios.privacyManifests` no app.json com todas as APIs do RN Core
-- Verificar dependências de terceiros (Sentry, Firebase, etc.)
-- Usar `npx expo-doctor` para verificar configuração
-- Ver `references/react-native-expo.md` para configuração completa
+**Solutions:**
+- Add `expo.ios.privacyManifests` in app.json with all RN Core APIs
+- Check third-party dependencies (Sentry, Firebase, etc.)
+- Use `npx expo-doctor` to verify configuration
+- See `references/react-native-expo.md` for complete configuration
 
 ---
 
-### 3. Metadata Incorreto
-**Frequência:** Alta
+### 3. Incorrect Metadata
+**Frequency:** High
 **Guideline:** 2.3 Accurate Metadata
 
-**Sintomas:**
-- Screenshots não refletem a versão atual do app
-- Screenshots com dispositivos desatualizados
-- Descrição menciona funcionalidades que não existem
-- Palavras-chave no nome do app
+**Symptoms:**
+- Screenshots don't reflect the current version of the app
+- Screenshots with outdated devices
+- Description mentions features that don't exist
+- Keywords in the app name
 
-**Soluções:**
-- Tirar screenshots frescos antes de cada submissão
-- Usar dispositivos do tamanho certo (iPhone 6.9", 6.5", iPad 12.9")
-- Remover qualquer "Coming Soon" da descrição
-- Garantir que a categoria está correta
+**Solutions:**
+- Take fresh screenshots before each submission
+- Use devices of the correct size (iPhone 6.9", 6.5", iPad 12.9")
+- Remove any "Coming Soon" from the description
+- Ensure the category is correct
 
 ---
 
-### 4. Demo Account Não Fornecida
-**Frequência:** Alta
+### 4. Demo Account Not Provided
+**Frequency:** High
 **Guideline:** 2.1 App Completeness
 
-**Sintomas:**
-- Email do App Review solicitando credenciais
-- Rejeição por não conseguir acessar o conteúdo do app
+**Symptoms:**
+- Email from App Review requesting credentials
+- Rejection due to inability to access app content
 
-**Soluções:**
-- Sempre fornecer demo account em App Review Notes
-- Credenciais devem funcionar sem configuração adicional
-- Incluir instruções se o fluxo for complexo
-- Para app com câmera/localização: gravações de vídeo do funcionamento ajudam
+**Solutions:**
+- Always provide a demo account in App Review Notes
+- Credentials must work without additional configuration
+- Include instructions if the flow is complex
+- For apps with camera/location: video recordings of functionality help
 
 ---
 
-### 5. Account Deletion Ausente
-**Frequência:** Média-Alta (obrigatório desde junho/2023)
+### 5. Account Deletion Missing
+**Frequency:** Medium-High (mandatory since June/2023)
 **Guideline:** 5.1.1(ix)
 
-**Sintomas:**
+**Symptoms:**
 - "We noticed that your app allows users to create an account but does not have the option to initiate deletion of their account from within the app"
 
-**Soluções:**
-- Adicionar opção de exclusão de conta em Configurações/Perfil do app
-- A exclusão deve excluir TODOS os dados do usuário (ou anonimizar)
-- Pode ter período de 30 dias antes da exclusão definitiva (mas deve ser claro)
-- Não aceitar "envie email para deletar" — deve ser autoserviço
+**Solutions:**
+- Add account deletion option in Settings/Profile of the app
+- Deletion must delete ALL user data (or anonymize it)
+- Can have a 30-day period before permanent deletion (but must be clear)
+- "Send email to delete" is not accepted — must be self-service
 
 ---
 
-### 6. Restore Purchases Ausente
-**Frequência:** Média
+### 6. Restore Purchases Missing
+**Frequency:** Medium
 **Guideline:** 3.1.1
 
-**Sintomas:**
-- Rejeição em apps com IAP sem botão de restore
+**Symptoms:**
+- Rejection in apps with IAP without restore button
 
-**Soluções:**
-- Adicionar botão "Restaurar Compras" visível
-- Implementar `purchasesAreRestored` callback
-- Testar restore com conta de Sandbox que já comprou
+**Solutions:**
+- Add a visible "Restore Purchases" button
+- Implement `purchasesAreRestored` callback
+- Test restore with a Sandbox account that has already purchased
 
 ---
 
-### 7. Usage Descriptions Genéricas
-**Frequência:** Média
+### 7. Generic Usage Descriptions
+**Frequency:** Medium
 **Guideline:** 5.1.1
 
-**Sintomas:**
+**Symptoms:**
 - "The purpose string in the NSCameraUsageDescription key is not sufficient"
 
-**Soluções:**
-- Descriptions devem explicar o propósito real, não apenas afirmar que o app precisa
-- Ruim: "This app needs camera access"
-- Bom: "Usamos a câmera para você fotografar suas plantas e receber identificação automática"
-- Referenciar a funcionalidade específica que usa a permissão
+**Solutions:**
+- Descriptions must explain the real purpose, not just state that the app needs it
+- Bad: "This app needs camera access"
+- Good: "We use the camera for you to photograph your plants and receive automatic identification"
+- Reference the specific functionality that uses the permission
 
 ---
 
 ### 8. WebView Wrapper
-**Frequência:** Média
+**Frequency:** Medium
 **Guideline:** 4.2 Minimum Functionality
 
-**Sintomas:**
-- App é essencialmente um website aberto em WebView
-- Sem funcionalidade nativa significativa
-- UI identical ao website da empresa
+**Symptoms:**
+- App is essentially a website opened in WebView
+- No significant native functionality
+- UI identical to the company website
 
-**Soluções:**
-- Adicionar valor nativo (notificações push, acesso à câmera, biometria, offline)
-- Garantir que a experiência nativa é significativamente melhor que o website
-- Se é um app híbrido, a WebView deve ser complemento, não a funcionalidade principal
+**Solutions:**
+- Add native value (push notifications, camera access, biometrics, offline)
+- Ensure the native experience is significantly better than the website
+- If it's a hybrid app, WebView should be a complement, not the main functionality
 
 ---
 
-### 9. Conteúdo UGC Sem Moderação
-**Frequência:** Média-Baixa
+### 9. UGC Content Without Moderation
+**Frequency:** Medium-Low
 **Guideline:** 1.2 User Generated Content
 
-**Sintomas:**
-- App permite usuários postarem conteúdo sem mecanismo de denúncia
-- Ausência de Report/Block buttons
+**Symptoms:**
+- App allows users to post content without a reporting mechanism
+- Absence of Report/Block buttons
 
-**Soluções:**
-- Adicionar botão de "Denunciar" em todo conteúdo de usuários
-- Implementar botão de "Bloquear usuário"
-- Ter mecanismo de moderação (automático ou manual)
-- Mencionar mecanismos de moderação no App Review Notes
+**Solutions:**
+- Add a "Report" button on all user content
+- Implement a "Block user" button
+- Have a moderation mechanism (automatic or manual)
+- Mention moderation mechanisms in App Review Notes
 
 ---
 
-### 10. Backend Inativo durante Review
-**Frequência:** Média-Baixa
+### 10. Inactive Backend during Review
+**Frequency:** Medium-Low
 **Guideline:** 2.1 App Completeness
 
-**Sintomas:**
-- Reviewers não conseguem usar o app por erros de rede/API
+**Symptoms:**
+- Reviewers cannot use the app due to network/API errors
 
-**Soluções:**
-- Manter ambiente de produção estável durante todo o período de review (até 7 dias)
-- Se usar feature flags, garantir que todas as features estão habilitadas para o reviewer
-- Monitorar uptime com alertas
-- Fornecer IP de localização dos reviewers para whitelist se necessário (Apple usa IPs em Cupertino, CA)
+**Solutions:**
+- Keep the production environment stable throughout the review period (up to7 days)
+- If using feature flags, ensure all features are enabled for the reviewer
+- Monitor uptime with alerts
+- Provide reviewer location IPs for whitelisting if necessary (Apple uses IPs in Cupertino, CA)
 
 ---
 
 ## Top 10 — Google Play Store
 
-### 1. Violação da Política de Dados do Usuário
-**Frequência:** Alta
+### 1. User Data Policy Violation
+**Frequency:** High
 **Policy:** User Data Policy
 
-**Sintomas:**
-- App removido por coleta de dados sem disclosure
-- Warning sobre práticas de privacidade
+**Symptoms:**
+- App removed for data collection without disclosure
+- Warning about privacy practices
 
-**Soluções:**
-- Preencher Data Safety Section corretamente
-- Declarar TODOS os SDKs que coletam dados
-- Privacy Policy acessível e atualizada
-- Não coletar mais dados do que o declarado
+**Solutions:**
+- Fill out Data Safety Section correctly
+- Declare ALL SDKs that collect data
+- Privacy Policy accessible and updated
+- Don't collect more data than declared
 
 ---
 
-### 2. Target API Level Desatualizado
-**Frequência:** Alta
+### 2. Outdated Target API Level
+**Frequency:** High
 **Policy:** Target API Requirements
 
-**Sintomas:**
+**Symptoms:**
 - "Your app currently targets API level X. It needs to target API level Y or higher"
-- App impedido de ser publicado/atualizado
+- App prevented from being published/updated
 
-**Soluções:**
-- Atualizar `targetSdkVersion` no build.gradle ou app.json
-- Testar comportamento em Android 14/15 antes de publicar
-- Verificar se todas as dependências suportam o novo target SDK
+**Solutions:**
+- Update `targetSdkVersion` in build.gradle or app.json
+- Test behavior on Android 14/15 before publishing
+- Verify all dependencies support the new target SDK
 
 ---
 
-### 3. Permissões Excessivas ou Injustificadas
-**Frequência:** Média-Alta
+### 3. Excessive or Unjustified Permissions
+**Frequency:** Medium-High
 **Policy:** Permissions Policy
 
-**Sintomas:**
+**Symptoms:**
 - "Your app requests permissions that are not used by your app's functionality"
-- Rejeição por permissão hazardous sem justificativa
+- Rejection for hazardous permission without justification
 
-**Soluções:**
-- Remover permissões não utilizadas do AndroidManifest.xml
-- Para permissões sensíveis: adicionar justificativa clara no Store Listing
-- Para `ACCESS_BACKGROUND_LOCATION`: aprovação especial necessária
+**Solutions:**
+- Remove unused permissions from AndroidManifest.xml
+- For sensitive permissions: add clear justification in Store Listing
+- For `ACCESS_BACKGROUND_LOCATION`: special approval required
 
 ---
 
-### 4. Data Safety Section Incompleta ou Incorreta
-**Frequência:** Média-Alta
+### 4. Incomplete or Incorrect Data Safety Section
+**Frequency:** Medium-High
 **Policy:** Data Safety
 
-**Sintomas:**
-- Warning indicando que Data Safety não reflete comportamento real do app
-- Formulário não preenchido
+**Symptoms:**
+- Warning indicating Data Safety doesn't reflect actual app behavior
+- Form not filled out
 
-**Soluções:**
-- Preencher Data Safety completamente no Play Console
-- Incluir todos os SDKs de terceiros que coletam dados
-- Manter sincronizado com a Privacy Policy
-- Ver template em `templates/data-safety-form.md`
+**Solutions:**
+- Fill out Data Safety completely in Play Console
+- Include all third-party SDKs that collect data
+- Keep synchronized with Privacy Policy
+- See template in `templates/data-safety-form.md`
 
 ---
 
-### 5. Spam / Conteúdo Repetitivo
-**Frequência:** Média
+### 5. Spam / Repetitive Content
+**Frequency:** Medium
 **Policy:** Spam and Minimum Functionality
 
-**Sintomas:**
-- App muito similar a outro app do mesmo desenvolvedor
-- Funcionalidade mínima
-- Conteúdo gerado programaticamente
+**Symptoms:**
+- App very similar to another app from the same developer
+- Minimal functionality
+- Programmatically generated content
 
-**Soluções:**
-- Garantir que o app tem valor único e funcionalidade significativa
-- Evitar publicar múltiplos apps idênticos com apenas o tema diferente
+**Solutions:**
+- Ensure the app has unique value and significant functionality
+- Avoid publishing multiple identical apps with just different themes
 
 ---
 
-### 6. Violação da Política de Pagamentos
-**Frequência:** Média
+### 6. Payment Policy Violation
+**Frequency:** Medium
 **Policy:** Payments
 
-**Sintomas:**
-- App com compras digitais que não usam Google Play Billing
-- Link para comprar fora do Google Play para conteúdo digital
+**Symptoms:**
+- App with digital purchases that don't use Google Play Billing
+- Link to purchase outside Google Play for digital content
 
-**Soluções:**
-- Usar Google Play Billing para todos os conteúdos digitais
-- Remover links/botões para compra externa de conteúdo digital
-- User Choice Billing disponível em alguns países (checkout alternativo)
+**Solutions:**
+- Use Google Play Billing for all digital content
+- Remove links/buttons for external purchase of digital content
+- UserChoice Billing available in some countries (alternative checkout)
 
 ---
 
-### 7. Conteúdo Inadequado para a Classificação
-**Frequência:** Média
+### 7. Content Inadequate for Rating
+**Frequency:** Medium
 **Policy:** Restricted Content
 
-**Sintomas:**
-- App classificado inadequadamente
-- Conteúdo adulto em app classificado para todas as idades
+**Symptoms:**
+- App incorrectly classified
+- Adult content in app classified for all ages
 
-**Soluções:**
-- Preencher Content Rating Questionnaire honestamente
-- Classificar corretamente (IARC)
-- Não expor conteúdo adulto em apps para menores
+**Solutions:**
+- Fill out Content Rating Questionnaire honestly
+- Classify correctly (IARC)
+- Don't expose adult content in apps for minors
 
 ---
 
-### 8. Ícone, Screenshot ou Descrição Enganosos
-**Frequência:** Média
+### 8. Misleading Icon, Screenshot, or Description
+**Frequency:** Medium
 **Policy:** Store Listing and Promotion
 
-**Sintomas:**
-- Screenshots prometem funcionalidades não existentes
-- Ícone imita app famoso
+**Symptoms:**
+- Screenshots promise non-existent features
+- Icon imitates famous app
 
-**Soluções:**
-- Screenshots e preview de app devem refletir experiência real
-- Ícone deve ser original
-- Descrição sem claims não verificáveis ("o melhor", "o único")
+**Solutions:**
+- Screenshots and app preview must reflect real experience
+- Icon must be original
+- Description without unverifiable claims ("the best", "the only")
 
 ---
 
-### 9. Uso Indevido de Permissões de Acessibilidade
-**Frequência:** Baixa-Média
+### 9. Improper Use of Accessibility Permissions
+**Frequency:** Low-Medium
 **Policy:** Device and Network Abuse
 
-**Sintomas:**
-- App usa AccessibilityService para coleta de dados não declarada
+**Symptoms:**
+- App uses AccessibilityService for undeclared data collection
 
-**Soluções:**
-- Usar AccessibilityService apenas para funcionalidades de acessibilidade real
-- Qualquer uso não-padrão requer aprovação especial
+**Solutions:**
+- Use AccessibilityService only for real accessibility features
+- Any non-standard use requires special approval
 
 ---
 
-### 10. Violação de Propriedade Intelectual
-**Frequência:** Baixa-Média
+### 10. Intellectual Property Violation
+**Frequency:** Low-Medium
 **Policy:** Intellectual Property
 
-**Sintomas:**
-- App usa marca registrada de terceiros sem autorização
-- Conteúdo protegido por copyright
+**Symptoms:**
+- App uses third-party trademark without authorization
+- Content protected by copyright
 
-**Soluções:**
-- Verificar se nome, ícone e conteúdo não violam IP de terceiros
-- Obter licenças necessárias para músicas, imagens, fontes
-- Remover qualquer referência não autorizada a marcas registradas
+**Solutions:**
+- Verify that name, icon, and content don't violate third-party IP
+- Obtain necessary licenses for music, images, fonts
+- Remove any unauthorized references to registered trademarks
 
 ---
 
-## Dicas Gerais para Evitar Rejeições
+## General Tips to Avoid Rejections
 
-1. **Testar em device real** antes de qualquer submissão
-2. **Ler a rejeição completamente** — os revisores incluem detalhes específicos
-3. **Responder com screenshots** quando contestar uma rejeição
-4. **Manter um changelog** do que foi alterado para facilitar re-submissão
-5. **Usar TestFlight/Internal Testing** extensivamente antes de produção
-6. **Monitorar o app após aprovação** — apps podem ser removidos depois
-7. **Manter Privacy Policy atualizada** conforme o app evolui
+1. **Test on real device** before any submission
+2. **Read the rejection completely** — reviewers include specific details
+3. **Respond with screenshots** when contesting a rejection
+4. **Keep a changelog** of what was changed to facilitate re-submission
+5. **Use TestFlight/Internal Testing** extensively before production
+6. **Monitor the app after approval** — apps can be removed later
+7. **Keep Privacy Policy updated** as the app evolves

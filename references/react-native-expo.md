@@ -1,26 +1,26 @@
-# React Native / Expo — Verificações Específicas
+# React Native / Expo — Specific Checks
 
-> Última atualização: 2026-03-28
-> Documentação Expo: https://docs.expo.dev
+> Last updated: 2026-03-28
+> Expo Documentation: https://docs.expo.dev
 
 ---
 
-## Expo SDK — Versões e Compatibilidade
+## Expo SDK — Versions and Compatibility
 
-| SDK | Status | Suporte iOS | Suporte Android |
+| SDK | Status | iOS Support | Android Support |
 |-----|--------|-------------|-----------------|
-| SDK 52 | Atual | iOS 16+ | Android 7+ (API 24+) |
+| SDK 52 | Current | iOS 16+ | Android 7+ (API 24+) |
 | SDK 51 | LTS | iOS 15.1+ | Android 6+ (API 23+) |
 | SDK 50 | Deprecated | iOS 13+ | Android 6+ |
-| SDK 49 e anteriores | EOL | Não recomendado | Não recomendado |
+| SDK 49 and earlier | EOL | Not recommended | Not recommended |
 
-**Verificar:** `expo upgrade` para atualizar para o SDK mais recente.
+**Check:** `expo upgrade` to update to the latest SDK.
 
 ---
 
-## Privacy Manifest (iOS) no Expo
+## Privacy Manifest (iOS) in Expo
 
-### Configuração no app.json
+### Configuration in app.json
 
 ```json
 {
@@ -50,20 +50,20 @@
 }
 ```
 
-### APIs usadas pelo React Native Core
-O React Native core utiliza internamente:
+### APIs used by React Native Core
+React Native core uses internally:
 - `NSPrivacyAccessedAPICategoryUserDefaults` (reason: CA92.1)
 - `NSPrivacyAccessedAPICategoryFileTimestamp` (reason: C617.1)
 - `NSPrivacyAccessedAPICategorySystemBootTime` (reason: 35F9.1)
 - `NSPrivacyAccessedAPICategoryDiskSpace` (reason: E174.1)
 
-**Sempre declare todas as 4 APIs acima** mesmo sem usar módulos adicionais.
+**Always declare all 4 APIs above** even without using additional modules.
 
 ---
 
 ## expo-secure-store
 
-Armazenamento encriptado para dados sensíveis:
+Encrypted storage for sensitive data:
 
 ```bash
 npx expo install expo-secure-store
@@ -72,18 +72,18 @@ npx expo install expo-secure-store
 ```typescript
 import * as SecureStore from 'expo-secure-store';
 
-// Salvar
+// Save
 await SecureStore.setItemAsync('authToken', token);
 
-// Ler
+// Read
 const token = await SecureStore.getItemAsync('authToken');
 
-// Deletar
+// Delete
 await SecureStore.deleteItemAsync('authToken');
 ```
 
-**Regra:** Use expo-secure-store para tokens, senhas, chaves de API.
-Use AsyncStorage apenas para dados não-sensíveis (preferências, cache).
+**Rule:** Use expo-secure-store for tokens, passwords, API keys.
+Use AsyncStorage only for non-sensitive data (preferences, cache).
 
 ---
 
@@ -96,20 +96,20 @@ npx expo install expo-tracking-transparency
 ```typescript
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
-// Antes de inicializar Firebase Analytics, Amplitude, etc.
+// Before initializing Firebase Analytics, Amplitude, etc.
 const { status } = await requestTrackingPermissionsAsync();
 if (status === 'granted') {
-  // Inicializar SDKs de tracking
+  // Initialize tracking SDKs
 }
 ```
 
-No `app.json`, adicionar:
+In `app.json`, add:
 ```json
 {
   "expo": {
     "ios": {
       "infoPlist": {
-        "NSUserTrackingUsageDescription": "Usamos seus dados para personalizar a experiência e melhorar o app."
+        "NSUserTrackingUsageDescription": "We use your data to personalize the experience and improve the app."
       }
     }
   }
@@ -118,9 +118,9 @@ No `app.json`, adicionar:
 
 ---
 
-## Permissões Comuns no Expo
+## Common Permissions in Expo
 
-### Câmera
+### Camera
 ```json
 {
   "expo": {
@@ -128,7 +128,7 @@ No `app.json`, adicionar:
       [
         "expo-camera",
         {
-          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua câmera para tirar fotos."
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
         }
       ]
     ]
@@ -136,7 +136,7 @@ No `app.json`, adicionar:
 }
 ```
 
-### Localização
+### Location
 ```json
 {
   "expo": {
@@ -144,8 +144,8 @@ No `app.json`, adicionar:
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Usamos sua localização para mostrar pontos próximos.",
-          "locationWhenInUsePermission": "Usamos sua localização para mostrar pontos próximos."
+          "locationAlwaysAndWhenInUsePermission": "We use your location to show nearby points.",
+          "locationWhenInUsePermission": "We use your location to show nearby points."
         }
       ]
     ]
@@ -153,7 +153,7 @@ No `app.json`, adicionar:
 }
 ```
 
-### Notificações Push
+### Push Notifications
 ```json
 {
   "expo": {
@@ -175,21 +175,21 @@ No `app.json`, adicionar:
 
 ## Expo OTA Updates (Over-The-Air)
 
-### Limitações das Lojas
-- OTA updates **não podem** mudar funcionalidade core do app
-- Não podem adicionar novas permissões via OTA
-- Podem: corrigir bugs, atualizar conteúdo, ajustar UI
-- Apple: OTA que muda funcionalidade primária = rejeição
-- Google: OTA permitido com mais flexibilidade
+### Store Limitations
+- OTA updates **cannot** change core app functionality
+- Cannot add new permissions via OTA
+- Can: fix bugs, update content, adjust UI
+- Apple: OTA that changes primary functionality = rejection
+- Google: OTA allowed with more flexibility
 
-### Configuração
+### Configuration
 ```json
 {
   "expo": {
     "updates": {
       "enabled": true,
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/seu-project-id"
+      "url": "https://u.expo.dev/your-project-id"
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
@@ -200,15 +200,15 @@ No `app.json`, adicionar:
 
 ---
 
-## Deep Linking e Universal Links
+## Deep Linking and Universal Links
 
-### Configuração Básica
+### Basic Configuration
 ```json
 {
   "expo": {
-    "scheme": "meuapp",
+    "scheme": "myapp",
     "ios": {
-      "associatedDomains": ["applinks:meuapp.com"]
+      "associatedDomains": ["applinks:myapp.com"]
     },
     "android": {
       "intentFilters": [
@@ -218,7 +218,7 @@ No `app.json`, adicionar:
           "data": [
             {
               "scheme": "https",
-              "host": "meuapp.com",
+              "host": "myapp.com",
               "pathPrefix": "/app"
             }
           ],
@@ -230,15 +230,15 @@ No `app.json`, adicionar:
 }
 ```
 
-### Arquivo apple-app-site-association (iOS)
-Hospedar em `https://meuapp.com/.well-known/apple-app-site-association`:
+### apple-app-site-association file (iOS)
+Host at `https://myapp.com/.well-known/apple-app-site-association`:
 ```json
 {
   "applinks": {
     "apps": [],
     "details": [
       {
-        "appID": "TEAM_ID.com.empresa.app",
+        "appID": "TEAM_ID.com.company.app",
         "paths": ["/app/*"]
       }
     ]
@@ -250,7 +250,7 @@ Hospedar em `https://meuapp.com/.well-known/apple-app-site-association`:
 
 ## EAS Build
 
-### Configuração eas.json
+### eas.json Configuration
 ```json
 {
   "cli": {
@@ -274,7 +274,7 @@ Hospedar em `https://meuapp.com/.well-known/apple-app-site-association`:
   "submit": {
     "production": {
       "ios": {
-        "appleId": "seu@email.com",
+        "appleId": "your@email.com",
         "ascAppId": "123456789"
       },
       "android": {
@@ -286,30 +286,30 @@ Hospedar em `https://meuapp.com/.well-known/apple-app-site-association`:
 }
 ```
 
-### EAS Secrets (para credenciais no build)
+### EAS Secrets (for build credentials)
 ```bash
-# Adicionar secret
-eas secret:create --scope project --name MY_API_KEY --value "valor_secreto"
+# Add secret
+eas secret:create --scope project --name MY_API_KEY --value "secret_value"
 
-# Usar no app.config.js
+# Use in app.config.js
 export default {
   expo: {
     extra: {
-      apiUrl: process.env.API_URL,  // NÃO use process.env para secrets do cliente!
+      apiUrl: process.env.API_URL,  // DO NOT use process.env for client secrets!
     }
   }
 }
 ```
 
-**Atenção:** `expo.extra` é incluído no bundle do app — não coloque secrets lá!
-Secrets devem estar apenas no servidor/backend.
+**Warning:** `expo.extra` is included in the app bundle — don't put secrets there!
+Secrets should only be on the server/backend.
 
 ---
 
 ## React Native New Architecture (Fabric + TurboModules)
 
-A partir do React Native 0.74+, a New Architecture é padrão.
-Para Expo SDK 52+, New Architecture está habilitada por padrão.
+Starting from React Native 0.74+, New Architecture is the default.
+For Expo SDK 52+, New Architecture is enabled by default.
 
 ```json
 {
@@ -319,23 +319,23 @@ Para Expo SDK 52+, New Architecture está habilitada por padrão.
 }
 ```
 
-Verificar compatibilidade de módulos nativos com New Architecture antes de habilitar.
+Check native module compatibility with New Architecture before enabling.
 
 ---
 
-## Configuração para as Lojas
+## Store Configuration
 
-### app.json Completo (Exemplo Recomendado)
+### Complete app.json (Recommended Example)
 ```json
 {
   "expo": {
-    "name": "Meu App",
-    "slug": "meu-app",
+    "name": "My App",
+    "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "meuapp",
-    "privacyPolicyUrl": "https://meuapp.com/privacidade",
+    "scheme": "myapp",
+    "privacyPolicyUrl": "https://myapp.com/privacy",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -343,12 +343,12 @@ Verificar compatibilidade de módulos nativos com New Architecture antes de habi
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.empresa.meuapp",
+      "bundleIdentifier": "com.company.myapp",
       "buildNumber": "1",
-      "privacyPolicyUrl": "https://meuapp.com/privacidade",
+      "privacyPolicyUrl": "https://myapp.com/privacy",
       "infoPlist": {
-        "NSCameraUsageDescription": "Usamos a câmera para você tirar fotos de perfil.",
-        "NSPhotoLibraryUsageDescription": "Acessamos a galeria para você escolher uma foto de perfil."
+        "NSCameraUsageDescription": "We use the camera for you to take profile photos.",
+        "NSPhotoLibraryUsageDescription": "We access the gallery for you to choose a profile photo."
       },
       "privacyManifests": {
         "NSPrivacyTracking": false,
@@ -373,7 +373,7 @@ Verificar compatibilidade de módulos nativos com New Architecture antes de habi
       }
     },
     "android": {
-      "package": "com.empresa.meuapp",
+      "package": "com.company.myapp",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -389,7 +389,7 @@ Verificar compatibilidade de módulos nativos com New Architecture antes de habi
       [
         "expo-camera",
         {
-          "cameraPermission": "Usamos a câmera para você tirar fotos de perfil."
+          "cameraPermission": "We use the camera for you to take profile photos."
         }
       ]
     ]
@@ -399,7 +399,7 @@ Verificar compatibilidade de módulos nativos com New Architecture antes de habi
 
 ---
 
-## Recursos
+## Resources
 
 - [Expo Documentation](https://docs.expo.dev)
 - [Expo Apple Privacy Manifest Guide](https://docs.expo.dev/guides/apple-privacy/)

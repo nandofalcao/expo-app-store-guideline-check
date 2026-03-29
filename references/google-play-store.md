@@ -1,31 +1,31 @@
-# Diretrizes Google Play Store — Referência Condensada
+# Google Play Store Guidelines — Condensed Reference
 
-> Última atualização: 2026-03-28
-> Fonte oficial: https://support.google.com/googleplay/android-developer/answer/16810878
-> Prazos: https://support.google.com/googleplay/android-developer/table/12921780
+> Last updated: 2026-03-28
+> Official source: https://support.google.com/googleplay/android-developer/answer/16810878
+> Deadlines: https://support.google.com/googleplay/android-developer/table/12921780
 
 ---
 
-## Requisitos Ativos (2025/2026)
+## Active Requirements (2025/2026)
 
-| Requisito | Prazo | Status |
+| Requirement | Deadline | Status |
 |-----------|-------|--------|
-| Target API 34 (Android 14) para atualizações | Agosto/2024 | **Obrigatório** |
-| Target API 35 (Android 15) para novos apps | 2025/2026 | **Recomendado agora** |
-| Data Safety Section preenchida | Obrigatório | **Obrigatório** |
-| Developer Verification (Brasil) | Setembro/2026 | **Em breve** |
-| AAB format (não APK) para novos apps | Agosto/2021 | **Obrigatório** |
+| Target API 34 (Android 14) for updates | August/2024 | **Mandatory** |
+| Target API 35 (Android 15) for new apps | 2025/2026 | **Recommended now** |
+| Data Safety Section filled | Mandatory | **Mandatory** |
+| Developer Verification (Brazil) | September/2026 | **Coming soon** |
+| AAB format (not APK) for new apps | August/2021 | **Mandatory** |
 
 ---
 
 ## Target API Level
 
-### Cronograma de Exigências
-- **API 33 (Android 13):** mínimo para apps existentes até agosto/2023
-- **API 34 (Android 14):** obrigatório para novos apps e atualizações desde agosto/2024
-- **API 35 (Android 15):** recomendado para 2025/2026 — verificar prazo oficial
+### Requirements Timeline
+- **API 33 (Android 13):** minimum for existing apps until August/2023
+- **API 34 (Android 14):** mandatory for new apps and updates since August/2024
+- **API 35 (Android 15):** recommended for 2025/2026 — check official deadline
 
-### No Expo/React Native
+### In Expo/React Native
 ```json
 // app.json
 {
@@ -41,14 +41,14 @@
 
 ---
 
-## Data Safety Section — CRÍTICO
+## Data Safety Section — CRITICAL
 
-### O que é
-Formulário obrigatório no Google Play Console > App content > Data safety.
-Deve declarar todos os dados que o app coleta, usa e compartilha.
+### What it is
+Mandatory form in Google Play Console > App content > Data safety.
+Must declare all data that the app collects, uses, and shares.
 
-### Categorias de Dados
-| Categoria | Exemplos |
+### Data Categories
+| Category | Examples |
 |-----------|----------|
 | Location | Approximate, Precise, Background |
 | Personal info | Name, Email, User ID, Address |
@@ -65,140 +65,140 @@ Deve declarar todos os dados que o app coleta, usa e compartilha.
 | App info & performance | Crash logs, Diagnostics |
 | Device or other IDs | Device ID, Advertising ID |
 
-### Perguntas do Formulário
-Para cada tipo de dado:
-1. O app coleta esses dados?
-2. Os dados são compartilhados com terceiros?
-3. Os dados podem ser solicitados para exclusão?
-4. O tratamento é obrigatório ou opcional?
-5. A coleta é criptografada em trânsito?
+### Form Questions
+For each data type:
+1. Does the app collect this data?
+2. Is the data shared with third parties?
+3. Can the data be requested for deletion?
+4. Is the processing mandatory or optional?
+5. Is collection encrypted in transit?
 
-### SDKs que Coletam Dados Automaticamente
+### SDKs that Automatically Collect Data
 - **Firebase Analytics:** App activity, Device IDs
 - **Firebase Crashlytics:** App info & performance, Device info
 - **Amplitude:** App activity, Device IDs
 - **Google AdMob:** Device IDs, App activity
 - **Sentry:** App info & performance
-- **Branch/Appsflyer/Adjust:** Device IDs, App activity (atribuição)
+- **Branch/Appsflyer/Adjust:** Device IDs, App activity (attribution)
 
 ---
 
-## Políticas de Privacidade e Dados
+## Privacy and Data Policies
 
 ### User Data Policy
-- Coletar apenas dados necessários para as funcionalidades declaradas
-- Disclosure claro e em destaque antes de coletar dados sensíveis
-- Consentimento explícito para coleta de dados sensíveis
-- Privacy Policy obrigatória e acessível
+- Collect only data necessary for declared functionalities
+- Clear and prominent disclosure before collecting sensitive data
+- Explicit consent for collecting sensitive data
+- Privacy Policy mandatory and accessible
 
 ### Permissions Policy
-- Solicitar apenas permissões necessárias
-- Explicar por que cada permissão é necessária
-- Não acessar permissões em background sem justificativa
-- Permissões "hazardous" (Location, Contacts, etc.) com uso mínimo
+- Request only necessary permissions
+- Explain why each permission is needed
+- Do not access background permissions without justification
+- "Hazardous" permissions (Location, Contacts, etc.) with minimal use
 
-### Permissões de Alto Risco
-| Permissão | Requisito Adicional |
+### High-Risk Permissions
+| Permission | Additional Requirement |
 |-----------|---------------------|
-| ACCESS_BACKGROUND_LOCATION | Aprovação especial + justificativa |
-| READ_CONTACTS | Data Safety disclosure obrigatório |
-| RECORD_AUDIO | Justificativa clara |
-| READ_CALL_LOG | Aprovação especial |
-| CAMERA | Disclosure de uso |
-| READ_MEDIA_* | Disclosure de acesso |
+| ACCESS_BACKGROUND_LOCATION | Special approval + justification |
+| READ_CONTACTS | Data Safety disclosure mandatory |
+| RECORD_AUDIO | Clear justification |
+| READ_CALL_LOG | Special approval |
+| CAMERA | Usage disclosure |
+| READ_MEDIA_* | Access disclosure |
 
 ---
 
-## Conteúdo Restrito
+## Restricted Content
 
-### Conteúdo Proibido
-- Conteúdo sexual explícito (sem aprovação especial)
-- Material ilegal (drogas, armas ilegais, CSAM)
-- Conteúdo que incite violência ou ódio
+### Prohibited Content
+- Explicit sexual content (without special approval)
+- Illegal material (drugs, illegal weapons, CSAM)
+- Content that incites violence or hate
 - Malware, spyware, adware
-- Aplicativos de stalking/surveillance sem consentimento
+- Stalking/surveillance applications without consent
 
-### Conteúdo para Adultos
-- Classificar corretamente no Content Rating Questionnaire
-- Sem conteúdo adulto visível antes de confirmação de idade
-- Seguir políticas de ads se houver publicidade
-
----
-
-## Famílies Policy (Apps para Crianças)
-
-Se o app é direcionado a menores de 13 anos (ou mistos):
-- Sem publicidade de terceiros (exceto aprovados pela política de famílias)
-- Sem analytics que coletam dados de crianças
-- Sem compras dentro do app sem aprovação parental
-- Sem links para conteúdo adulto
-- Cumprir COPPA (EUA) e legislações equivalentes
+### Adult Content
+- Correctly classify in Content Rating Questionnaire
+- No adult content visible before age confirmation
+- Follow ads policies if advertising is present
 
 ---
 
-## Monetização e Publicidade
+## Families Policy (Apps for Children)
+
+If the app is targeted at children under 13 (or mixed):
+- No third-party advertising (except those approved by families policy)
+- No analytics that collect children's data
+- No in-app purchases without parental approval
+- No links to adult content
+- Comply with COPPA (USA) and equivalent legislation
+
+---
+
+## Monetization and Advertising
 
 ### Google Play Billing
-- **Obrigatório** para conteúdo digital consumível (mesma regra da Apple)
-- Não contornar o sistema de pagamento do Google
-- Exceções: apps físicos, B2B, certos apps de streaming
+- **Mandatory** for consumable digital content (same rule as Apple)
+- Do not bypass Google's payment system
+- Exceptions: physical apps, B2B, certain streaming apps
 
-### Políticas de Ads
-- Sem anúncios enganosos
-- Sem anúncios que simulam notificações do sistema
-- Sem anúncios intersticiais inesperados
-- Ads devem ser claramente identificados como publicidade
-- AdMob: seguir políticas de família se app tem menores
+### Ads Policies
+- No misleading ads
+- No ads that simulate system notifications
+- No unexpected interstitial ads
+- Ads must be clearly identified as advertising
+- AdMob: follow family policies if app has minors
 
 ---
 
-## Store Listing e Metadados
+## Store Listing and Metadata
 
-### Requisitos de Metadados
-- Screenshots devem refletir o app real
-- Descrição precisa das funcionalidades
-- Título do app: máximo 50 caracteres
-- Sem keywords spam no título
-- Ícone: PNG 512x512
+### Metadata Requirements
+- Screenshots must reflect the actual app
+- Accurate description of functionalities
+- App title: maximum 50 characters
+- No keyword spam in title
+- Icon: PNG 512x512
 - Feature Graphic: JPG/PNG 1024x500
 
 ### Content Rating
-- Preencher questionário de classificação indicativa
-- Classificação IARC obrigatória
-- Rating incorreto pode causar remoção
+- Fill out the content rating questionnaire
+- IARC classification mandatory
+- Incorrect rating may cause removal
 
 ---
 
-## Spam e Funcionalidade Mínima
+## Spam and Minimum Functionality
 
-- App deve ter funcionalidade significativa
-- Sem apps que são apenas links para websites
-- Sem clones idênticos de outros apps
-- Sem apps com funcionalidade trivial
-- Sem comportamentos enganosos
+- App must have significant functionality
+- No apps that are only links to websites
+- No identical clones of other apps
+- No apps with trivial functionality
+- No misleading behaviors
 
 ---
 
 ## Developer Verification (2026)
 
-A partir de setembro de 2026, todos os desenvolvedores no Brasil (e outros países)
-precisarão verificar identidade/empresa no Google Play Console.
+Starting September 2026, all developers in Brazil (and other countries)
+will need to verify identity/company in Google Play Console.
 
-**Preparar agora:**
-- Manter dados da conta atualizados
-- Empresas: ter documentação jurídica pronta
-- Indivíduos: documento de identidade com foto
+**Prepare now:**
+- Keep account data updated
+- Companies: have legal documentation ready
+- Individuals: photo ID document
 
 ---
 
-## Formatos de Build
+## Build Formats
 
-### AAB (Android App Bundle) — Obrigatório
+### AAB (Android App Bundle) — Mandatory
 ```bash
-# EAS Build gera AAB por padrão
+# EAS Build generates AAB by default
 eas build --platform android --profile production
 
-# Verificar em eas.json:
+# Check in eas.json:
 {
   "build": {
     "production": {
@@ -212,7 +212,7 @@ eas build --platform android --profile production
 
 ---
 
-## Recursos de Conformidade (Google)
+## Compliance Resources (Google)
 
 - [Google Play Developer Policy Center](https://support.google.com/googleplay/android-developer/answer/16810878)
 - [Data Safety Section Help](https://support.google.com/googleplay/android-developer/answer/10787469)
