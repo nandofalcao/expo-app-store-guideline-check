@@ -1,15 +1,14 @@
 ---
 name: mobile-app-compliance-checker
 description: >
-  Verifica se uma aplicação React Native/Expo está em conformidade com as
-  diretrizes da Apple App Store, Google Play Store, LGPD e políticas de
-  privacidade. Use esta skill sempre que o usuário mencionar: compliance,
-  conformidade, submissão app store, rejeição app store, privacy policy,
-  política de privacidade, LGPD, proteção de dados, data safety, privacy
-  manifest, app review, pre-submission checklist, verificação de segurança
-  de app mobile, ou qualquer menção a preparar um app para publicação nas
-  lojas. Também acione quando o usuário perguntar sobre permissões de app,
-  coleta de dados, ou requisitos de privacidade para apps mobile.
+  Verifies if a React Native/Expo application complies with Apple App Store,
+  Google Play Store, LGPD, and privacy policy guidelines. Use this skill
+  whenever the user mentions: compliance, app store submission, app store
+  rejection, privacy policy, LGPD, data protection, data safety, privacy
+  manifest, app review, pre-submission checklist, mobile app security check,
+  or any mention of preparing an app for publication in stores. Also trigger
+  when the user asks about app permissions, data collection, or privacy
+  requirements for mobile apps.
 version: "1.0.0"
 updated: "2026-03-28"
 platforms: [ios, android]
@@ -18,200 +17,200 @@ frameworks: [react-native, expo]
 
 # Mobile App Compliance Checker
 
-Skill para verificar conformidade de apps React Native/Expo com diretrizes da
-Apple App Store, Google Play Store, LGPD e boas práticas de privacidade/segurança.
+Skill to verify compliance of React Native/Expo apps with Apple App Store,
+Google Play Store, LGPD, and privacy/security best practices guidelines.
 
 ---
 
-## O Que Esta Skill Faz
+## What This Skill Does
 
-1. **Analisa o projeto automaticamente** via scripts bash
-2. **Classifica problemas** em: CRÍTICO / ALERTA / INFO / OK
-3. **Gera relatório acionável** com correções sugeridas para cada problema
-4. **Cobre quatro domínios:** Apple App Store, Google Play, LGPD/Privacidade, Segurança
+1. **Analyzes the project automatically** via bash scripts
+2. **Classifies issues** as: CRITICAL / WARNING / INFO / OK
+3. **Generates actionable report** with suggested fixes for each issue
+4. **Covers four domains:** Apple App Store, Google Play, LGPD/Privacy, Security
 
 ---
 
-## Fluxo de Execução
+## Execution Flow
 
-### Análise Automatizada (recomendado)
+### Automated Analysis (recommended)
 
 ```bash
-# Na raiz do projeto React Native/Expo:
-bash /caminho/para/skill/scripts/scan-project.sh .
+# At the root of the React Native/Expo project:
+bash /path/to/skill/scripts/scan-project.sh .
 
-# O relatório será gerado em:
+# The report will be generated at:
 # ./.compliance-report/report_YYYYMMDD_HHMMSS.md
 ```
 
-### Análise por Domínio (quando necessário verificar só uma área)
+### Analysis by Domain (when needed to check only one area)
 
 ```bash
-# Somente configuração Expo
-bash scripts/check-expo-config.sh /caminho/projeto
+# Expo configuration only
+bash scripts/check-expo-config.sh /project/path
 
-# Somente permissões
-bash scripts/check-permissions.sh /caminho/projeto
+# Permissions only
+bash scripts/check-permissions.sh /project/path
 
-# Somente iOS Privacy Manifest
-bash scripts/check-privacy-manifest.sh /caminho/projeto
+# iOS Privacy Manifest only
+bash scripts/check-privacy-manifest.sh /project/path
 
-# Somente Google Data Safety
-bash scripts/check-data-safety.sh /caminho/projeto
+# Google Data Safety only
+bash scripts/check-data-safety.sh /project/path
 
-# Somente segurança
-bash scripts/check-security.sh /caminho/projeto
+# Security only
+bash scripts/check-security.sh /project/path
 
-# Somente dependências
-bash scripts/check-dependencies.sh /caminho/projeto
+# Dependencies only
+bash scripts/check-dependencies.sh /project/path
 ```
 
 ---
 
-## Quando Usar Cada Recurso
+## When to Use Each Resource
 
-| Situação | Recurso |
-|----------|---------|
-| Preparar app para submissão | `scripts/scan-project.sh` + checklists relevantes |
-| Rejeição Apple | `references/apple-app-store.md` + `references/common-rejections.md` |
-| Rejeição Google Play | `references/google-play-store.md` + `references/common-rejections.md` |
-| Configurar Privacy Manifest iOS | `references/react-native-expo.md` + `scripts/check-privacy-manifest.sh` |
-| Preencher Data Safety Google | `templates/data-safety-form.md` + `scripts/check-data-safety.sh` |
-| Preencher Privacy Labels Apple | `templates/app-privacy-labels.md` |
-| Criar Política de Privacidade | `templates/privacy-policy-pt-br.md` |
-| Criar Termos de Uso | `templates/terms-of-use-pt-br.md` |
-| Verificar conformidade LGPD | `references/lgpd-privacy.md` + `checklists/privacy-compliance.md` |
-| Checklist completo iOS | `checklists/pre-submission-ios.md` |
-| Checklist completo Android | `checklists/pre-submission-android.md` |
-| Verificar segurança de dados | `checklists/security-checklist.md` + `scripts/check-security.sh` |
+| Situation | Resource |
+|----------|----------|
+| Preparing app for submission | `scripts/scan-project.sh` + relevant checklists |
+| Apple rejection | `references/apple-app-store.md` + `references/common-rejections.md` |
+| Google Play rejection | `references/google-play-store.md` + `references/common-rejections.md` |
+| Configure iOS Privacy Manifest | `references/react-native-expo.md` + `scripts/check-privacy-manifest.sh` |
+| Fill Google Data Safety | `templates/data-safety-form.md` + `scripts/check-data-safety.sh` |
+| Fill Apple Privacy Labels | `templates/app-privacy-labels.md` |
+| Create Privacy Policy | `templates/privacy-policy-pt-br.md` |
+| Create Terms of Use | `templates/terms-of-use-pt-br.md` |
+| Verify LGPD compliance | `references/lgpd-privacy.md` + `checklists/privacy-compliance.md` |
+| Complete iOS checklist | `checklists/pre-submission-ios.md` |
+| Complete Android checklist | `checklists/pre-submission-android.md` |
+| Verify data security | `checklists/security-checklist.md` + `scripts/check-security.sh` |
 
 ---
 
-## Estrutura dos Resultados
+## Results Structure
 
-Cada verificação produz resultados com a seguinte estrutura:
+Each verification produces results with the following structure:
 
 ```json
 {
   "id": "EXPO-001",
   "severity": "CRITICAL",
   "category": "apple",
-  "title": "Descrição curta do problema",
-  "description": "Explicação detalhada",
-  "fix": "Como corrigir",
-  "reference": "URL ou doc de referência",
-  "file": "arquivo relevante"
+  "title": "Short description of the problem",
+  "description": "Detailed explanation",
+  "fix": "How to fix",
+  "reference": "URL or reference doc",
+  "file": "relevant file"
 }
 ```
 
-### Níveis de Severidade
+### Severity Levels
 
-| Nível | Símbolo | Ação Necessária |
-|-------|---------|-----------------|
-| CRITICAL | 🔴 | Corrigir antes de submeter — causará rejeição |
-| WARNING | ⚠️ | Revisar — pode causar rejeição ou problema futuro |
-| INFO | ℹ️ | Considerar — boa prática mas não obrigatório |
-| OK | ✅ | Conformidade verificada |
+| Level | Symbol | Required Action |
+|-------|--------|-----------------|
+| CRITICAL | 🔴 | Fix before submitting — will cause rejection |
+| WARNING | ⚠️ | Review — may cause rejection or future problem |
+| INFO | ℹ️ | Consider — best practice but not mandatory |
+| OK | ✅ | Compliance verified |
 
 ---
 
-## Domínios de Verificação
+## Verification Domains
 
 ### Apple App Store
-- **Configuração básica:** bundle identifier, version, build number
-- **Permissões iOS:** NS*UsageDescription strings
+- **Basic configuration:** bundle identifier, version, build number
+- **iOS Permissions:** NS*UsageDescription strings
 - **Privacy Manifest:** PrivacyInfo.xcprivacy / expo.ios.privacyManifests
-- **App Tracking Transparency:** implementação para tracking
-- **Account Deletion:** obrigatório se há criação de conta
-- **IAP/Subscriptions:** restore purchases, preços visíveis
+- **App Tracking Transparency:** implementation for tracking
+- **Account Deletion:** mandatory if account creation exists
+- **IAP/Subscriptions:** restore purchases, visible prices
 
-Referências: `references/apple-app-store.md`
+References: `references/apple-app-store.md`
 
 ### Google Play Store
-- **Configuração básica:** package name, versionCode
-- **Target API Level:** Android 15 (API 35) para novos apps 2025+
-- **Data Safety Section:** preparação e preenchimento
-- **Permissões Android:** `<uses-permission>` justificadas
-- **Content Rating:** questionário preenchido
+- **Basic configuration:** package name, versionCode
+- **Target API Level:** Android 15 (API 35) for new apps 2025+
+- **Data Safety Section:** preparation and filling
+- **Android Permissions:** `<uses-permission>` justified
+- **Content Rating:** questionnaire filled
 
-Referências: `references/google-play-store.md`
+References: `references/google-play-store.md`
 
-### LGPD / Privacidade
-- **Política de Privacidade:** presença, acessibilidade, idioma
-- **Consentimento:** mecanismo explícito antes de coletar dados
-- **Direitos do titular:** acesso, exclusão, portabilidade
-- **DPO:** identificação do encarregado
-- **Compartilhamento:** lista de terceiros que recebem dados
+### LGPD / Privacy
+- **Privacy Policy:** presence, accessibility, language
+- **Consent:** explicit mechanism before collecting data
+- **Data subject rights:** access, deletion, portability
+- **DPO:** data protection officer identification
+- **Sharing:** list of third parties receiving data
 
-Referências: `references/lgpd-privacy.md`
+References: `references/lgpd-privacy.md`
 
-### Segurança de Dados
-- **Armazenamento:** sem dados sensíveis em AsyncStorage
-- **Comunicação:** HTTPS obrigatório, SSL pinning recomendado
-- **Segredos:** sem API keys hardcoded ou em .env commitado
-- **Logs:** sem dados sensíveis em console.log
+### Data Security
+- **Storage:** no sensitive data in AsyncStorage
+- **Communication:** HTTPS mandatory, SSL pinning recommended
+- **Secrets:** no hardcoded API keys or committed .env files
+- **Logs:** no sensitive data in console.log
 
-Referências: `checklists/security-checklist.md`
-
----
-
-## Configuração de Projeto
-
-A skill detecta automaticamente:
-
-| Indicador | Tipo de Projeto |
-|-----------|-----------------|
-| `app.json` com chave `"expo"` | Expo Managed Workflow |
-| `app.json` + pasta `ios/` ou `android/` | Expo Bare Workflow |
-| `package.json` com `react-native` sem `expo` | React Native puro |
+References: `checklists/security-checklist.md`
 
 ---
 
-## Interpretando o Relatório
+## Project Configuration
 
-O relatório gerado (`compliance-report.md`) é dividido em seções:
+The skill automatically detects:
 
-1. **Resumo Executivo** — contagem por severidade
-2. **Apple App Store** — problemas específicos iOS
-3. **Google Play Store** — problemas específicos Android
-4. **LGPD / Privacidade** — conformidade com lei brasileira
-5. **Segurança** — vulnerabilidades de dados
-6. **Dependências** — riscos em pacotes de terceiros
-7. **Próximos Passos** — ordem de ação recomendada
+| Indicator | Project Type |
+|-----------|--------------|
+| `app.json` with `"expo"` key | Expo Managed Workflow |
+| `app.json` + `ios/` or `android/` folder | Expo Bare Workflow |
+| `package.json` with `react-native` without `expo` | Pure React Native |
 
-### Priorização de Correções
+---
+
+## Interpreting the Report
+
+The generated report (`compliance-report.md`) is divided into sections:
+
+1. **Executive Summary** — count by severity
+2. **Apple App Store** — iOS-specific issues
+3. **Google Play Store** — Android-specific issues
+4. **LGPD / Privacy** — compliance with Brazilian law
+5. **Security** — data vulnerabilities
+6. **Dependencies** — risks in third-party packages
+7. **Next Steps** — recommended action order
+
+### Fix Prioritization
 
 ```
-1. Corrigir todos os 🔴 CRÍTICO
-2. Revisar todos os ⚠️ ALERTA (decidir se aplica ao contexto)
-3. Considerar ℹ️ INFO para melhor compliance
-4. ✅ OK não precisa de ação
+1. Fix all 🔴 CRITICAL
+2. Review all ⚠️ WARNING (decide if applies to context)
+3. Consider ℹ️ INFO for better compliance
+4. ✅ OK needs no action
 ```
 
 ---
 
-## Limitações Importantes
+## Important Limitations
 
-- Scripts analisam configuração e código estático — não testam runtime
-- Verificação de segurança identifica padrões comuns, não é pentest
-- Análise LGPD cobre requisitos técnicos; aspectos jurídicos requerem advogado
-- Diretrizes das lojas mudam — verifique datas de atualização nos reference files
-- Não substitui revisão manual dos checklists antes de submeter
-
----
-
-## Atualizando a Skill
-
-Os reference files têm datas de atualização no cabeçalho. Quando as diretrizes
-mudarem, atualize os arquivos em `references/` e os checks correspondentes nos
-scripts. Mantenha `version` e `updated` neste SKILL.md atualizados.
+- Scripts analyze configuration and static code — they do not test runtime
+- Security verification identifies common patterns, not a pentest
+- LGPD analysis covers technical requirements; legal aspects require a lawyer
+- Store guidelines change — check update dates in reference files
+- Does not replace manual review of checklists before submitting
 
 ---
 
-## Recursos Adicionais
+## Updating the Skill
 
-- `references/` — diretrizes condensadas por plataforma
-- `checklists/` — checklists interativos pré-submissão
-- `templates/` — templates de documentos legais e formulários
-- `scripts/` — automação bash para análise de projeto
-- `evals/evals.json` — casos de teste para validar a skill
+Reference files have update dates in the header. When guidelines change,
+update files in `references/` and corresponding checks in scripts. Keep
+`version` and `updated` in this SKILL.md current.
+
+---
+
+## Additional Resources
+
+- `references/` — condensed guidelines by platform
+- `checklists/` — interactive pre-submission checklists
+- `templates/` — legal document templates and forms
+- `scripts/` — bash automation for project analysis
+- `evals/evals.json` — test cases to validate the skill
