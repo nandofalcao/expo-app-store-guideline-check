@@ -2,13 +2,14 @@
 name: mobile-app-compliance-checker
 description: >
   Verifies if a React Native/Expo application complies with Apple App Store,
-  Google Play Store, LGPD, and privacy policy guidelines. Use this skill
+  Google Play Store, LGPD, GDPR, and privacy policy guidelines. Use this skill
   whenever the user mentions: compliance, app store submission, app store
-  rejection, privacy policy, LGPD, data protection, data safety, privacy
+  rejection, privacy policy, LGPD, GDPR, data protection, data safety, privacy
   manifest, app review, pre-submission checklist, mobile app security check,
-  or any mention of preparing an app for publication in stores. Also trigger
-  when the user asks about app permissions, data collection, or privacy
-  requirements for mobile apps.
+  European data protection, EU privacy, DPIA, data processing agreement,
+  supervisory authority, or any mention of preparing an app for publication in
+  stores. Also trigger when the user asks about app permissions, data collection,
+  or privacy requirements for mobile apps.
 version: "1.0.0"
 updated: "2026-03-28"
 platforms: [ios, android]
@@ -18,7 +19,7 @@ frameworks: [react-native, expo]
 # Mobile App Compliance Checker
 
 Skill to verify compliance of React Native/Expo apps with Apple App Store,
-Google Play Store, LGPD, and privacy/security best practices guidelines.
+Google Play Store, LGPD, GDPR, and privacy/security best practices guidelines.
 
 ---
 
@@ -27,7 +28,7 @@ Google Play Store, LGPD, and privacy/security best practices guidelines.
 1. **Analyzes the project automatically** via bash scripts
 2. **Classifies issues** as: CRITICAL / WARNING / INFO / OK
 3. **Generates actionable report** with suggested fixes for each issue
-4. **Covers four domains:** Apple App Store, Google Play, LGPD/Privacy, Security
+4. **Covers four domains:** Apple App Store, Google Play, Privacy/Data Protection (LGPD + GDPR), Security
 
 ---
 
@@ -77,9 +78,12 @@ bash scripts/check-dependencies.sh /project/path
 | Configure iOS Privacy Manifest | `references/react-native-expo.md` + `scripts/check-privacy-manifest.sh` |
 | Fill Google Data Safety | `templates/data-safety-form.md` + `scripts/check-data-safety.sh` |
 | Fill Apple Privacy Labels | `templates/app-privacy-labels.md` |
-| Create Privacy Policy | `templates/privacy-policy-en.md` (EN) or `templates/privacy-policy-pt-br.md` (PT-BR) |
+| Create Privacy Policy (LGPD) | `templates/privacy-policy-en.md` (EN) or `templates/privacy-policy-pt-br.md` (PT-BR) |
+| Create Privacy Policy (GDPR) | `templates/privacy-policy-gdpr-en.md` |
 | Create Terms of Use | `templates/terms-of-use-en.md` (EN) or `templates/terms-of-use-pt-br.md` (PT-BR) |
 | Verify LGPD compliance | `references/lgpd-privacy.md` + `checklists/privacy-compliance.md` |
+| Verify GDPR compliance | `references/gdpr-privacy.md` + `checklists/privacy-compliance.md` |
+| Compare LGPD vs GDPR | `references/lgpd-vs-gdpr.md` |
 | Complete iOS checklist | `checklists/pre-submission-ios.md` |
 | Complete Android checklist | `checklists/pre-submission-android.md` |
 | Verify data security | `checklists/security-checklist.md` + `scripts/check-security.sh` |
@@ -135,14 +139,27 @@ References: `references/apple-app-store.md`
 
 References: `references/google-play-store.md`
 
-### LGPD / Privacy
-- **Privacy Policy:** presence, accessibility, language
-- **Consent:** explicit mechanism before collecting data
-- **Data subject rights:** access, deletion, portability
-- **DPO:** data protection officer identification
+### Privacy / Data Protection
+
+#### LGPD (Brazil — Law 13.709/2018)
+- **Privacy Policy:** presence, accessibility, language (Portuguese for Brazilian users)
+- **Consent:** explicit mechanism before collecting data (Art. 8º)
+- **Data subject rights:** access and deletion within 15 days (Art. 18)
+- **DPO:** data protection officer — mandatory for all controllers (Art. 41)
 - **Sharing:** list of third parties receiving data
 
 References: `references/lgpd-privacy.md`
+
+#### GDPR (EU/EEA — Regulation 2016/679)
+- **Privacy Policy:** mandatory Art. 13/14 elements, language of target member state
+- **Consent:** freely given, specific, demonstrable, withdrawable (Art. 7)
+- **Data subject rights:** access, erasure within 30 days, restriction, objection (Art. 15–22)
+- **DPO:** conditional — required for large-scale, public authorities, special categories (Art. 37)
+- **DPIA:** mandatory for high-risk processing (Art. 35)
+- **DPA:** written agreement mandatory with all processors (Art. 28)
+- **Breach notification:** 72 hours to supervisory authority (Art. 33)
+
+References: `references/gdpr-privacy.md` | Dual-market: `references/lgpd-vs-gdpr.md`
 
 ### Data Security
 - **Storage:** no sensitive data in AsyncStorage
@@ -173,7 +190,7 @@ The generated report (`compliance-report.md`) is divided into sections:
 1. **Executive Summary** — count by severity
 2. **Apple App Store** — iOS-specific issues
 3. **Google Play Store** — Android-specific issues
-4. **LGPD / Privacy** — compliance with Brazilian law
+4. **Privacy / Data Protection** — LGPD (Brazil) and/or GDPR (EU/EEA)
 5. **Security** — data vulnerabilities
 6. **Dependencies** — risks in third-party packages
 7. **Next Steps** — recommended action order
@@ -193,7 +210,7 @@ The generated report (`compliance-report.md`) is divided into sections:
 
 - Scripts analyze configuration and static code — they do not test runtime
 - Security verification identifies common patterns, not a pentest
-- LGPD analysis covers technical requirements; legal aspects require a lawyer
+- LGPD and GDPR analysis covers technical requirements; legal aspects require a lawyer
 - Store guidelines change — check update dates in reference files
 - Does not replace manual review of checklists before submitting
 

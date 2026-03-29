@@ -92,6 +92,8 @@ mobile-app-compliance-checker/
 │   ├── apple-app-store.md
 │   ├── google-play-store.md
 │   ├── lgpd-privacy.md
+│   ├── gdpr-privacy.md
+│   ├── lgpd-vs-gdpr.md
 │   ├── react-native-expo.md
 │   └── common-rejections.md
 ├── checklists/           # Pre-submission checklists
@@ -102,6 +104,7 @@ mobile-app-compliance-checker/
 ├── templates/            # Legal and form templates
 │   ├── privacy-policy-pt-br.md
 │   ├── privacy-policy-en.md
+│   ├── privacy-policy-gdpr-en.md
 │   ├── terms-of-use-pt-br.md
 │   ├── terms-of-use-en.md
 │   ├── app-privacy-labels.md
@@ -124,7 +127,7 @@ mobile-app-compliance-checker/
 When translating files:
 
 1. **Preserve structure**: Keep the same markdown structure and formatting
-2. **Keep technical terms**: Don't translate terms like "React Native", "Expo", "iOS", "LGPD"
+2. **Keep technical terms**: Don't translate terms like "React Native", "Expo", "iOS", "LGPD", "GDPR"
 3. **Preserve code blocks**: Don't translate code examples
 4. **Keep URLs unchanged**: Don't modify links or file paths
 5. **Maintain legal accuracy**: For legal templates, preserve legal terminology

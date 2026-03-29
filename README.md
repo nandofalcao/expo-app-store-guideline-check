@@ -1,7 +1,7 @@
 # mobile-app-compliance-checker
 
 Tool-agnostic skill to verify compliance of React Native/Expo apps
-with **Apple App Store**, **Google Play Store**, **LGPD** guidelines and
+with **Apple App Store**, **Google Play Store**, **LGPD**, **GDPR** guidelines and
 privacy and security best practices.
 
 ## What It Checks
@@ -10,7 +10,8 @@ privacy and security best practices.
 |--------|----------------|
 | Apple App Store | Privacy Manifest, Usage Descriptions, Account Deletion, IAP |
 | Google Play Store | Target API Level, Data Safety Section, Permissions |
-| LGPD / Privacy | Privacy Policy, Consent, Data Subject Rights |
+| LGPD / Privacy | Privacy Policy, Consent, Data Subject Rights, DPO |
+| GDPR | DPIA, DPA (Art. 28), 72h breach notification, Art. 15-22 rights |
 | Security | AsyncStorage with sensitive data, hardcoded API keys, HTTPS |
 | Dependencies | Known vulnerabilities, SDKs that collect data |
 
@@ -68,6 +69,8 @@ mobile-app-compliance-checker/
 │   ├── apple-app-store.md            # Condensed Apple guidelines
 │   ├── google-play-store.md          # Condensed Google Play guidelines
 │   ├── lgpd-privacy.md               # LGPD + Privacy requirements
+│   ├── gdpr-privacy.md               # GDPR + Privacy requirements (EU/EEA)
+│   ├── lgpd-vs-gdpr.md               # LGPD vs GDPR comparison + dual-compliance strategy
 │   ├── react-native-expo.md          # RN/Expo specific checks
 │   └── common-rejections.md          # Common rejection reasons + solutions
 ├── checklists/
@@ -85,8 +88,9 @@ mobile-app-compliance-checker/
 │   ├── check-security.sh             # Checks security practices
 │   └── generate-report.sh            # Generates consolidated report
 ├── templates/
-│   ├── privacy-policy-en.md          # Privacy Policy Template (EN)
-│   ├── privacy-policy-pt-br.md       # Privacy Policy Template (PT-BR)
+│   ├── privacy-policy-en.md          # Privacy Policy Template — LGPD (EN)
+│   ├── privacy-policy-pt-br.md       # Privacy Policy Template — LGPD (PT-BR)
+│   ├── privacy-policy-gdpr-en.md     # Privacy Policy Template — GDPR (EN)
 │   ├── terms-of-use-en.md            # Terms of Use Template (EN)
 │   ├── terms-of-use-pt-br.md         # Terms of Use Template (PT-BR)
 │   ├── data-safety-form.md           # Google Play Data Safety Guide
@@ -129,11 +133,12 @@ regularly:
 - [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - [Google Play Developer Policy](https://support.google.com/googleplay/android-developer/answer/16810878)
 - [ANPD — National Data Protection Authority](https://www.gov.br/anpd/pt-br)
+- [EDPB — European Data Protection Board](https://www.edpb.europa.eu/edpb_en)
 
 ## Disclaimer
 
 This skill provides automated technical checks and educational references.
-**It does not replace legal advice.** For full compliance with LGPD and
+**It does not replace legal advice.** For full compliance with LGPD, GDPR, and
 other regulatory frameworks, consult a legal professional specialized
 in data protection.
 
