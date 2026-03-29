@@ -10,7 +10,7 @@
 
 # Privacy Policy
 
-**[NOME DO APP]**
+**[APP NAME]**
 
 *Last updated: [DATE — e.g.: March 28, 2026]*
 
@@ -18,13 +18,13 @@
 
 ## 1. Who We Are
 
-**[NOME DA EMPRESA/DESENVOLVEDOR]** ("we", "our", "us"), registered under CNPJ/CPF number **[CNPJ/CPF]**, headquartered in **[CIDADE, ESTADO, BRASIL]**, is the responsible party for the application **[NOME DO APP]** ("Application").
+**[COMPANY NAME/DEVELOPER]** ("we", "our", "us"), registered under CNPJ/CPF number **[CNPJ/CPF]**, headquartered in **[CITY, STATE, BRAZIL]**, is the responsible party for the application **[APP NAME]** ("Application").
 
 In accordance with the Brazilian General Data Protection Law (LGPD — Law No. 13.709/2018), we act as **Controller** of the personal data collected through this Application.
 
 **Data Protection Officer (DPO) Contact:**
-- Name: **[NOME DO DPO]**
-- Email: **[dpo@suaempresa.com.br]**
+- Name: **[DPO NAME]**
+- Email: **[dpo@yourcompany.com]**
 
 ---
 
@@ -37,7 +37,7 @@ In accordance with the Brazilian General Data Protection Law (LGPD — Law No. 1
 | Full name | Identification and personalization | Execution of contract | While account is active + [X] years |
 | Email address | Login, notifications and communication | Execution of contract | While account is active + [X] years |
 | Profile photo | Profile display | Consent | While account is active |
-| [ADICIONAR OUTROS DADOS] | [PURPOSE] | [LEGAL BASIS] | [RETENTION] |
+| [ADD OTHER DATA] | [PURPOSE] | [LEGAL BASIS] | [RETENTION] |
 
 ### 2.2 Data Collected Automatically
 
@@ -115,7 +115,7 @@ As a personal data subject, you have the following rights:
 | **Withdrawal of consent** | [Settings > Privacy] | Immediate |
 | **Objection** to processing | Email the DPO | Up to 15 days |
 
-**To exercise your rights:** Contact our DPO at **[dpo@suaempresa.com.br]**.
+**To exercise your rights:** Contact our DPO at **[dpo@yourcompany.com]**.
 
 ---
 
@@ -195,10 +195,10 @@ Continued use of the Application after changes constitutes acceptance of the new
 For questions, rights requests, or privacy complaints:
 
 **Data Protection Officer (DPO):**
-- **[NOME DO DPO]**
-- Email: **[dpo@suaempresa.com.br]**
-- [OPTIONAL] Phone: **[TELEFONE]**
-- Address: **[ENDEREÇO COMPLETO]**
+- **[DPO NAME]**
+- Email: **[dpo@yourcompany.com]**
+- [OPTIONAL] Phone: **[PHONE]**
+- Address: **[FULL ADDRESS]**
 
 You can also file complaints directly with the **National Data Protection Authority (ANPD):** https://www.gov.br/anpd/
 
