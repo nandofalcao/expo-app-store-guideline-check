@@ -1,130 +1,130 @@
-# Checklist de Segurança de Dados
+# Data Security Checklist
 
-> Versão: 1.0 | Atualizado: 2026-03-28
-> Baseado em OWASP Mobile Top 10 e boas práticas para React Native/Expo
+> Version: 1.0 | Updated: 2026-03-28
+> Based on OWASP Mobile Top 10 and best practices for React Native/Expo
 
 ---
 
-## 1. Armazenamento de Dados
+## 1. Data Storage
 
-### Dados Sensíveis
-- [ ] Tokens de autenticação armazenados em `expo-secure-store` (encriptado)
-- [ ] Senhas NUNCA armazenadas localmente
-- [ ] Dados de cartão de crédito NUNCA armazenados localmente (use tokenização)
-- [ ] Informações de saúde e documentos em armazenamento encriptado
-- [ ] `AsyncStorage` usado APENAS para dados não-sensíveis (preferências, cache)
+### Sensitive Data
+- [ ] Authentication tokens stored in `expo-secure-store` (encrypted)
+- [ ] Passwords NEVER stored locally
+- [ ] Credit card data NEVER stored locally (use tokenization)
+- [ ] Health information and documents in encrypted storage
+- [ ] `AsyncStorage` used ONLY for non-sensitive data (preferences, cache)
 
-### Verificação do Armazenamento
+### Storage Verification
 ```typescript
-// ✅ Correto — dados sensíveis
+// ✅ Correct — sensitive data
 import * as SecureStore from 'expo-secure-store';
 await SecureStore.setItemAsync('authToken', token);
 
-// ❌ Incorreto — dados sensíveis
+// ❌ Incorrect — sensitive data
 import AsyncStorage from '@react-native-async-storage/async-storage';
-await AsyncStorage.setItem('authToken', token); // NÃO fazer isso
+await AsyncStorage.setItem('authToken', token); // DO NOT do this
 ```
 
-- [ ] Busca por `AsyncStorage.setItem` com palavras como token/auth/password não encontra matches
-- [ ] Sem dados de usuário em cookies não-encriptados
+- [ ] Search for `AsyncStorage.setItem` with words like token/auth/password finds no matches
+- [ ] No user data in unencrypted cookies
 
 ---
 
-## 2. Comunicação Segura
+## 2. Secure Communication
 
 ### HTTPS / TLS
-- [ ] Todos os endpoints de API usam HTTPS
-- [ ] Sem URLs `http://` hardcoded no código (exceto localhost)
-- [ ] Versão TLS mínima: TLS 1.2 (TLS 1.3 recomendado)
-- [ ] Certificados SSL válidos e não expirados nos endpoints
+- [ ] All API endpoints use HTTPS
+- [ ] No `http://` URLs hardcoded in code (except localhost)
+- [ ] Minimum TLS version: TLS 1.2 (TLS 1.3 recommended)
+- [ ] Valid and non-expired SSL certificates on endpoints
 
 ### Android Network Security
-- [ ] `android:usesCleartextTraffic="false"` no AndroidManifest (padrão no Android 9+)
-- [ ] `network_security_config.xml` não permite cleartext para domínios de produção
-- [ ] Sem `cleartextTrafficPermitted="true"` global no build de produção
+- [ ] `android:usesCleartextTraffic="false"` in AndroidManifest (default on Android 9+)
+- [ ] `network_security_config.xml` does not allow cleartext for production domains
+- [ ] No global `cleartextTrafficPermitted="true"` in production build
 
 ### iOS App Transport Security (ATS)
-- [ ] Sem `NSAllowsArbitraryLoads: true` no Info.plist de produção
-- [ ] Exceções de ATS documentadas e justificadas (se necessário)
+- [ ] No `NSAllowsArbitraryLoads: true` in production Info.plist
+- [ ] ATS exceptions documented and justified (if necessary)
 
 ---
 
-## 3. Segredos e Chaves de API
+## 3. Secrets and API Keys
 
-### No Código-Fonte
-- [ ] Sem API keys hardcoded em arquivos `.ts`, `.tsx`, `.js`, `.jsx`
-- [ ] Sem tokens ou senhas em código-fonte
-- [ ] Sem connection strings de banco de dados expostas
-- [ ] Busca por padrões comuns de segredos sem matches:
+### In Source Code
+- [ ] No hardcoded API keys in `.ts`, `.tsx`, `.js`, `.jsx` files
+- [ ] No tokens or passwords in source code
+- [ ] No exposed database connection strings
+- [ ] Search for common secret patterns finds no matches:
   ```bash
   grep -rn "api_key\|secret_key\|private_key" src/ --include="*.ts"
   ```
 
-### Em Arquivos de Configuração
-- [ ] Arquivos `.env` com valores reais não commitados no git
-- [ ] `.gitignore` inclui: `.env`, `.env.local`, `.env.production`, `.env.staging`
-- [ ] `.env.example` presente com valores de placeholder (sem segredos reais)
-- [ ] `eas.json` não contém segredos (usar EAS Secrets)
-- [ ] `app.json` não contém segredos em `expo.extra`
+### In Configuration Files
+- [ ] `.env` files with real values not committed to git
+- [ ] `.gitignore` includes: `.env`, `.env.local`, `.env.production`, `.env.staging`
+- [ ] `.env.example` present with placeholder values (no real secrets)
+- [ ] `eas.json` does not contain secrets (use EAS Secrets)
+- [ ] `app.json` does not contain secrets in `expo.extra`
 
-### Variáveis de Ambiente Corretas
+### Correct Environment Variables
 ```bash
-# Verificar .gitignore
+# Check .gitignore
 cat .gitignore | grep "\.env"
 
-# Verificar se .env está rastreado (não deve estar)
+# Check if .env is tracked (it shouldn't be)
 git status .env
 ```
 
 ---
 
-## 4. Autenticação e Sessão
+## 4. Authentication and Session
 
-- [ ] Tokens JWT com tempo de expiração curto (access token: 15min-1h)
-- [ ] Refresh tokens com expiração maior (ex: 30 dias) e rotação
-- [ ] Logout invalida tokens no servidor (não apenas no cliente)
-- [ ] Sem tokens em URLs (use Authorization header)
-- [ ] Implementação de "revogar todas as sessões" disponível para usuário
-- [ ] Rate limiting no endpoint de login (proteção a força bruta)
-- [ ] Multi-factor authentication (MFA) para contas sensíveis (recomendado)
-
----
-
-## 5. Injeção e Validação
-
-- [ ] Inputs do usuário validados antes de enviar para API
-- [ ] Sem uso de `eval()` ou `new Function()` no código
-- [ ] Sem interpolação de strings não-sanitizadas em queries
-- [ ] Sem XSS em WebViews (se usa renderização de HTML do usuário)
-- [ ] Deep linking verifica origem antes de executar ações
+- [ ] JWT tokens with short expiration time (access token: 15min-1h)
+- [ ] Refresh tokens with longer expiration (e.g., 30 days) and rotation
+- [ ] Logout invalidates tokens on the server (not just on client)
+- [ ] No tokens in URLs (use Authorization header)
+- [ ] "Revoke all sessions" implementation available for user
+- [ ] Rate limiting on login endpoint (brute force protection)
+- [ ] Multi-factor authentication (MFA) for sensitive accounts (recommended)
 
 ---
 
-## 6. Privacidade em Logs
+## 5. Injection and Validation
 
-- [ ] Logs de produção não incluem dados pessoais
-- [ ] Logs não incluem tokens, senhas ou segredos
-- [ ] `console.log` com dados sensíveis removidos antes do release
-- [ ] Crash reporters (Sentry, Crashlytics) com PII scrubbing configurado
-- [ ] Configuração de logging diferente para dev/produção
+- [ ] User inputs validated before sending to API
+- [ ] No usage of `eval()` or `new Function()` in code
+- [ ] No unsanitized string interpolation in queries
+- [ ] No XSS in WebViews (if using user HTML rendering)
+- [ ] Deep linking verifies origin before executing actions
+
+---
+
+## 6. Privacy in Logs
+
+- [ ] Production logs do not include personal data
+- [ ] Logs do not include tokens, passwords, or secrets
+- [ ] `console.log` with sensitive data removed before release
+- [ ] Crash reporters (Sentry, Crashlytics) with PII scrubbing configured
+- [ ] Different logging configuration for dev/production
 
 ```typescript
-// Biblioteca recomendada para logging seguro
+// Recommended library for secure logging
 import * as Logger from 'react-native-logs';
-// Configurar para desabilitar em produção
+// Configure to disable in production
 ```
 
 ---
 
-## 7. Proteção do Código (Build de Produção)
+## 7. Code Protection (Production Build)
 
-- [ ] Modo release/produção ativo no build (não debug)
-- [ ] Minificação e ofuscação habilitadas no build de produção
-- [ ] `__DEV__` e código de desenvolvimento removidos do build
-- [ ] Remote Debugger desabilitado em produção
-- [ ] Flipper desabilitado em produção
+- [ ] Release/production mode active in build (not debug)
+- [ ] Minification and obfuscation enabled in production build
+- [ ] `__DEV__` and development code removed from build
+- [ ] Remote Debugger disabled in production
+- [ ] Flipper disabled in production
 
-### EAS Build — verificar eas.json:
+### EAS Build — check eas.json:
 ```json
 {
   "build": {
@@ -139,75 +139,75 @@ import * as Logger from 'react-native-logs';
 
 ---
 
-## 8. Biometria e Autenticação Local
+## 8. Biometrics and Local Authentication
 
-- [ ] Face ID/Touch ID via `expo-local-authentication` (não implementação customizada)
-- [ ] Fallback para PIN/senha se biometria não disponível
-- [ ] Autenticação local não substitui autenticação de servidor para operações críticas
-- [ ] Re-autenticação solicitada para ações sensíveis (pagamentos, exclusão de conta)
-
----
-
-## 9. Atualizações e Dependências
-
-- [ ] `npm audit` ou `yarn audit` sem vulnerabilidades críticas/altas
-- [ ] Dependências atualizadas (verificar com `npx npm-check-updates`)
-- [ ] React Native na versão LTS mais recente
-- [ ] Expo SDK na versão mais recente (ou LTS)
-- [ ] Processo de atualização de dependências documentado (ex: mensal)
+- [ ] Face ID/Touch ID via `expo-local-authentication` (not custom implementation)
+- [ ] Fallback to PIN/password if biometrics not available
+- [ ] Local authentication does not replace server authentication for critical operations
+- [ ] Re-authentication requested for sensitive actions (payments, account deletion)
 
 ---
 
-## 10. Tratamento de Dados Sensíveis em Memória
+## 9. Updates and Dependencies
 
-- [ ] Senhas limpas da memória após uso (difícil em JS, mas evitar persistência desnecessária)
-- [ ] Clipboard limpo após copiar dados sensíveis (opcional, mas boa prática)
-- [ ] Screenshots bloqueados em telas com dados financeiros ou de saúde (Android: `FLAG_SECURE`, iOS: similar)
+- [ ] `npm audit` or `yarn audit` with no critical/high vulnerabilities
+- [ ] Dependencies up to date (check with `npx npm-check-updates`)
+- [ ] React Native on latest LTS version
+- [ ] Expo SDK on latest version (or LTS)
+- [ ] Dependency update process documented (e.g., monthly)
 
 ---
 
-## 11. SSL Pinning (Recomendado para Apps Críticos)
+## 10. Handling Sensitive Data in Memory
 
-Para apps financeiros, de saúde ou com dados muito sensíveis:
+- [ ] Passwords cleared from memory after use (difficult in JS, but avoid unnecessary persistence)
+- [ ] Clipboard cleared after copying sensitive data (optional, but good practice)
+- [ ] Screenshots blocked on screens with financial or health data (Android: `FLAG_SECURE`, iOS: similar)
 
-- [ ] SSL Pinning implementado para endpoints críticos
-- [ ] Certificado inclui backup pins (para rotação segura)
-- [ ] Processo de atualização de pins documentado
+---
+
+## 11. SSL Pinning (Recommended for Critical Apps)
+
+For financial, health, or highly sensitive data apps:
+
+- [ ] SSL Pinning implemented for critical endpoints
+- [ ] Certificate includes backup pins (for secure rotation)
+- [ ] Pin update process documented
 
 ```bash
-# Instalar
+# Install
 npm install react-native-ssl-pinning
 ```
 
 ---
 
-## Verificação Automática
+## Automatic Verification
 
-Execute o check de segurança:
+Run the security check:
 ```bash
 bash scripts/check-security.sh .
 ```
 
 ---
 
-## OWASP Mobile Top 10 (2023) — Cobertura
+## OWASP Mobile Top 10 (2023) — Coverage
 
-| Risco | Coberto | Como |
-|-------|---------|------|
-| M1: Improper Credential Usage | ✅ | Seções 1, 3, 4 |
-| M2: Inadequate Supply Chain Security | ✅ | Seção 9 |
-| M3: Insecure Authentication/Authorization | ✅ | Seção 4 |
-| M4: Insufficient Input/Output Validation | ✅ | Seção 5 |
-| M5: Insecure Communication | ✅ | Seção 2 |
-| M6: Inadequate Privacy Controls | ✅ | Seção 6, `checklists/privacy-compliance.md` |
-| M7: Insufficient Binary Protections | ✅ | Seção 7 |
-| M8: Security Misconfiguration | ✅ | Seções 2, 3 |
-| M9: Insecure Data Storage | ✅ | Seção 1 |
-| M10: Insufficient Cryptography | ✅ | Seções 1, 2, 4 |
+| Risk | Covered | How |
+|------|---------|-----|
+| M1: Improper Credential Usage | ✅ | Sections 1, 3, 4 |
+| M2: Inadequate Supply Chain Security | ✅ | Section 9 |
+| M3: Insecure Authentication/Authorization | ✅ | Section 4 |
+| M4: Insufficient Input/Output Validation | ✅ | Section 5 |
+| M5: Insecure Communication | ✅ | Section 2 |
+| M6: Inadequate Privacy Controls | ✅ | Section 6, `checklists/privacy-compliance.md` |
+| M7: Insufficient Binary Protections | ✅ | Section 7 |
+| M8: Security Misconfiguration | ✅ | Sections 2, 3 |
+| M9: Insecure Data Storage | ✅ | Section 1 |
+| M10: Insufficient Cryptography | ✅ | Sections 1, 2, 4 |
 
 ---
 
-## Referências
+## References
 
 - [OWASP Mobile Top 10](https://owasp.org/www-project-mobile-top-10/)
 - [React Native Security](https://reactnative.dev/docs/security)

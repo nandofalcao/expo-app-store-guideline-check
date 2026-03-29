@@ -1,180 +1,180 @@
-# Checklist de Conformidade com Privacidade
+# Privacy Compliance Checklist
 
-> Versão: 1.0 | Atualizado: 2026-03-28
-> Cobre: LGPD (Brasil) + Apple App Store + Google Play Store
-
----
-
-## 1. Política de Privacidade
-
-### Existência e Acessibilidade
-- [ ] Privacy Policy existe em URL pública e permanente
-- [ ] Privacy Policy acessível **dentro do app** (sem login)
-- [ ] Link para Privacy Policy na tela de onboarding/cadastro
-- [ ] URL configurada no App Store Connect (Apple)
-- [ ] URL configurada no Google Play Console
-- [ ] Privacy Policy em **português** (para usuários brasileiros)
-
-### Conteúdo da Privacy Policy
-- [ ] Dados coletados listados explicitamente
-- [ ] Finalidade de uso de cada tipo de dado
-- [ ] Base legal para cada tratamento (LGPD)
-- [ ] Compartilhamento com terceiros (listar SDKs e parceiros)
-- [ ] Política de retenção de dados (por quanto tempo cada dado é mantido)
-- [ ] Direitos dos titulares explicados
-- [ ] Como exercer cada direito (instrução clara)
-- [ ] Nome e contato do DPO/Encarregado de Dados
-- [ ] Procedimento em caso de incidente de segurança
-- [ ] Data da última atualização
-- [ ] Informações sobre transferência internacional (se dados vão para fora do Brasil)
+> Version: 1.0 | Updated: 2026-03-28
+> Covers: LGPD (Brazil) + Apple App Store + Google Play Store
 
 ---
 
-## 2. Consentimento
+## 1. Privacy Policy
 
-- [ ] Consentimento solicitado **antes** de coletar dados não-essenciais
-- [ ] Consentimento em **destaque** (não enterrado em texto)
-- [ ] Descrição clara do que está sendo autorizado
-- [ ] Link para Privacy Policy completa no momento do consentimento
-- [ ] Opção de **recusar** igualmente acessível à opção de aceitar
-- [ ] Sem pré-marcação de checkboxes de consentimento
-- [ ] Mecanismo de **revogação** de consentimento no app
-- [ ] App funciona (com funcionalidade reduzida) para quem recusa dados opcionais
-- [ ] Consentimento separado por finalidade (marketing ≠ analytics ≠ essencial)
+### Existence and Accessibility
+- [ ] Privacy Policy exists at a public and permanent URL
+- [ ] Privacy Policy accessible **within the app** (no login required)
+- [ ] Link to Privacy Policy on onboarding/registration screen
+- [ ] URL configured in App Store Connect (Apple)
+- [ ] URL configured in Google Play Console
+- [ ] Privacy Policy in **Portuguese** (for Brazilian users)
+
+### Privacy Policy Content
+- [ ] Collected data explicitly listed
+- [ ] Purpose of use for each type of data
+- [ ] Legal basis for each processing activity (LGPD)
+- [ ] Sharing with third parties (list SDKs and partners)
+- [ ] Data retention policy (how long each data is kept)
+- [ ] Data subject rights explained
+- [ ] How to exercise each right (clear instruction)
+- [ ] DPO/Data Protection Officer name and contact
+- [ ] Procedure in case of security incident
+- [ ] Date of last update
+- [ ] Information about international transfer (if data goes outside Brazil)
 
 ---
 
-## 3. Dados Coletados — Inventário
+## 2. Consent
 
-Para cada dado coletado, verificar:
+- [ ] Consent requested **before** collecting non-essential data
+- [ ] Consent in **highlight** (not buried in text)
+- [ ] Clear description of what is being authorized
+- [ ] Link to full Privacy Policy at the moment of consent
+- [ ] Option to **refuse** equally accessible as the option to accept
+- [ ] No pre-checked consent checkboxes
+- [ ] Mechanism for **revoking** consent in the app
+- [ ] App works (with reduced functionality) for those who refuse optional data
+- [ ] Separate consent per purpose (marketing ≠ analytics ≠ essential)
 
-| Dado | Coletado? | Base Legal | Finalidade | Retenção | Compartilhado com |
-|------|-----------|------------|-----------|----------|-------------------|
+---
+
+## 3. Collected Data — Inventory
+
+For each collected data, verify:
+
+| Data | Collected? | Legal Basis | Purpose | Retention | Shared with |
+|------|-----------|-------------|---------|----------|-------------|
 | Email | | | | | |
-| Nome | | | | | |
-| Localização | | | | | |
-| Fotos/Vídeos | | | | | |
-| Dados de uso | | | | | |
+| Name | | | | | |
+| Location | | | | | |
+| Photos/Videos | | | | | |
+| Usage data | | | | | |
 | Device ID | | | | | |
 | Crash logs | | | | | |
 | Push tokens | | | | | |
 
-- [ ] Inventário de dados preenchido e atualizado
-- [ ] Cada dado tem base legal definida
-- [ ] Nenhum dado coletado sem finalidade clara
+- [ ] Data inventory filled out and updated
+- [ ] Each data has defined legal basis
+- [ ] No data collected without clear purpose
 
 ---
 
-## 4. Direitos dos Titulares
+## 4. Data Subject Rights
 
-### Acesso aos Dados
-- [ ] Usuário pode visualizar seus dados dentro do app **ou**
-- [ ] Mecanismo de solicitação de acesso (máx. 15 dias de resposta pela LGPD)
-- [ ] Resposta em formato legível
+### Data Access
+- [ ] User can view their data within the app **OR**
+- [ ] Access request mechanism (max 15 days response by LGPD)
+- [ ] Response in readable format
 
-### Correção de Dados
-- [ ] Usuário pode editar seu perfil e dados básicos
-- [ ] Processo para corrigir dados que não estão no app (contato com DPO)
+### Data Correction
+- [ ] User can edit their profile and basic data
+- [ ] Process to correct data not in the app (contact DPO)
 
-### Exclusão de Dados (Account Deletion)
-- [ ] **Funcionalidade de exclusão dentro do app** (obrigatório Apple e LGPD)
-- [ ] Exclusão remove **todos** os dados do usuário (incluindo backups, ressalvado obrigação legal)
-- [ ] Período de exclusão clara (imediato ou até 30 dias)
-- [ ] Confirmação de exclusão enviada por email/notificação
-- [ ] Opção de exportar dados antes de excluir (portabilidade)
+### Data Deletion (Account Deletion)
+- [ ] **Deletion feature within the app** (required by Apple and LGPD)
+- [ ] Deletion removes **all** user data (including backups, subject to legal obligation)
+- [ ] Clear deletion period (immediate or up to 30 days)
+- [ ] Deletion confirmation sent via email/notification
+- [ ] Option to export data before deleting (portability)
 
-### Portabilidade
-- [ ] Export de dados disponível (JSON, CSV ou formato legível)
-- [ ] Processo documentado e comunicado na Privacy Policy
+### Portability
+- [ ] Data export available (JSON, CSV or readable format)
+- [ ] Process documented and communicated in Privacy Policy
 
-### Revogação de Consentimento
-- [ ] Toggle de marketing/analytics nas configurações
-- [ ] Ação imediata após revogação
-- [ ] App não pede consentimento novamente imediatamente
-
----
-
-## 5. Segurança dos Dados
-
-- [ ] HTTPS em todos os endpoints de API
-- [ ] Dados sensíveis encriptados em repouso (expo-secure-store)
-- [ ] Senhas com hash (bcrypt/Argon2) — nunca texto claro
-- [ ] Tokens com validade limitada e renovação segura
-- [ ] Sem dados pessoais em logs de produção
-- [ ] Sem dados sensíveis em AsyncStorage
-- [ ] Acesso mínimo a APIs (princípio do menor privilégio)
-- [ ] Revisão de segurança realizada antes de cada lançamento major
+### Consent Revocation
+- [ ] Marketing/analytics toggle in settings
+- [ ] Immediate action after revocation
+- [ ] App doesn't ask for consent again immediately
 
 ---
 
-## 6. SDKs de Terceiros
+## 5. Data Security
 
-- [ ] Lista de todos os SDKs que coletam dados do usuário
-- [ ] DPA (Data Processing Agreement) assinado com cada processador
-- [ ] Configurações de privacidade de cada SDK verificadas
-
-**SDKs comuns — verificar:**
-- [ ] Firebase Analytics: configuração de data retention, disable para menores
-- [ ] Firebase Crashlytics: dados de crash são anonimizados?
-- [ ] Amplitude/Mixpanel: user deletion API disponível?
-- [ ] Sentry: configuração de PII scrubbing ativa
-- [ ] Google Ads/AdMob: conformidade com Families Policy (se app para crianças)
-- [ ] Branch/Adjust/Appsflyer: data processing agreement assinado
+- [ ] HTTPS on all API endpoints
+- [ ] Sensitive data encrypted at rest (expo-secure-store)
+- [ ] Passwords with hash (bcrypt/Argon2) — never plain text
+- [ ] Tokens with limited validity and secure renewal
+- [ ] No personal data in production logs
+- [ ] No sensitive data in AsyncStorage
+- [ ] Minimum access to APIs (principle of least privilege)
+- [ ] Security review performed before each major release
 
 ---
 
-## 7. Crianças e Adolescentes (se aplicável)
+## 6. Third-Party SDKs
 
-- [ ] Classificação do app indica público-alvo (com ou sem menores)
-- [ ] Se app para menores: coleta mínima de dados
-- [ ] Se app para menores: sem publicidade comportamental de terceiros
-- [ ] Consentimento parental implementado (se coleta dados de menores de 12 anos)
-- [ ] COPPA compliance verificada (se distribuído nos EUA)
+- [ ] List of all SDKs that collect user data
+- [ ] DPA (Data Processing Agreement) signed with each processor
+- [ ] Privacy settings of each SDK verified
 
----
-
-## 8. DPO (Encarregado de Dados)
-
-- [ ] DPO identificado (pessoa física ou jurídica)
-- [ ] Nome do DPO na Privacy Policy
-- [ ] Email/contato do DPO na Privacy Policy e dentro do app
-- [ ] Canal de contato com a ANPD configurado
-- [ ] DPO treinado sobre LGPD e obrigações do cargo
+**Common SDKs — verify:**
+- [ ] Firebase Analytics: data retention configuration, disable for minors
+- [ ] Firebase Crashlytics: are crash data anonymized?
+- [ ] Amplitude/Mixpanel: user deletion API available?
+- [ ] Sentry: PII scrubbing configuration active
+- [ ] Google Ads/AdMob: compliance with Families Policy (if app for children)
+- [ ] Branch/Adjust/Appsflyer: data processing agreement signed
 
 ---
 
-## 9. Resposta a Incidentes
+## 7. Children and Adolescents (if applicable)
 
-- [ ] Processo documentado para resposta a vazamentos
-- [ ] Responsável por coordenar resposta a incidentes definido
-- [ ] Checklist de notificação à ANPD disponível
-- [ ] Template de notificação aos usuários disponível
-- [ ] Monitoramento de segurança ativo (alertas de anomalias)
-
----
-
-## 10. Revisão e Manutenção
-
-- [ ] Privacy Policy revisada a cada lançamento com novos dados/funcionalidades
-- [ ] Privacy Policy com data de "última atualização" visível
-- [ ] Revisão anual de conformidade agendada
-- [ ] Processo de notificação a usuários quando Privacy Policy muda
-- [ ] Registro de atividades de tratamento (ROPA) mantido internamente
+- [ ] App rating indicates target audience (with or without minors)
+- [ ] If app for minors: minimal data collection
+- [ ] If app for minors: no third-party behavioral advertising
+- [ ] Parental consent implemented (if collecting data from minors under 12 years)
+- [ ] COPPA compliance verified (if distributed in the US)
 
 ---
 
-## Verificação Final
+## 8. DPO (Data Protection Officer)
 
-- [ ] Escanear com `bash scripts/scan-project.sh .` e resolver itens CRÍTICOS
-- [ ] Consultar `templates/privacy-policy-pt-br.md` para geração/revisão da Privacy Policy
-- [ ] Confirmar que Data Safety (Google) e Privacy Labels (Apple) estão consistentes com a Privacy Policy
-- [ ] Advogado especializado em LGPD revisou os documentos (recomendado)
+- [ ] DPO identified (individual or legal entity)
+- [ ] DPO name in Privacy Policy
+- [ ] DPO email/contact in Privacy Policy and within the app
+- [ ] Contact channel with ANPD configured
+- [ ] DPO trained on LGPD and position obligations
 
 ---
 
-## Referências
+## 9. Incident Response
 
-- `references/lgpd-privacy.md` — detalhes da LGPD
-- `templates/privacy-policy-pt-br.md` — template de Privacy Policy
-- [ANPD — Guias Orientativos](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
-- [LGPD — Lei 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
+- [ ] Documented process for responding to data breaches
+- [ ] Person responsible for coordinating incident response defined
+- [ ] ANPD notification checklist available
+- [ ] User notification template available
+- [ ] Active security monitoring (anomaly alerts)
+
+---
+
+## 10. Review and Maintenance
+
+- [ ] Privacy Policy reviewed with each release containing new data/features
+- [ ] Privacy Policy with visible "last updated" date
+- [ ] Annual compliance review scheduled
+- [ ] Process for notifying users when Privacy Policy changes
+- [ ] Record of processing activities (ROPA) maintained internally
+
+---
+
+## Final Verification
+
+- [ ] Scan with `bash scripts/scan-project.sh .` and resolve CRITICAL items
+- [ ] Consult `templates/privacy-policy-pt-br.md` for Privacy Policy generation/review
+- [ ] Confirm that Data Safety (Google) and Privacy Labels (Apple) are consistent with Privacy Policy
+- [ ] Lawyer specialized in LGPD reviewed the documents (recommended)
+
+---
+
+## References
+
+- `references/lgpd-privacy.md` — LGPD details
+- `templates/privacy-policy-pt-br.md` — Privacy Policy template
+- [ANPD — Guiding Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
+- [LGPD — Law 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
