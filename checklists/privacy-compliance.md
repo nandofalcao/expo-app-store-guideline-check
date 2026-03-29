@@ -1,7 +1,7 @@
 # Privacy Compliance Checklist
 
-> Version: 1.0 | Updated: 2026-03-28
-> Covers: LGPD (Brazil) + Apple App Store + Google Play Store
+> Version: 1.1 | Updated: 2026-03-29
+> Covers: LGPD (Brazil) + GDPR (EU/EEA) + Apple App Store + Google Play Store
 
 ---
 
@@ -13,12 +13,13 @@
 - [ ] Link to Privacy Policy on onboarding/registration screen
 - [ ] URL configured in App Store Connect (Apple)
 - [ ] URL configured in Google Play Console
-- [ ] Privacy Policy in **Portuguese** (for Brazilian users)
+- [ ] Privacy Policy in **Portuguese** (for Brazilian users) `[LGPD]`
+- [ ] Privacy Policy available in the **language(s) of target EU member states** `[GDPR]`
 
 ### Privacy Policy Content
 - [ ] Collected data explicitly listed
 - [ ] Purpose of use for each type of data
-- [ ] Legal basis for each processing activity (LGPD)
+- [ ] Legal basis for each processing activity (LGPD Art. 7 / GDPR Art. 6)
 - [ ] Sharing with third parties (list SDKs and partners)
 - [ ] Data retention policy (how long each data is kept)
 - [ ] Data subject rights explained
@@ -26,7 +27,11 @@
 - [ ] DPO/Data Protection Officer name and contact
 - [ ] Procedure in case of security incident
 - [ ] Date of last update
-- [ ] Information about international transfer (if data goes outside Brazil)
+- [ ] Information about international transfer (if data goes outside Brazil) `[LGPD]`
+- [ ] International transfer safeguard documented (SCCs, adequacy) `[GDPR]`
+- [ ] DPIA reference or indication if high-risk processing `[GDPR]`
+- [ ] DPA (Data Processing Agreement) mentioned for each processor `[GDPR]`
+- [ ] Legitimate Interest Assessment documented where LI is the legal basis `[GDPR]`
 
 ---
 
@@ -69,7 +74,7 @@ For each collected data, verify:
 
 ### Data Access
 - [ ] User can view their data within the app **OR**
-- [ ] Access request mechanism (max 15 days response by LGPD)
+- [ ] Access request mechanism (max 15 days response `[LGPD]` / 30 days `[GDPR]`)
 - [ ] Response in readable format
 
 ### Data Correction
@@ -86,6 +91,12 @@ For each collected data, verify:
 ### Portability
 - [ ] Data export available (JSON, CSV or readable format)
 - [ ] Process documented and communicated in Privacy Policy
+
+### GDPR-Specific Rights `[GDPR]`
+- [ ] Right to **restriction of processing** available (Art. 18)
+- [ ] Right to **object** to legitimate interest processing available (Art. 21)
+- [ ] Notification to recipients of rectification/erasure (Art. 19)
+- [ ] Human review available for automated decision-making (Art. 22)
 
 ### Consent Revocation
 - [ ] Marketing/analytics toggle in settings
@@ -128,18 +139,20 @@ For each collected data, verify:
 - [ ] App rating indicates target audience (with or without minors)
 - [ ] If app for minors: minimal data collection
 - [ ] If app for minors: no third-party behavioral advertising
-- [ ] Parental consent implemented (if collecting data from minors under 12 years)
+- [ ] Parental consent for minors under 12 years `[LGPD]` / under 16 years (or 13 per member state) `[GDPR]`
 - [ ] COPPA compliance verified (if distributed in the US)
 
 ---
 
 ## 8. DPO (Data Protection Officer)
 
-- [ ] DPO identified (individual or legal entity)
+- [ ] DPO identified (individual or legal entity) — mandatory for LGPD controllers `[LGPD]`
+- [ ] DPO appointment assessed: required for large-scale processing, public authorities, or special categories (Art. 37) `[GDPR]`
 - [ ] DPO name in Privacy Policy
 - [ ] DPO email/contact in Privacy Policy and within the app
-- [ ] Contact channel with ANPD configured
-- [ ] DPO trained on LGPD and position obligations
+- [ ] Contact channel with ANPD configured `[LGPD]`
+- [ ] Contact channel with relevant supervisory authority configured `[GDPR]`
+- [ ] DPO trained on applicable data protection obligations
 
 ---
 
@@ -147,8 +160,10 @@ For each collected data, verify:
 
 - [ ] Documented process for responding to data breaches
 - [ ] Person responsible for coordinating incident response defined
-- [ ] ANPD notification checklist available
-- [ ] User notification template available
+- [ ] ANPD notification checklist available (no specified deadline) `[LGPD]`
+- [ ] **72-hour notification process** to supervisory authority documented `[GDPR]`
+- [ ] Internal discovery timestamp captured (starts 72h GDPR clock)
+- [ ] User notification template available (for high-risk breaches)
 - [ ] Active security monitoring (anomaly alerts)
 
 ---
@@ -166,16 +181,22 @@ For each collected data, verify:
 ## Final Verification
 
 - [ ] Scan with `bash scripts/scan-project.sh .` and resolve CRITICAL items
-- [ ] Consult `templates/privacy-policy-en.md` or `templates/privacy-policy-pt-br.md` for Privacy Policy generation/review
+- [ ] Consult the appropriate Privacy Policy template for generation/review
 - [ ] Confirm that Data Safety (Google) and Privacy Labels (Apple) are consistent with Privacy Policy
-- [ ] Lawyer specialized in LGPD reviewed the documents (recommended)
+- [ ] Lawyer specialized in LGPD reviewed the documents (recommended) `[LGPD]`
+- [ ] Lawyer specialized in GDPR reviewed the documents (recommended) `[GDPR]`
 
 ---
 
 ## References
 
-- `references/lgpd-privacy.md` — LGPD details
-- `templates/privacy-policy-en.md` — Privacy Policy template (EN)
-- `templates/privacy-policy-pt-br.md` — Privacy Policy template (PT-BR)
+- `references/lgpd-privacy.md` — LGPD full reference
+- `references/gdpr-privacy.md` — GDPR full reference
+- `references/lgpd-vs-gdpr.md` — Side-by-side comparison and dual-compliance strategy
+- `templates/privacy-policy-en.md` — Privacy Policy template (LGPD, EN)
+- `templates/privacy-policy-pt-br.md` — Privacy Policy template (LGPD, PT-BR)
+- `templates/privacy-policy-gdpr-en.md` — Privacy Policy template (GDPR, EN)
 - [ANPD — Orientation Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
 - [LGPD — Law 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
+- [GDPR Full Text](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679)
+- [EDPB — Guidance and Guidelines](https://www.edpb.europa.eu/edpb_en)
