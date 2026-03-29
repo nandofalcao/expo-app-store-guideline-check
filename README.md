@@ -1,140 +1,140 @@
 # mobile-app-compliance-checker
 
-Skill agnóstica de ferramenta para verificar conformidade de apps React Native/Expo
-com as diretrizes da **Apple App Store**, **Google Play Store**, **LGPD** e boas
-práticas de privacidade e segurança.
+Tool-agnostic skill to verify compliance of React Native/Expo apps
+with **Apple App Store**, **Google Play Store**, **LGPD** guidelines and
+privacy and security best practices.
 
-## O Que Verifica
+## What It Checks
 
-| Domínio | Exemplos de Verificações |
-|---------|--------------------------|
+| Domain | Example Checks |
+|--------|----------------|
 | Apple App Store | Privacy Manifest, Usage Descriptions, Account Deletion, IAP |
-| Google Play Store | Target API Level, Data Safety Section, Permissões |
-| LGPD / Privacidade | Política de Privacidade, Consentimento, Direitos do Titular |
-| Segurança | AsyncStorage com dados sensíveis, API keys hardcoded, HTTPS |
-| Dependências | Vulnerabilidades conhecidas, SDKs que coletam dados |
+| Google Play Store | Target API Level, Data Safety Section, Permissions |
+| LGPD / Privacy | Privacy Policy, Consent, Data Subject Rights |
+| Security | AsyncStorage with sensitive data, hardcoded API keys, HTTPS |
+| Dependencies | Known vulnerabilities, SDKs that collect data |
 
-## Uso Rápido
+## Quick Start
 
 ```bash
-# Na raiz do seu projeto Expo/React Native:
-bash /caminho/para/skill/scripts/scan-project.sh .
+# At the root of your Expo/React Native project:
+bash /path/to/skill/scripts/scan-project.sh .
 
-# Relatório gerado em:
+# Report generated at:
 # ./.compliance-report/report_YYYYMMDD_HHMMSS.md
 ```
 
-## Instalação
+## Installation
 
 ### Claude Code
 
 ```bash
-# Copiar para diretório de skills do Claude Code
+# Copy to Claude Code skills directory
 cp -r mobile-app-compliance-checker/ ~/.claude/skills/
 
-# Ou referenciar localmente no projeto via .claude/settings.json
+# Or reference locally in the project via .claude/settings.json
 ```
 
 ### OpenCode
 
 ```bash
-# Adicionar referência ao SKILL.md nas instruções customizadas
-# Copiar conteúdo de SKILL.md para .opencode/instructions.md
+# Add reference to SKILL.md in custom instructions
+# Copy SKILL.md content to .opencode/instructions.md
 ```
 
 ### GitHub Copilot
 
 ```bash
-# Adicionar ao arquivo de instruções customizadas
+# Add to custom instructions file
 cat SKILL.md >> .github/copilot-instructions.md
 ```
 
-### Uso Standalone (sem LLM)
+### Standalone Usage (without LLM)
 
 ```bash
-# Clonar o repositório
+# Clone the repository
 git clone https://github.com/nandofalcao/mobile-app-compliance-checker
 
-# Executar na raiz do projeto React Native/Expo
-bash mobile-app-compliance-checker/scripts/scan-project.sh /caminho/do/projeto
+# Run at the root of your React Native/Expo project
+bash mobile-app-compliance-checker/scripts/scan-project.sh /path/to/project
 ```
 
-## Estrutura
+## Structure
 
 ```
 mobile-app-compliance-checker/
-├── SKILL.md                          # Skill principal (< 500 linhas)
+├── SKILL.md                          # Main skill (< 500 lines)
 ├── references/
-│   ├── apple-app-store.md            # Diretrizes Apple condensadas
-│   ├── google-play-store.md          # Diretrizes Google Play condensadas
-│   ├── lgpd-privacy.md               # Requisitos LGPD + Privacidade
-│   ├── react-native-expo.md          # Verificações específicas RN/Expo
-│   └── common-rejections.md          # Motivos comuns de rejeição + soluções
+│   ├── apple-app-store.md            # Condensed Apple guidelines
+│   ├── google-play-store.md          # Condensed Google Play guidelines
+│   ├── lgpd-privacy.md               # LGPD + Privacy requirements
+│   ├── react-native-expo.md          # RN/Expo specific checks
+│   └── common-rejections.md          # Common rejection reasons + solutions
 ├── checklists/
-│   ├── pre-submission-ios.md         # Checklist pré-submissão iOS
-│   ├── pre-submission-android.md     # Checklist pré-submissão Android
-│   ├── privacy-compliance.md         # Checklist privacidade/LGPD
-│   └── security-checklist.md         # Checklist segurança de dados
+│   ├── pre-submission-ios.md         # iOS pre-submission checklist
+│   ├── pre-submission-android.md     # Android pre-submission checklist
+│   ├── privacy-compliance.md         # Privacy/LGPD checklist
+│   └── security-checklist.md         # Data security checklist
 ├── scripts/
-│   ├── scan-project.sh               # Orquestrador principal
-│   ├── check-permissions.sh          # Analisa permissões declaradas
-│   ├── check-privacy-manifest.sh     # Verifica iOS Privacy Manifest
-│   ├── check-data-safety.sh          # Verifica Data Safety (Android)
-│   ├── check-expo-config.sh          # Analisa app.json / app.config.js
-│   ├── check-dependencies.sh         # Analisa dependências
-│   ├── check-security.sh             # Verifica práticas de segurança
-│   └── generate-report.sh            # Gera relatório consolidado
+│   ├── scan-project.sh               # Main orchestrator
+│   ├── check-permissions.sh          # Analyzes declared permissions
+│   ├── check-privacy-manifest.sh     # Checks iOS Privacy Manifest
+│   ├── check-data-safety.sh          # Checks Data Safety (Android)
+│   ├── check-expo-config.sh          # Analyzes app.json / app.config.js
+│   ├── check-dependencies.sh         # Analyzes dependencies
+│   ├── check-security.sh             # Checks security practices
+│   └── generate-report.sh            # Generates consolidated report
 ├── templates/
-│   ├── privacy-policy-pt-br.md       # Template Política de Privacidade (PT-BR)
-│   ├── terms-of-use-pt-br.md         # Template Termos de Uso (PT-BR)
-│   ├── data-safety-form.md           # Guia Data Safety Google Play
-│   └── app-privacy-labels.md         # Guia Privacy Labels Apple
+│   ├── privacy-policy-pt-br.md       # Privacy Policy Template (PT-BR)
+│   ├── terms-of-use-pt-br.md         # Terms of Use Template (PT-BR)
+│   ├── data-safety-form.md           # Google Play Data Safety Guide
+│   └── app-privacy-labels.md         # Apple Privacy Labels Guide
 ├── evals/
-│   └── evals.json                    # Casos de teste
+│   └── evals.json                    # Test cases
 └── README.md
 ```
 
-## Níveis de Severidade
+## Severity Levels
 
-| Nível | Símbolo | Significado |
-|-------|---------|-------------|
-| CRITICAL | 🔴 | Causará rejeição nas lojas — corrigir imediatamente |
-| WARNING | ⚠️ | Pode causar rejeição ou problema futuro — revisar |
-| INFO | ℹ️ | Boa prática recomendada — considerar |
-| OK | ✅ | Conformidade verificada |
+| Level | Symbol | Meaning |
+|-------|--------|---------|
+| CRITICAL | 🔴 | Will cause store rejection — fix immediately |
+| WARNING | ⚠️ | May cause rejection or future issues — review |
+| INFO | ℹ️ | Recommended best practice — consider |
+| OK | ✅ | Verified compliance |
 
-## Requisitos
+## Requirements
 
 - `bash` 3.2+
-- `node` 14+ (para parsing JSON quando necessário)
-- `jq` (opcional, melhora a saída JSON)
-- Sem outras dependências externas
+- `node` 14+ (for JSON parsing when needed)
+- `jq` (optional, improves JSON output)
+- No other external dependencies
 
-## Compatibilidade
+## Compatibility
 
-| Projeto | Suporte |
+| Project | Support |
 |---------|---------|
-| Expo Managed Workflow | ✅ Completo |
-| Expo Bare Workflow | ✅ Completo |
-| React Native puro | ✅ Parcial (sem verificações Expo-específicas) |
+| Expo Managed Workflow | ✅ Full |
+| Expo Bare Workflow | ✅ Full |
+| Pure React Native | ✅ Partial (no Expo-specific checks) |
 
-## Atualizações de Diretrizes
+## Guideline Updates
 
-As diretrizes das lojas mudam com frequência. Cada arquivo em `references/`
-tem uma data de última atualização no cabeçalho. Verifique as fontes oficiais
-regularmente:
+Store guidelines change frequently. Each file in `references/`
+has a last update date in the header. Check official sources
+regularly:
 
 - [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - [Google Play Developer Policy](https://support.google.com/googleplay/android-developer/answer/16810878)
-- [ANPD — Autoridade Nacional de Proteção de Dados](https://www.gov.br/anpd/pt-br)
+- [ANPD — National Data Protection Authority](https://www.gov.br/anpd/pt-br)
 
-## Aviso Legal
+## Disclaimer
 
-Esta skill fornece verificações técnicas automatizadas e referências educacionais.
-**Não substitui assessoria jurídica.** Para conformidade completa com LGPD e
-outros marcos regulatórios, consulte um profissional de direito especializado
-em proteção de dados.
+This skill provides automated technical checks and educational references.
+**It does not replace legal advice.** For full compliance with LGPD and
+other regulatory frameworks, consult a legal professional specialized
+in data protection.
 
-## Licença
+## License
 
-MIT — veja [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE)
