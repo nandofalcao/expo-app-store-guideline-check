@@ -85,7 +85,9 @@ mobile-app-compliance-checker/
 │   ├── check-security.sh             # Checks security practices
 │   └── generate-report.sh            # Generates consolidated report
 ├── templates/
+│   ├── privacy-policy-en.md          # Privacy Policy Template (EN)
 │   ├── privacy-policy-pt-br.md       # Privacy Policy Template (PT-BR)
+│   ├── terms-of-use-en.md            # Terms of Use Template (EN)
 │   ├── terms-of-use-pt-br.md         # Terms of Use Template (PT-BR)
 │   ├── data-safety-form.md           # Google Play Data Safety Guide
 │   └── app-privacy-labels.md         # Apple Privacy Labels Guide

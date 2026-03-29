@@ -166,7 +166,7 @@ For each collected data, verify:
 ## Final Verification
 
 - [ ] Scan with `bash scripts/scan-project.sh .` and resolve CRITICAL items
-- [ ] Consult `templates/privacy-policy-pt-br.md` for Privacy Policy generation/review
+- [ ] Consult `templates/privacy-policy-en.md` or `templates/privacy-policy-pt-br.md` for Privacy Policy generation/review
 - [ ] Confirm that Data Safety (Google) and Privacy Labels (Apple) are consistent with Privacy Policy
 - [ ] Lawyer specialized in LGPD reviewed the documents (recommended)
 
@@ -175,6 +175,7 @@ For each collected data, verify:
 ## References
 
 - `references/lgpd-privacy.md` — LGPD details
-- `templates/privacy-policy-pt-br.md` — Privacy Policy template
-- [ANPD — Guiding Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
+- `templates/privacy-policy-en.md` — Privacy Policy template (EN)
+- `templates/privacy-policy-pt-br.md` — Privacy Policy template (PT-BR)
+- [ANPD — Orientation Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
 - [LGPD — Law 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)

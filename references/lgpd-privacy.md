@@ -219,6 +219,6 @@ certifications and contractual clauses that meet this requirement. Document it.
 ## Resources
 
 - [Law 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
-- [ANPD — Guidance Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
+- [ANPD — Orientation Guides](https://www.gov.br/anpd/pt-br/documentos-e-publicacoes)
 - [ANPD — Resolution CD/ANPD nº 4/2023 (Enforcement)](https://www.gov.br/anpd/pt-br)
 - [ISO/IEC 27001](https://www.iso.org/isoiec-27001-information-security.html) — security reference

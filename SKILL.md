@@ -77,8 +77,8 @@ bash scripts/check-dependencies.sh /project/path
 | Configure iOS Privacy Manifest | `references/react-native-expo.md` + `scripts/check-privacy-manifest.sh` |
 | Fill Google Data Safety | `templates/data-safety-form.md` + `scripts/check-data-safety.sh` |
 | Fill Apple Privacy Labels | `templates/app-privacy-labels.md` |
-| Create Privacy Policy | `templates/privacy-policy-pt-br.md` |
-| Create Terms of Use | `templates/terms-of-use-pt-br.md` |
+| Create Privacy Policy | `templates/privacy-policy-en.md` (EN) or `templates/privacy-policy-pt-br.md` (PT-BR) |
+| Create Terms of Use | `templates/terms-of-use-en.md` (EN) or `templates/terms-of-use-pt-br.md` (PT-BR) |
 | Verify LGPD compliance | `references/lgpd-privacy.md` + `checklists/privacy-compliance.md` |
 | Complete iOS checklist | `checklists/pre-submission-ios.md` |
 | Complete Android checklist | `checklists/pre-submission-android.md` |
