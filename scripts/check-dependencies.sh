@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# check-dependencies.sh — Analisa dependências por riscos conhecidos
-# Uso: bash check-dependencies.sh [diretório-do-projeto]
-# Saída: JSON estruturado para stdout
+# check-dependencies.sh — Analyzes dependencies for known risks
+# Usage: bash check-dependencies.sh [project-directory]
+# Output: structured JSON to stdout
 set -uo pipefail
 
 PROJECT_DIR="${1:-.}"
@@ -34,15 +34,15 @@ PKG_JSON="${PROJECT_DIR}/package.json"
 
 if [ ! -f "$PKG_JSON" ]; then
   critical "DEP-000" "both" \
-    "package.json não encontrado" \
-    "Não foi possível analisar dependências: package.json ausente." \
-    "Execute este script na raiz do projeto React Native/Expo." \
+    "package.json not found" \
+    "Could not analyze dependencies: package.json is missing." \
+    "Run this script from the root of the React Native/Expo project." \
     "" "—"
   echo "{\"check\":\"check-dependencies\",\"results\":[${RESULTS[0]}],\"summary\":{\"critical\":1,\"warning\":0,\"info\":0,\"ok\":0}}"
   exit 0
 fi
 
-# ─── DEP-001: Versão do React Native ─────────────────────────────────────────
+# ─── DEP-001: React Native version ───────────────────────────────────────────
 
 RN_VERSION=$(SCAN_FILE="$PKG_JSON" node -e "
   try {
@@ -59,13 +59,13 @@ if [ "$RN_VERSION" != "__MISSING__" ]; then
 
   if [ "$RN_MAJOR" -eq 0 ] && [ "$RN_MINOR" -lt 73 ] 2>/dev/null; then
     warning "DEP-001" "both" \
-      "React Native desatualizado: 0.${RN_MINOR} (recomendado: 0.76+)" \
-      "Versões antigas de React Native podem não suportar APIs mínimas exigidas pelas lojas ou ter vulnerabilidades conhecidas." \
-      "Atualize para React Native 0.76+ ou use a versão LTS mais recente." \
+      "React Native outdated: 0.${RN_MINOR} (recommended: 0.76+)" \
+      "Older versions of React Native may not support the minimum APIs required by the stores or may have known vulnerabilities." \
+      "Update to React Native 0.76+ or use the latest LTS version." \
       "https://reactnative.dev/blog" \
       "package.json"
   else
-    ok "DEP-001" "both" "React Native atualizado: 0.${RN_MINOR}" "" "package.json"
+    ok "DEP-001" "both" "React Native up to date: 0.${RN_MINOR}" "" "package.json"
   fi
 fi
 
@@ -85,36 +85,36 @@ EXPO_VERSION=$(SCAN_FILE="$PKG_JSON" node -e "
 if [ "$EXPO_VERSION" != "__MISSING__" ]; then
   if [ "$EXPO_VERSION" -lt 51 ] 2>/dev/null; then
     critical "DEP-002" "both" \
-      "Expo SDK desatualizado: SDK ${EXPO_VERSION} (mínimo recomendado: SDK 51+)" \
-      "Versões antigas do Expo SDK podem não incluir o Privacy Manifest obrigatório para iOS e ter vulnerabilidades." \
-      "Atualize para Expo SDK 52 ou superior: npx expo upgrade" \
+      "Expo SDK outdated: SDK ${EXPO_VERSION} (minimum recommended: SDK 51+)" \
+      "Older versions of the Expo SDK may not include the mandatory Privacy Manifest for iOS and may have vulnerabilities." \
+      "Update to Expo SDK 52 or higher: npx expo upgrade" \
       "https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/" \
       "package.json"
   elif [ "$EXPO_VERSION" -lt 52 ] 2>/dev/null; then
     warning "DEP-002" "both" \
-      "Expo SDK ${EXPO_VERSION} — versão nova disponível (SDK 52+)" \
-      "Manter o SDK Expo atualizado garante suporte às APIs mais recentes das lojas." \
-      "Considere atualizar: npx expo upgrade" \
+      "Expo SDK ${EXPO_VERSION} — newer version available (SDK 52+)" \
+      "Keeping the Expo SDK up to date ensures support for the latest store APIs." \
+      "Consider updating: npx expo upgrade" \
       "https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/" \
       "package.json"
   else
-    ok "DEP-002" "both" "Expo SDK atualizado: SDK ${EXPO_VERSION}" "" "package.json"
+    ok "DEP-002" "both" "Expo SDK up to date: SDK ${EXPO_VERSION}" "" "package.json"
   fi
 fi
 
-# ─── DEP-003: SDKs com coleta de dados — disclosure obrigatório ───────────────
+# ─── DEP-003: Data-collecting SDKs — mandatory disclosure ────────────────────
 
 declare -a DATA_COLLECTING_SDKS=(
-  "@react-native-firebase/analytics:Coleta eventos, propriedades de usuário e dados de dispositivo"
-  "@react-native-firebase/crashlytics:Coleta crash logs, stack traces e dados de dispositivo"
-  "@amplitude/analytics-react-native:Coleta eventos, sessões e propriedades de usuário"
-  "react-native-mixpanel:Coleta eventos, propriedades e dados de perfil"
-  "react-native-fbsdk-next:Coleta dados do Facebook para analytics e publicidade"
-  "react-native-google-mobile-ads:Coleta Advertising ID e dados de comportamento"
-  "@segment/analytics-react-native:Coleta e encaminha eventos para múltiplos destinos"
-  "react-native-branch:Coleta dados de atribuição e deep linking"
-  "react-native-appsflyer:Coleta dados de atribuição de instalação e eventos"
-  "react-native-adjust:Coleta dados de atribuição mobile"
+  "@react-native-firebase/analytics:Collects events, user properties, and device data"
+  "@react-native-firebase/crashlytics:Collects crash logs, stack traces, and device data"
+  "@amplitude/analytics-react-native:Collects events, sessions, and user properties"
+  "react-native-mixpanel:Collects events, properties, and profile data"
+  "react-native-fbsdk-next:Collects Facebook data for analytics and advertising"
+  "react-native-google-mobile-ads:Collects Advertising ID and behavior data"
+  "@segment/analytics-react-native:Collects and forwards events to multiple destinations"
+  "react-native-branch:Collects attribution and deep linking data"
+  "react-native-appsflyer:Collects install attribution and event data"
+  "react-native-adjust:Collects mobile attribution data"
 )
 
 DATA_SDK_COUNT=0
@@ -123,42 +123,42 @@ for sdk_entry in "${DATA_COLLECTING_SDKS[@]}"; do
   if grep -q "\"$sdk_name\"" "$PKG_JSON" 2>/dev/null; then
     DATA_SDK_COUNT=$((DATA_SDK_COUNT+1))
     info_r "DEP-003-${DATA_SDK_COUNT}" "both" \
-      "SDK coleta dados: $sdk_name" \
-      "${sdk_desc}. Deve ser declarado na Data Safety (Google) e Privacy Labels (Apple)." \
-      "Certifique-se de declarar os dados coletados por ${sdk_name} nas seções de privacidade de ambas as lojas." \
+      "SDK collects data: $sdk_name" \
+      "${sdk_desc}. Must be declared in Data Safety (Google) and Privacy Labels (Apple)." \
+      "Make sure to declare the data collected by ${sdk_name} in the privacy sections of both stores." \
       "https://support.google.com/googleplay/android-developer/answer/10787469" \
       "package.json"
   fi
 done
 
 if [ "$DATA_SDK_COUNT" -eq 0 ]; then
-  ok "DEP-003" "both" "Nenhum SDK de coleta de dados de terceiros detectado" "" "package.json"
+  ok "DEP-003" "both" "No third-party data-collecting SDK detected" "" "package.json"
 fi
 
-# ─── DEP-004: Pacotes deprecated ou com problemas conhecidos ─────────────────
+# ─── DEP-004: Deprecated or known-issue packages ─────────────────────────────
 
 declare -a DEPRECATED_PKGS=(
-  "@react-native-community/async-storage:Migrado para @react-native-async-storage/async-storage"
-  "react-native-camera:Substituído por react-native-vision-camera (mais ativo e mantido)"
-  "react-native-fcm:Firebase Cloud Messaging agora via @react-native-firebase/messaging"
-  "react-native-code-push:CodePush está sendo descontinuado pelo Visual Studio App Center"
-  "react-native-linear-gradient:Use expo-linear-gradient se usar Expo"
-  "@react-native-community/netinfo:Verificar compatibilidade com novas versões do RN"
+  "@react-native-community/async-storage:Migrated to @react-native-async-storage/async-storage"
+  "react-native-camera:Replaced by react-native-vision-camera (more active and maintained)"
+  "react-native-fcm:Firebase Cloud Messaging now via @react-native-firebase/messaging"
+  "react-native-code-push:CodePush is being discontinued by Visual Studio App Center"
+  "react-native-linear-gradient:Use expo-linear-gradient if using Expo"
+  "@react-native-community/netinfo:Check compatibility with newer versions of RN"
 )
 
 for pkg_entry in "${DEPRECATED_PKGS[@]}"; do
   IFS=':' read -r pkg_name pkg_note <<< "$pkg_entry"
   if grep -q "\"$pkg_name\"" "$PKG_JSON" 2>/dev/null; then
     warning "DEP-004-$(echo "$pkg_name" | tr -d '@/-' | head -c 8)" "both" \
-      "Pacote possivelmente deprecated: $pkg_name" \
+      "Possibly deprecated package: $pkg_name" \
       "${pkg_note}." \
-      "Avalie se é necessário migrar para a alternativa recomendada." \
+      "Evaluate whether migration to the recommended alternative is necessary." \
       "https://www.npmjs.com/package/${pkg_name}" \
       "package.json"
   fi
 done
 
-# ─── DEP-005: npm audit (se disponível) ──────────────────────────────────────
+# ─── DEP-005: npm audit (if available) ───────────────────────────────────────
 
 if command -v npm &>/dev/null && [ -f "${PROJECT_DIR}/package-lock.json" ]; then
   AUDIT_OUTPUT=$(cd "$PROJECT_DIR" && npm audit --json 2>/dev/null || true)
@@ -189,34 +189,34 @@ if command -v npm &>/dev/null && [ -f "${PROJECT_DIR}/package-lock.json" ]; then
 
     if [ "$CRITICAL_VULNS" -gt 0 ] 2>/dev/null; then
       critical "DEP-005" "security" \
-        "npm audit: ${CRITICAL_VULNS} vulnerabilidade(s) CRÍTICA(S) encontrada(s)" \
-        "Dependências com vulnerabilidades críticas representam risco de segurança e podem causar rejeição nas lojas." \
-        "Execute 'npm audit fix' para corrigir automaticamente. Revise manualmente as que precisam de intervenção." \
+        "npm audit: ${CRITICAL_VULNS} CRITICAL vulnerability(ies) found" \
+        "Dependencies with critical vulnerabilities pose a security risk and may cause store rejection." \
+        "Run 'npm audit fix' to fix automatically. Manually review those that require intervention." \
         "https://docs.npmjs.com/cli/v10/commands/npm-audit" \
         "package-lock.json"
     elif [ "$HIGH_VULNS" -gt 0 ] 2>/dev/null; then
       warning "DEP-005" "security" \
-        "npm audit: ${HIGH_VULNS} vulnerabilidade(s) de alta severidade encontrada(s)" \
-        "Dependências com vulnerabilidades altas representam risco de segurança." \
-        "Execute 'npm audit' para ver detalhes e 'npm audit fix' para corrigir o que for possível." \
+        "npm audit: ${HIGH_VULNS} high severity vulnerability(ies) found" \
+        "Dependencies with high vulnerabilities pose a security risk." \
+        "Run 'npm audit' for details and 'npm audit fix' to fix what is possible." \
         "https://docs.npmjs.com/cli/v10/commands/npm-audit" \
         "package-lock.json"
     else
-      ok "DEP-005" "security" "npm audit: nenhuma vulnerabilidade crítica ou alta encontrada" "" "package-lock.json"
+      ok "DEP-005" "security" "npm audit: no critical or high vulnerabilities found" "" "package-lock.json"
     fi
   fi
 elif command -v yarn &>/dev/null && [ -f "${PROJECT_DIR}/yarn.lock" ]; then
   info_r "DEP-005" "security" \
-    "Verifique vulnerabilidades com yarn audit" \
-    "Não foi possível executar yarn audit automaticamente. Execute manualmente para verificar vulnerabilidades." \
-    "Execute 'yarn audit' na raiz do projeto e corrija as vulnerabilidades encontradas." \
+    "Check vulnerabilities with yarn audit" \
+    "Could not run yarn audit automatically. Run it manually to check for vulnerabilities." \
+    "Run 'yarn audit' at the project root and fix the vulnerabilities found." \
     "https://yarnpkg.com/cli/npm/audit" \
     "yarn.lock"
 fi
 
-# ─── DEP-006: Licenças de dependências ───────────────────────────────────────
+# ─── DEP-006: Dependency licenses ────────────────────────────────────────────
 
-# Verificar presença de pacotes com licenças GPL (incompatíveis com App Store)
+# Check for packages with GPL licenses (incompatible with App Store)
 GPL_PACKAGES=$(SCAN_FILE="$PKG_JSON" node -e "
   try {
     const p = require(process.env.SCAN_FILE);
@@ -228,13 +228,13 @@ GPL_PACKAGES=$(SCAN_FILE="$PKG_JSON" node -e "
 
 if [ "$GPL_PACKAGES" != "__NONE__" ] && [ -n "$GPL_PACKAGES" ]; then
   warning "DEP-006" "apple" \
-    "Possíveis pacotes GPL detectados: $GPL_PACKAGES" \
-    "Licenças GPL podem ser incompatíveis com a distribuição via App Store (Apple). Verifique cada dependência." \
-    "Revise as licenças dos pacotes e substitua por alternativas com licenças permissivas (MIT, Apache 2.0, BSD)." \
+    "Possible GPL packages detected: $GPL_PACKAGES" \
+    "GPL licenses may be incompatible with distribution via the App Store (Apple). Check each dependency." \
+    "Review the package licenses and replace them with alternatives using permissive licenses (MIT, Apache 2.0, BSD)." \
     "https://developer.apple.com/app-store/review/guidelines/#5.2.1" \
     "package.json"
 else
-  ok "DEP-006" "both" "Nenhum pacote com licença GPL óbvia detectado" "" "package.json"
+  ok "DEP-006" "both" "No package with an obvious GPL license detected" "" "package.json"
 fi
 
 # ─── Output JSON ──────────────────────────────────────────────────────────────
@@ -245,7 +245,7 @@ for r in "${RESULTS[@]}"; do
 done
 
 if [ ${#RESULTS[@]} -eq 0 ]; then
-  ok "DEP-000" "both" "Nenhum problema de dependências detectado" "" "—"
+  ok "DEP-000" "both" "No dependency issues detected" "" "—"
   RESULTS_JSON="${RESULTS[0]}"
 fi
 

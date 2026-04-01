@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# generate-report.sh — Consolida resultados dos checks em relatório markdown
-# Uso: bash generate-report.sh <project_dir> <results_dir> <report_file> <app_name> <app_version> <project_type> <platforms>
+# generate-report.sh — Consolidates check results into a markdown report
+# Usage: bash generate-report.sh <project_dir> <results_dir> <report_file> <app_name> <app_version> <project_type> <platforms>
 set -uo pipefail
 
 PROJECT_DIR="${1:-.}"
@@ -13,17 +13,17 @@ PLATFORMS="${7:-ios android}"
 
 REPORT_DATE=$(date '+%d/%m/%Y %H:%M')
 
-# ─── Agregar todos os resultados ──────────────────────────────────────────────
+# ─── Aggregate all results ────────────────────────────────────────────────────
 
 TOTAL_CRITICAL=0
 TOTAL_WARNING=0
 TOTAL_INFO=0
 TOTAL_OK=0
 
-# Coletar todos os itens por categoria
+# Collect all items by category
 collect_by_severity() {
   local severity="$1"
-  local category_filter="$2"  # "apple", "google", "security", "both", ou "" para todos
+  local category_filter="$2"  # "apple", "google", "security", "both", or "" for all
 
   for json_file in "${RESULTS_DIR}"/*.json; do
     [ -f "$json_file" ] || continue
@@ -40,9 +40,9 @@ collect_by_severity() {
             const icon = {CRITICAL:'🔴',WARNING:'⚠️',INFO:'ℹ️',OK:'✅'}[r.severity] || '';
             console.log('- ' + icon + ' **' + r.title + '**');
             if (r.description) console.log('  ' + r.description);
-            if (r.fix) console.log('  > **Correção:** ' + r.fix);
-            if (r.reference) console.log('  > **Referência:** ' + r.reference);
-            if (r.file && r.file !== '—') console.log('  > **Arquivo:** \`' + r.file + '\`');
+            if (r.fix) console.log('  > **Fix:** ' + r.fix);
+            if (r.reference) console.log('  > **Reference:** ' + r.reference);
+            if (r.file && r.file !== '—') console.log('  > **File:** \`' + r.file + '\`');
             console.log('');
           }
         });
@@ -72,7 +72,7 @@ collect_ok_items() {
   done
 }
 
-# Contar totais
+# Count totals
 for json_file in "${RESULTS_DIR}"/*.json; do
   [ -f "$json_file" ] || continue
   c=$(SCAN_FILE="$json_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
@@ -85,65 +85,65 @@ for json_file in "${RESULTS_DIR}"/*.json; do
   TOTAL_OK=$((TOTAL_OK + ${o:-0}))
 done
 
-# ─── Gerar Relatório ──────────────────────────────────────────────────────────
+# ─── Generate Report ──────────────────────────────────────────────────────────
 
 {
 cat << HEADER
-# 📊 Relatório de Compliance — ${APP_NAME}
+# 📊 Compliance Report — ${APP_NAME}
 
-> **Data:** ${REPORT_DATE}
-> **Versão do App:** ${APP_VERSION}
-> **Tipo de Projeto:** ${PROJECT_TYPE}
-> **Plataformas:** ${PLATFORMS}
+> **Date:** ${REPORT_DATE}
+> **App Version:** ${APP_VERSION}
+> **Project Type:** ${PROJECT_TYPE}
+> **Platforms:** ${PLATFORMS}
 
 ---
 
-## Resumo Executivo
+## Executive Summary
 
-| Nível | Quantidade | Ação |
-|-------|-----------|------|
-| 🔴 Crítico | ${TOTAL_CRITICAL} | Corrigir antes de submeter |
-| ⚠️ Alerta | ${TOTAL_WARNING} | Revisar — pode causar problemas |
-| ℹ️ Info | ${TOTAL_INFO} | Considerar para melhor compliance |
-| ✅ OK | ${TOTAL_OK} | Conformidade verificada |
+| Level | Count | Action |
+|-------|-------|--------|
+| 🔴 Critical | ${TOTAL_CRITICAL} | Fix before submitting |
+| ⚠️ Warning | ${TOTAL_WARNING} | Review — may cause issues |
+| ℹ️ Info | ${TOTAL_INFO} | Consider for better compliance |
+| ✅ OK | ${TOTAL_OK} | Compliance verified |
 
 HEADER
 
-# Status geral
+# Overall status
 if [ "$TOTAL_CRITICAL" -gt 0 ]; then
-  echo "**Status: 🔴 NÃO PRONTO PARA SUBMISSÃO** — corrija os problemas críticos antes de enviar às lojas."
+  echo "**Status: 🔴 NOT READY FOR SUBMISSION** — fix critical issues before submitting to the stores."
 elif [ "$TOTAL_WARNING" -gt 0 ]; then
-  echo "**Status: ⚠️ ATENÇÃO NECESSÁRIA** — sem problemas críticos, mas há alertas para revisar."
+  echo "**Status: ⚠️ ATTENTION NEEDED** — no critical issues, but there are warnings to review."
 else
-  echo "**Status: ✅ PRONTO PARA REVISÃO** — nenhum problema crítico detectado. Revise os itens de atenção."
+  echo "**Status: ✅ READY FOR REVIEW** — no critical issues detected. Review the attention items."
 fi
 
 echo ""
 echo "---"
 echo ""
 
-# ─── Seção Apple App Store ───────────────────────────────────────────────────
+# ─── Apple App Store Section ──────────────────────────────────────────────────
 if echo "$PLATFORMS" | grep -q "ios"; then
   echo "## 🍎 Apple App Store"
   echo ""
 
   APPLE_CRITICAL=$(collect_by_severity "CRITICAL" "apple")
   if [ -n "$APPLE_CRITICAL" ]; then
-    echo "### 🔴 Críticos"
+    echo "### 🔴 Critical"
     echo ""
     echo "$APPLE_CRITICAL"
   fi
 
   APPLE_WARNING=$(collect_by_severity "WARNING" "apple")
   if [ -n "$APPLE_WARNING" ]; then
-    echo "### ⚠️ Alertas"
+    echo "### ⚠️ Warnings"
     echo ""
     echo "$APPLE_WARNING"
   fi
 
   APPLE_INFO=$(collect_by_severity "INFO" "apple")
   if [ -n "$APPLE_INFO" ]; then
-    echo "### ℹ️ Informações"
+    echo "### ℹ️ Info"
     echo ""
     echo "$APPLE_INFO"
   fi
@@ -160,28 +160,28 @@ if echo "$PLATFORMS" | grep -q "ios"; then
   echo ""
 fi
 
-# ─── Seção Google Play Store ─────────────────────────────────────────────────
+# ─── Google Play Store Section ────────────────────────────────────────────────
 if echo "$PLATFORMS" | grep -q "android"; then
   echo "## 🤖 Google Play Store"
   echo ""
 
   GOOGLE_CRITICAL=$(collect_by_severity "CRITICAL" "google")
   if [ -n "$GOOGLE_CRITICAL" ]; then
-    echo "### 🔴 Críticos"
+    echo "### 🔴 Critical"
     echo ""
     echo "$GOOGLE_CRITICAL"
   fi
 
   GOOGLE_WARNING=$(collect_by_severity "WARNING" "google")
   if [ -n "$GOOGLE_WARNING" ]; then
-    echo "### ⚠️ Alertas"
+    echo "### ⚠️ Warnings"
     echo ""
     echo "$GOOGLE_WARNING"
   fi
 
   GOOGLE_INFO=$(collect_by_severity "INFO" "google")
   if [ -n "$GOOGLE_INFO" ]; then
-    echo "### ℹ️ Informações"
+    echo "### ℹ️ Info"
     echo ""
     echo "$GOOGLE_INFO"
   fi
@@ -198,27 +198,27 @@ if echo "$PLATFORMS" | grep -q "android"; then
   echo ""
 fi
 
-# ─── Seção Segurança ─────────────────────────────────────────────────────────
-echo "## 🔐 Segurança de Dados"
+# ─── Security Section ─────────────────────────────────────────────────────────
+echo "## 🔐 Data Security"
 echo ""
 
 SEC_CRITICAL=$(collect_by_severity "CRITICAL" "security")
 if [ -n "$SEC_CRITICAL" ]; then
-  echo "### 🔴 Críticos"
+  echo "### 🔴 Critical"
   echo ""
   echo "$SEC_CRITICAL"
 fi
 
 SEC_WARNING=$(collect_by_severity "WARNING" "security")
 if [ -n "$SEC_WARNING" ]; then
-  echo "### ⚠️ Alertas"
+  echo "### ⚠️ Warnings"
   echo ""
   echo "$SEC_WARNING"
 fi
 
 SEC_INFO=$(collect_by_severity "INFO" "security")
 if [ -n "$SEC_INFO" ]; then
-  echo "### ℹ️ Informações"
+  echo "### ℹ️ Info"
   echo ""
   echo "$SEC_INFO"
 fi
@@ -234,29 +234,29 @@ fi
 echo "---"
 echo ""
 
-# ─── Seção Both (aplica a ambas) ─────────────────────────────────────────────
+# ─── Both Platforms Section ───────────────────────────────────────────────────
 BOTH_CRITICAL=$(collect_by_severity "CRITICAL" "both")
 BOTH_WARNING=$(collect_by_severity "WARNING" "both")
 BOTH_INFO=$(collect_by_severity "INFO" "both")
 
 if [ -n "$BOTH_CRITICAL" ] || [ -n "$BOTH_WARNING" ] || [ -n "$BOTH_INFO" ]; then
-  echo "## 📋 Ambas as Plataformas"
+  echo "## 📋 Both Platforms"
   echo ""
 
   if [ -n "$BOTH_CRITICAL" ]; then
-    echo "### 🔴 Críticos"
+    echo "### 🔴 Critical"
     echo ""
     echo "$BOTH_CRITICAL"
   fi
 
   if [ -n "$BOTH_WARNING" ]; then
-    echo "### ⚠️ Alertas"
+    echo "### ⚠️ Warnings"
     echo ""
     echo "$BOTH_WARNING"
   fi
 
   if [ -n "$BOTH_INFO" ]; then
-    echo "### ℹ️ Informações"
+    echo "### ℹ️ Info"
     echo ""
     echo "$BOTH_INFO"
   fi
@@ -265,50 +265,50 @@ if [ -n "$BOTH_CRITICAL" ] || [ -n "$BOTH_WARNING" ] || [ -n "$BOTH_INFO" ]; the
   echo ""
 fi
 
-# ─── Próximos Passos ─────────────────────────────────────────────────────────
+# ─── Next Steps ───────────────────────────────────────────────────────────────
 cat << NEXTSTEPS
-## 🚀 Próximos Passos
+## 🚀 Next Steps
 
-### Antes de Submeter
+### Before Submitting
 
 NEXTSTEPS
 
 if [ "$TOTAL_CRITICAL" -gt 0 ]; then
-  echo "1. **🔴 Corrigir todos os problemas CRÍTICOS** — não submeta sem resolver estes"
-  echo "2. **⚠️ Revisar todos os ALERTAS** — decida se se aplicam ao seu contexto"
-  echo "3. **ℹ️ Considerar itens INFO** — melhoram compliance mas não são obrigatórios"
-  echo "4. **📋 Executar checklists manuais** — \`checklists/pre-submission-ios.md\` e/ou \`checklists/pre-submission-android.md\`"
-  echo "5. **🧪 Testar em device real** — não apenas em simulador"
+  echo "1. **🔴 Fix all CRITICAL issues** — do not submit without resolving these"
+  echo "2. **⚠️ Review all WARNINGS** — decide which ones apply to your context"
+  echo "3. **ℹ️ Consider INFO items** — they improve compliance but are not mandatory"
+  echo "4. **📋 Run manual checklists** — \`checklists/pre-submission-ios.md\` and/or \`checklists/pre-submission-android.md\`"
+  echo "5. **🧪 Test on a real device** — not just in a simulator"
 else
-  echo "1. **⚠️ Revisar os ALERTAS** — decida quais se aplicam ao seu contexto"
-  echo "2. **ℹ️ Considerar itens INFO** — melhoram compliance mas não são obrigatórios"
-  echo "3. **📋 Executar checklists manuais** — \`checklists/pre-submission-ios.md\` e/ou \`checklists/pre-submission-android.md\`"
-  echo "4. **🧪 Testar em device real** — não apenas em simulador"
-  echo "5. **📝 Preencher formulários nas lojas** — Data Safety (Google) e Privacy Labels (Apple)"
+  echo "1. **⚠️ Review WARNINGS** — decide which ones apply to your context"
+  echo "2. **ℹ️ Consider INFO items** — they improve compliance but are not mandatory"
+  echo "3. **📋 Run manual checklists** — \`checklists/pre-submission-ios.md\` and/or \`checklists/pre-submission-android.md\`"
+  echo "4. **🧪 Test on a real device** — not just in a simulator"
+  echo "5. **📝 Fill out store forms** — Data Safety (Google) and Privacy Labels (Apple)"
 fi
 
 cat << FOOTER
 
-### Recursos da Skill
+### Skill Resources
 
-| Recurso | Arquivo |
-|---------|---------|
-| Checklist iOS | \`checklists/pre-submission-ios.md\` |
-| Checklist Android | \`checklists/pre-submission-android.md\` |
-| Checklist Privacidade | \`checklists/privacy-compliance.md\` |
-| Template Política de Privacidade | \`templates/privacy-policy-pt-br.md\` |
-| Guia Data Safety Google | \`templates/data-safety-form.md\` |
-| Guia Privacy Labels Apple | \`templates/app-privacy-labels.md\` |
-| Diretrizes Apple | \`references/apple-app-store.md\` |
-| Diretrizes Google Play | \`references/google-play-store.md\` |
-| Requisitos LGPD | \`references/lgpd-privacy.md\` |
+| Resource | File |
+|----------|------|
+| iOS Checklist | \`checklists/pre-submission-ios.md\` |
+| Android Checklist | \`checklists/pre-submission-android.md\` |
+| Privacy Checklist | \`checklists/privacy-compliance.md\` |
+| Privacy Policy Template | \`templates/privacy-policy-pt-br.md\` |
+| Google Data Safety Guide | \`templates/data-safety-form.md\` |
+| Apple Privacy Labels Guide | \`templates/app-privacy-labels.md\` |
+| Apple Guidelines | \`references/apple-app-store.md\` |
+| Google Play Guidelines | \`references/google-play-store.md\` |
+| LGPD Requirements | \`references/lgpd-privacy.md\` |
 
 ---
 
-*Relatório gerado por [expo-app-store-guideline-check](https://github.com/nandofalcao/expo-app-store-guideline-check)*
-*Este relatório verifica conformidade técnica. Consulte um advogado para conformidade legal completa com LGPD e outras regulamentações.*
+*Report generated by [expo-app-store-guideline-check](https://github.com/nandofalcao/expo-app-store-guideline-check)*
+*This report checks technical compliance. Consult a lawyer for full legal compliance with LGPD and other regulations.*
 FOOTER
 
 } > "$REPORT_FILE"
 
-echo "Relatório salvo em: $REPORT_FILE"
+echo "Report saved to: $REPORT_FILE"

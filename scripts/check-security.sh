@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# check-security.sh — Verifica práticas de segurança de dados no código
-# Uso: bash check-security.sh [diretório-do-projeto]
-# Saída: JSON estruturado para stdout
+# check-security.sh — Checks data security practices in the code
+# Usage: bash check-security.sh [project-directory]
+# Output: structured JSON to stdout
 set -uo pipefail
 
 PROJECT_DIR="${1:-.}"
@@ -32,17 +32,17 @@ info_r()   { add_result "$1" "INFO"     "$2" "$3" "$4" "$5" "$6" "$7"; }
 
 PKG_JSON="${PROJECT_DIR}/package.json"
 
-# Diretórios de código-fonte para busca
+# Source code directories for searching
 SRC_DIRS=()
 for dir in src app components screens lib hooks services utils store; do
   [ -d "${PROJECT_DIR}/${dir}" ] && SRC_DIRS+=("${PROJECT_DIR}/${dir}")
 done
-# Adicionar arquivos raiz comuns
+# Add common root files
 for f in App.tsx App.js App.ts index.tsx index.js; do
   [ -f "${PROJECT_DIR}/${f}" ] && SRC_DIRS+=("${PROJECT_DIR}/${f}")
 done
 
-# ─── SEC-001: AsyncStorage com dados sensíveis ────────────────────────────────
+# ─── SEC-001: AsyncStorage with sensitive data ────────────────────────────────
 
 USES_ASYNC_STORAGE=false
 if grep -q "async-storage\|AsyncStorage" "$PKG_JSON" 2>/dev/null; then
@@ -50,6 +50,7 @@ if grep -q "async-storage\|AsyncStorage" "$PKG_JSON" 2>/dev/null; then
 fi
 
 if [ "$USES_ASYNC_STORAGE" = true ] && [ ${#SRC_DIRS[@]} -gt 0 ]; then
+  # Note: "senha" is kept as a search pattern to detect Portuguese variable names in user code
   SENSITIVE_PATTERNS="token\|password\|senha\|secret\|api_key\|apikey\|auth\|credential\|jwt\|bearer\|session"
   MATCHES=$(grep -r "AsyncStorage.setItem\|AsyncStorage.set" "${SRC_DIRS[@]}" 2>/dev/null | \
     grep -iE "$SENSITIVE_PATTERNS" | head -5 || true)
@@ -57,42 +58,42 @@ if [ "$USES_ASYNC_STORAGE" = true ] && [ ${#SRC_DIRS[@]} -gt 0 ]; then
   if [ -n "$MATCHES" ]; then
     FIRST_MATCH=$(echo "$MATCHES" | head -1 | sed 's/\\/\\\\/g; s/"/\\"/g')
     critical "SEC-001" "security" \
-      "AsyncStorage potencialmente usado para dados sensíveis" \
-      "AsyncStorage é não-encriptado. Detectado uso com chaves que sugerem dados sensíveis. Exemplo: ${FIRST_MATCH}" \
-      "Use expo-secure-store ou react-native-keychain para armazenar tokens, senhas e dados sensíveis." \
+      "AsyncStorage potentially used for sensitive data" \
+      "AsyncStorage is unencrypted. Usage with keys that suggest sensitive data was detected. Example: ${FIRST_MATCH}" \
+      "Use expo-secure-store or react-native-keychain to store tokens, passwords, and sensitive data." \
       "https://docs.expo.dev/versions/latest/sdk/securestore/" \
       "src/"
   else
-    ok "SEC-001" "security" "Nenhum uso suspeito de AsyncStorage com dados sensíveis detectado" "" "—"
+    ok "SEC-001" "security" "No suspicious use of AsyncStorage with sensitive data detected" "" "—"
   fi
 elif [ "$USES_ASYNC_STORAGE" = false ]; then
-  ok "SEC-001" "security" "AsyncStorage não utilizado" "" "—"
+  ok "SEC-001" "security" "AsyncStorage not in use" "" "—"
 fi
 
-# ─── SEC-002: Armazenamento Seguro disponível ─────────────────────────────────
+# ─── SEC-002: Secure storage available ───────────────────────────────────────
 
 HAS_SECURE_STORAGE=false
 for pkg in "expo-secure-store" "react-native-keychain" "react-native-sensitive-info"; do
   if grep -q "\"$pkg\"" "$PKG_JSON" 2>/dev/null; then
     HAS_SECURE_STORAGE=true
-    ok "SEC-002" "security" "Biblioteca de armazenamento seguro presente: $pkg" "" "package.json"
+    ok "SEC-002" "security" "Secure storage library present: $pkg" "" "package.json"
     break
   fi
 done
 
 if [ "$HAS_SECURE_STORAGE" = false ]; then
   info_r "SEC-002" "security" \
-    "Nenhuma biblioteca de armazenamento seguro encontrada" \
-    "Se o app armazena tokens de autenticação ou dados sensíveis, use uma biblioteca de armazenamento encriptado." \
-    "Instale expo-secure-store: npx expo install expo-secure-store" \
+    "No secure storage library found" \
+    "If the app stores authentication tokens or sensitive data, use an encrypted storage library." \
+    "Install expo-secure-store: npx expo install expo-secure-store" \
     "https://docs.expo.dev/versions/latest/sdk/securestore/" \
     "package.json"
 fi
 
-# ─── SEC-003: API Keys hardcoded no código-fonte ──────────────────────────────
+# ─── SEC-003: Hardcoded API keys in source code ───────────────────────────────
 
 if [ ${#SRC_DIRS[@]} -gt 0 ]; then
-  # Padrões comuns de API keys hardcoded
+  # Common patterns for hardcoded API keys
   HARDCODED_PATTERNS='(api_key|apikey|api-key|secret_key|secretkey|private_key)\s*[=:]\s*["\x27][A-Za-z0-9_\-]{20,}'
   MATCHES=$(grep -rEi "$HARDCODED_PATTERNS" "${SRC_DIRS[@]}" 2>/dev/null | \
     grep -v "\.test\.\|\.spec\.\|__mocks__\|placeholder\|your_api_key\|YOUR_KEY" | \
@@ -100,24 +101,24 @@ if [ ${#SRC_DIRS[@]} -gt 0 ]; then
 
   if [ -n "$MATCHES" ]; then
     critical "SEC-003" "security" \
-      "Possíveis API keys hardcoded no código-fonte" \
-      "Credenciais hardcoded no código são um risco de segurança grave e podem ser expostas em repositórios." \
-      "Mova segredos para variáveis de ambiente (.env) e acesse via expo-constants ou react-native-config. Nunca commite .env com valores reais." \
+      "Possible hardcoded API keys in source code" \
+      "Hardcoded credentials in code are a serious security risk and may be exposed in repositories." \
+      "Move secrets to environment variables (.env) and access them via expo-constants or react-native-config. Never commit .env with real values." \
       "https://docs.expo.dev/guides/environment-variables/" \
       "src/"
   else
-    ok "SEC-003" "security" "Nenhuma API key hardcoded óbvia detectada no código-fonte" "" "—"
+    ok "SEC-003" "security" "No obvious hardcoded API key detected in source code" "" "—"
   fi
 fi
 
-# ─── SEC-004: Arquivos .env com segredos commitados ───────────────────────────
+# ─── SEC-004: Committed .env files with secrets ───────────────────────────────
 
 ENV_FILES_FOUND=false
 COMMITTED_ENV=""
 for env_file in .env .env.local .env.production .env.staging; do
   if [ -f "${PROJECT_DIR}/${env_file}" ]; then
     ENV_FILES_FOUND=true
-    # Verificar se está no .gitignore
+    # Check if it is in .gitignore
     if ! grep -q "^${env_file}$\|^${env_file}\s" "${PROJECT_DIR}/.gitignore" 2>/dev/null; then
       COMMITTED_ENV="${COMMITTED_ENV} ${env_file}"
     fi
@@ -126,18 +127,18 @@ done
 
 if [ -n "$COMMITTED_ENV" ]; then
   critical "SEC-004" "security" \
-    "Arquivo .env não está no .gitignore:${COMMITTED_ENV}" \
-    "Arquivos .env com segredos que não estão no .gitignore podem ser acidentalmente commitados e expostos." \
-    "Adicione '${COMMITTED_ENV}' ao .gitignore. Crie um .env.example com valores de exemplo (sem segredos reais)." \
+    ".env file is not in .gitignore:${COMMITTED_ENV}" \
+    ".env files with secrets that are not in .gitignore may be accidentally committed and exposed." \
+    "Add '${COMMITTED_ENV}' to .gitignore. Create a .env.example with example values (without real secrets)." \
     "https://docs.expo.dev/guides/environment-variables/" \
     ".gitignore"
 elif [ "$ENV_FILES_FOUND" = true ]; then
-  ok "SEC-004" "security" "Arquivos .env encontrados e protegidos pelo .gitignore" "" ".gitignore"
+  ok "SEC-004" "security" ".env files found and protected by .gitignore" "" ".gitignore"
 else
-  ok "SEC-004" "security" "Nenhum arquivo .env encontrado (verificar se variáveis de ambiente estão configuradas)" "" "—"
+  ok "SEC-004" "security" "No .env file found (check that environment variables are configured)" "" "—"
 fi
 
-# ─── SEC-005: URLs HTTP (não HTTPS) em código-fonte ──────────────────────────
+# ─── SEC-005: HTTP (non-HTTPS) URLs in source code ───────────────────────────
 
 if [ ${#SRC_DIRS[@]} -gt 0 ]; then
   HTTP_MATCHES=$(grep -rE "http://[a-zA-Z0-9]" "${SRC_DIRS[@]}" 2>/dev/null | \
@@ -147,36 +148,37 @@ if [ ${#SRC_DIRS[@]} -gt 0 ]; then
   if [ -n "$HTTP_MATCHES" ]; then
     FIRST_HTTP=$(echo "$HTTP_MATCHES" | head -1 | sed 's/.*http/http/' | cut -c1-80 | sed 's/"/\\"/g')
     critical "SEC-005" "security" \
-      "URLs HTTP (não HTTPS) detectadas no código" \
-      "URLs HTTP transmitem dados em texto claro. Pode causar rejeição nas lojas e viola boas práticas. Exemplo: ${FIRST_HTTP}" \
-      "Substitua todas as URLs http:// por https://. Para Android, adicione network security config se necessário." \
+      "HTTP (non-HTTPS) URLs detected in code" \
+      "HTTP URLs transmit data in plain text. This can cause store rejection and violates best practices. Example: ${FIRST_HTTP}" \
+      "Replace all http:// URLs with https://. For Android, add a network security config if necessary." \
       "https://developer.android.com/training/articles/security-config" \
       "src/"
   else
-    ok "SEC-005" "security" "Nenhuma URL HTTP não-segura detectada no código" "" "—"
+    ok "SEC-005" "security" "No insecure HTTP URL detected in code" "" "—"
   fi
 fi
 
-# ─── SEC-006: console.log com dados sensíveis ────────────────────────────────
+# ─── SEC-006: console.log with sensitive data ────────────────────────────────
 
 if [ ${#SRC_DIRS[@]} -gt 0 ]; then
+  # Note: "senha" is kept as a search pattern to detect Portuguese variable names in user code
   SENSITIVE_LOG_PATTERNS="console\.log.*\(.*token\|console\.log.*password\|console\.log.*senha\|console\.log.*secret\|console\.log.*auth\|console\.log.*credential"
   LOG_MATCHES=$(grep -rEi "$SENSITIVE_LOG_PATTERNS" "${SRC_DIRS[@]}" 2>/dev/null | \
     grep -v "\.test\.\|\.spec\." | head -3 || true)
 
   if [ -n "$LOG_MATCHES" ]; then
     warning "SEC-006" "security" \
-      "console.log com possíveis dados sensíveis detectado" \
-      "Logs com tokens, senhas ou credenciais podem vazar dados em produção e em logs do dispositivo." \
-      "Remova ou substitua console.log sensíveis. Use uma biblioteca de logging que desativa logs em produção (ex: react-native-logs)." \
+      "console.log with possible sensitive data detected" \
+      "Logs containing tokens, passwords, or credentials can leak data in production and in device logs." \
+      "Remove or replace sensitive console.log calls. Use a logging library that disables logs in production (e.g.: react-native-logs)." \
       "https://reactnative.dev/docs/debugging#examining-console-logs" \
       "src/"
   else
-    ok "SEC-006" "security" "Nenhum console.log suspeito com dados sensíveis detectado" "" "—"
+    ok "SEC-006" "security" "No suspicious console.log with sensitive data detected" "" "—"
   fi
 fi
 
-# ─── SEC-007: eval() e Function() ────────────────────────────────────────────
+# ─── SEC-007: eval() and Function() ──────────────────────────────────────────
 
 if [ ${#SRC_DIRS[@]} -gt 0 ]; then
   EVAL_MATCHES=$(grep -rE "\beval\s*\(|\bnew Function\s*\(" "${SRC_DIRS[@]}" 2>/dev/null | \
@@ -184,17 +186,17 @@ if [ ${#SRC_DIRS[@]} -gt 0 ]; then
 
   if [ -n "$EVAL_MATCHES" ]; then
     warning "SEC-007" "security" \
-      "Uso de eval() ou new Function() detectado" \
-      "eval() e new Function() são vetores de injeção de código e violam a Content Security Policy. Podem causar rejeição nas lojas." \
-      "Refatore o código para evitar eval(). Use alternativas como JSON.parse() para parsing de dados." \
+      "Use of eval() or new Function() detected" \
+      "eval() and new Function() are code injection vectors and violate the Content Security Policy. They may cause store rejection." \
+      "Refactor the code to avoid eval(). Use alternatives like JSON.parse() for data parsing." \
       "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!" \
       "src/"
   else
-    ok "SEC-007" "security" "Nenhum uso de eval() ou new Function() detectado" "" "—"
+    ok "SEC-007" "security" "No use of eval() or new Function() detected" "" "—"
   fi
 fi
 
-# ─── SEC-008: SSL Pinning ────────────────────────────────────────────────────
+# ─── SEC-008: SSL Pinning ─────────────────────────────────────────────────────
 
 HAS_SSL_PINNING=false
 SSL_PKGS="react-native-ssl-pinning react-native-pinch"
@@ -206,17 +208,17 @@ for pkg in $SSL_PKGS; do
 done
 
 if [ "$HAS_SSL_PINNING" = true ]; then
-  ok "SEC-008" "security" "SSL Pinning implementado" "" "package.json"
+  ok "SEC-008" "security" "SSL Pinning implemented" "" "package.json"
 else
   info_r "SEC-008" "security" \
-    "SSL Pinning não implementado" \
-    "SSL Pinning previne ataques man-in-the-middle mesmo com certificados válidos. Recomendado para apps financeiros e de saúde." \
-    "Considere implementar SSL Pinning com react-native-ssl-pinning para endpoints críticos." \
+    "SSL Pinning not implemented" \
+    "SSL Pinning prevents man-in-the-middle attacks even with valid certificates. Recommended for financial and health apps." \
+    "Consider implementing SSL Pinning with react-native-ssl-pinning for critical endpoints." \
     "https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning" \
     "package.json"
 fi
 
-# ─── SEC-009: Expo Constants expondo segredos ─────────────────────────────────
+# ─── SEC-009: Expo Constants exposing secrets ─────────────────────────────────
 
 if [ ${#SRC_DIRS[@]} -gt 0 ]; then
   CONSTANTS_SENSITIVE=$(grep -rE "Constants\.(expoConfig|manifest)\.(extra|env)" "${SRC_DIRS[@]}" 2>/dev/null | \
@@ -224,34 +226,34 @@ if [ ${#SRC_DIRS[@]} -gt 0 ]; then
 
   if [ -n "$CONSTANTS_SENSITIVE" ]; then
     warning "SEC-009" "security" \
-      "Expo Constants acessando possíveis segredos do extra/env" \
-      "Valores em expo.extra no app.json são expostos no bundle do app. Não coloque segredos lá." \
-      "Segredos não devem estar em expo.extra. Use variáveis de ambiente no servidor ou EAS Secrets para builds." \
+      "Expo Constants accessing possible secrets from extra/env" \
+      "Values in expo.extra in app.json are exposed in the app bundle. Do not put secrets there." \
+      "Secrets must not be in expo.extra. Use server-side environment variables or EAS Secrets for builds." \
       "https://docs.expo.dev/build-reference/variables/" \
       "src/"
   else
-    ok "SEC-009" "security" "Nenhum acesso suspeito a Expo Constants com segredos detectado" "" "—"
+    ok "SEC-009" "security" "No suspicious access to Expo Constants with secrets detected" "" "—"
   fi
 fi
 
-# ─── SEC-010: Network Security Config Android ────────────────────────────────
+# ─── SEC-010: Android Network Security Config ─────────────────────────────────
 
 ANDROID_NET_CONFIG="${PROJECT_DIR}/android/app/src/main/res/xml/network_security_config.xml"
 if [ -d "${PROJECT_DIR}/android" ]; then
   if [ -f "$ANDROID_NET_CONFIG" ]; then
-    # Verificar se permite cleartext
+    # Check if cleartext is allowed
     if grep -q "cleartextTrafficPermitted=\"true\"" "$ANDROID_NET_CONFIG" 2>/dev/null; then
       warning "SEC-010" "security" \
-        "Network Security Config permite tráfego cleartext (HTTP)" \
-        "cleartextTrafficPermitted='true' permite conexões HTTP inseguras. Use apenas em desenvolvimento." \
-        "Restrinja cleartextTrafficPermitted apenas para domínios específicos de desenvolvimento, não globalmente." \
+        "Network Security Config allows cleartext traffic (HTTP)" \
+        "cleartextTrafficPermitted='true' allows insecure HTTP connections. Use only in development." \
+        "Restrict cleartextTrafficPermitted to specific development domains only, not globally." \
         "https://developer.android.com/training/articles/security-config" \
         "android/app/src/main/res/xml/network_security_config.xml"
     else
-      ok "SEC-010" "security" "Network Security Config não permite cleartext HTTP globalmente" "" "android/"
+      ok "SEC-010" "security" "Network Security Config does not allow cleartext HTTP globally" "" "android/"
     fi
   else
-    ok "SEC-010" "security" "Sem Network Security Config customizado (padrão seguro do Android)" "" "android/"
+    ok "SEC-010" "security" "No custom Network Security Config (Android secure default)" "" "android/"
   fi
 fi
 
@@ -263,7 +265,7 @@ for r in "${RESULTS[@]}"; do
 done
 
 if [ ${#RESULTS[@]} -eq 0 ]; then
-  ok "SEC-000" "security" "Nenhum problema de segurança detectado" "" "—"
+  ok "SEC-000" "security" "No security issues detected" "" "—"
   RESULTS_JSON="${RESULTS[0]}"
 fi
 

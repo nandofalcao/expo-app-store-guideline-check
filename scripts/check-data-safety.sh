@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# check-data-safety.sh — Verifica preparação para Google Play Data Safety Section
-# Uso: bash check-data-safety.sh [diretório-do-projeto]
-# Saída: JSON estruturado para stdout
+# check-data-safety.sh — Checks preparation for Google Play Data Safety Section
+# Usage: bash check-data-safety.sh [project-directory]
+# Output: structured JSON to stdout
 set -uo pipefail
 
 PROJECT_DIR="${1:-.}"
@@ -35,7 +35,7 @@ PKG_JSON="${PROJECT_DIR}/package.json"
 
 # ─── DS-001: Target API Level ────────────────────────────────────────────────
 
-# Verificar targetSdkVersion no app.json (Expo) ou build.gradle (bare)
+# Check targetSdkVersion in app.json (Expo) or build.gradle (bare)
 TARGET_SDK="unknown"
 
 if [ -f "$APP_JSON" ]; then
@@ -50,7 +50,7 @@ if [ -f "$APP_JSON" ]; then
 fi
 
 if [ "$TARGET_SDK" = "__MISSING__" ]; then
-  # Tentar build.gradle
+  # Try build.gradle
   BUILD_GRADLE="${PROJECT_DIR}/android/app/build.gradle"
   if [ -f "$BUILD_GRADLE" ]; then
     TARGET_SDK=$(grep 'targetSdkVersion' "$BUILD_GRADLE" | grep -oP '\d+' | head -1 || echo "unknown")
@@ -59,39 +59,39 @@ fi
 
 if [ "$TARGET_SDK" = "unknown" ] || [ "$TARGET_SDK" = "__MISSING__" ]; then
   warning "DS-001" "google" \
-    "Target SDK Version não detectado" \
-    "Não foi possível detectar o targetSdkVersion. Novos apps em 2025+ precisam mirar API 35 (Android 15)." \
-    "Configure targetSdkVersion em expo.android.targetSdkVersion ou no android/app/build.gradle." \
+    "Target SDK Version not detected" \
+    "Could not detect targetSdkVersion. New apps in 2025+ need to target API 35 (Android 15)." \
+    "Set targetSdkVersion in expo.android.targetSdkVersion or in android/app/build.gradle." \
     "https://support.google.com/googleplay/android-developer/answer/11926878" \
     "app.json"
 elif [ "$TARGET_SDK" -lt 34 ] 2>/dev/null; then
   critical "DS-001" "google" \
-    "Target SDK Version muito baixo: $TARGET_SDK (mínimo: 34 / Android 14)" \
-    "O Google Play exige targetSdkVersion >= 34 para novos apps e atualizações desde agosto de 2024." \
-    "Atualize targetSdkVersion para 35 (Android 15) no app.json ou build.gradle." \
+    "Target SDK Version too low: $TARGET_SDK (minimum: 34 / Android 14)" \
+    "Google Play requires targetSdkVersion >= 34 for new apps and updates since August 2024." \
+    "Update targetSdkVersion to 35 (Android 15) in app.json or build.gradle." \
     "https://support.google.com/googleplay/android-developer/answer/11926878" \
     "app.json"
 elif [ "$TARGET_SDK" -eq 34 ] 2>/dev/null; then
   warning "DS-001" "google" \
-    "Target SDK Version: $TARGET_SDK (recomendado: 35 / Android 15)" \
-    "API 35 (Android 15) é o target recomendado para novos apps em 2025/2026." \
-    "Considere atualizar para targetSdkVersion 35 para melhor compatibilidade futura." \
+    "Target SDK Version: $TARGET_SDK (recommended: 35 / Android 15)" \
+    "API 35 (Android 15) is the recommended target for new apps in 2025/2026." \
+    "Consider updating to targetSdkVersion 35 for better future compatibility." \
     "https://support.google.com/googleplay/android-developer/answer/11926878" \
     "app.json"
 else
-  ok "DS-001" "google" "Target SDK Version adequado: $TARGET_SDK" "" "app.json"
+  ok "DS-001" "google" "Target SDK Version adequate: $TARGET_SDK" "" "app.json"
 fi
 
 # ─── DS-002: Analytics SDKs ──────────────────────────────────────────────────
 
 declare -a ANALYTICS_SDKS=(
-  "@react-native-firebase/analytics:Firebase Analytics coleta dados de uso e comportamento"
-  "@amplitude/analytics-react-native:Amplitude coleta eventos de uso e dados do usuário"
-  "react-native-mixpanel:Mixpanel coleta eventos e propriedades do usuário"
-  "@segment/analytics-react-native:Segment coleta e encaminha dados de analytics"
-  "react-native-rudderstack:RudderStack coleta e encaminha eventos de analytics"
-  "@datadog/mobile-react-native:Datadog coleta dados de performance e erros"
-  "react-native-posthog:PostHog coleta eventos de produto e dados de usuário"
+  "@react-native-firebase/analytics:Firebase Analytics collects usage and behavior data"
+  "@amplitude/analytics-react-native:Amplitude collects usage events and user data"
+  "react-native-mixpanel:Mixpanel collects events and user properties"
+  "@segment/analytics-react-native:Segment collects and forwards analytics data"
+  "react-native-rudderstack:RudderStack collects and forwards analytics events"
+  "@datadog/mobile-react-native:Datadog collects performance and error data"
+  "react-native-posthog:PostHog collects product events and user data"
 )
 
 ANALYTICS_FOUND=()
@@ -100,16 +100,16 @@ for sdk_entry in "${ANALYTICS_SDKS[@]}"; do
   if grep -q "\"$sdk_name\"" "$PKG_JSON" 2>/dev/null; then
     ANALYTICS_FOUND+=("$sdk_name")
     warning "DS-002-$(echo "$sdk_name" | tr -d '@/' | head -c 8)" "google" \
-      "SDK de Analytics detectado: $sdk_name" \
-      "${sdk_desc}. Declare esses dados na Data Safety Section do Google Play." \
-      "Vá para Google Play Console > App content > Data safety e declare os dados coletados por ${sdk_name}." \
+      "Analytics SDK detected: $sdk_name" \
+      "${sdk_desc}. Declare this data in the Google Play Data Safety Section." \
+      "Go to Google Play Console > App content > Data safety and declare the data collected by ${sdk_name}." \
       "https://support.google.com/googleplay/android-developer/answer/10787469" \
       "package.json"
   fi
 done
 
 if [ ${#ANALYTICS_FOUND[@]} -eq 0 ]; then
-  ok "DS-002" "google" "Nenhum SDK de analytics de terceiros detectado" "" "package.json"
+  ok "DS-002" "google" "No third-party analytics SDK detected" "" "package.json"
 fi
 
 # ─── DS-003: Crash Reporting ─────────────────────────────────────────────────
@@ -124,9 +124,9 @@ for sdk_entry in "${CRASH_SDKS[@]}"; do
   IFS=':' read -r sdk_name sdk_display <<< "$sdk_entry"
   if grep -q "\"$sdk_name\"" "$PKG_JSON" 2>/dev/null; then
     info_r "DS-003" "google" \
-      "SDK de crash reporting detectado: $sdk_display" \
-      "${sdk_display} coleta dados de diagnóstico (crash logs, device info). Declare na Data Safety Section." \
-      "Na Data Safety Section, declare 'Crash logs' e 'Diagnostics' como dados coletados automaticamente." \
+      "Crash reporting SDK detected: $sdk_display" \
+      "${sdk_display} collects diagnostic data (crash logs, device info). Declare it in the Data Safety Section." \
+      "In the Data Safety Section, declare 'Crash logs' and 'Diagnostics' as automatically collected data." \
       "https://support.google.com/googleplay/android-developer/answer/10787469#zippy=%2Cdiagnostics" \
       "package.json"
     break
@@ -146,16 +146,16 @@ done
 
 if [ "$USES_AD_ID" = true ]; then
   critical "DS-004" "google" \
-    "SDK de publicidade detectado — Advertising ID requer disclosure" \
-    "SDKs de publicidade usam o Android Advertising ID. Isso requer declaração na Data Safety Section e permissão AD_ID no manifest." \
-    "Declare uso de 'Device or other IDs > Advertising ID' na Data Safety Section. Verifique se AD_ID está no AndroidManifest." \
+    "Advertising SDK detected — Advertising ID requires disclosure" \
+    "Advertising SDKs use the Android Advertising ID. This requires a declaration in the Data Safety Section and the AD_ID permission in the manifest." \
+    "Declare 'Device or other IDs > Advertising ID' in the Data Safety Section. Verify that AD_ID is in AndroidManifest." \
     "https://support.google.com/googleplay/android-developer/answer/6048248" \
     "package.json"
 else
-  ok "DS-004" "google" "Nenhum SDK de publicidade/Advertising ID detectado" "" "package.json"
+  ok "DS-004" "google" "No advertising SDK / Advertising ID detected" "" "package.json"
 fi
 
-# ─── DS-005: Autenticação e dados de conta ───────────────────────────────────
+# ─── DS-005: Authentication and account data ─────────────────────────────────
 
 USES_AUTH=false
 AUTH_SDKS="@react-native-google-signin/google-signin react-native-fbsdk-next @invertase/react-native-apple-authentication expo-auth-session"
@@ -168,14 +168,14 @@ done
 
 if [ "$USES_AUTH" = true ]; then
   info_r "DS-005" "google" \
-    "SDK de autenticação social detectado" \
-    "Autenticação via Google/Facebook/Apple coleta dados de conta do usuário. Declare na Data Safety Section." \
-    "Na Data Safety Section, declare 'Account info' se usar autenticação social ou criar contas." \
+    "Social authentication SDK detected" \
+    "Authentication via Google/Facebook/Apple collects user account data. Declare it in the Data Safety Section." \
+    "In the Data Safety Section, declare 'Account info' if using social authentication or creating accounts." \
     "https://support.google.com/googleplay/android-developer/answer/10787469" \
     "package.json"
 fi
 
-# ─── DS-006: Localização ─────────────────────────────────────────────────────
+# ─── DS-006: Location ────────────────────────────────────────────────────────
 
 USES_LOCATION=false
 LOCATION_SDKS="expo-location react-native-maps @react-native-community/geolocation"
@@ -188,16 +188,16 @@ done
 
 if [ "$USES_LOCATION" = true ]; then
   warning "DS-006" "google" \
-    "SDK de localização detectado — declarar no Data Safety" \
-    "O app usa localização. Na Data Safety Section, declare se coleta localização aproximada ou precisa, e se em background." \
-    "Na Data Safety Section, declare 'Location > Approximate location' e/ou 'Precise location' conforme o caso." \
+    "Location SDK detected — declare in Data Safety" \
+    "The app uses location. In the Data Safety Section, declare whether approximate or precise location is collected, and whether it is used in the background." \
+    "In the Data Safety Section, declare 'Location > Approximate location' and/or 'Precise location' as appropriate." \
     "https://support.google.com/googleplay/android-developer/answer/10787469" \
     "package.json"
 else
-  ok "DS-006" "google" "Nenhum SDK de localização detectado" "" "package.json"
+  ok "DS-006" "google" "No location SDK detected" "" "package.json"
 fi
 
-# ─── DS-007: Armazenamento de arquivos ───────────────────────────────────────
+# ─── DS-007: File storage ────────────────────────────────────────────────────
 
 USES_STORAGE=false
 STORAGE_SDKS="expo-file-system expo-document-picker expo-media-library react-native-fs"
@@ -210,9 +210,9 @@ done
 
 if [ "$USES_STORAGE" = true ]; then
   info_r "DS-007" "google" \
-    "SDK de armazenamento de arquivos detectado" \
-    "O app acessa o armazenamento do dispositivo. Declare na Data Safety Section se coleta ou lê arquivos do usuário." \
-    "Na Data Safety Section, declare 'Photos and videos' ou 'Files and docs' conforme o conteúdo acessado." \
+    "File storage SDK detected" \
+    "The app accesses device storage. Declare in the Data Safety Section if it collects or reads user files." \
+    "In the Data Safety Section, declare 'Photos and videos' or 'Files and docs' depending on the content accessed." \
     "https://support.google.com/googleplay/android-developer/answer/10787469" \
     "package.json"
 fi
@@ -230,27 +230,27 @@ done
 
 if [ "$USES_PUSH" = true ]; then
   info_r "DS-008" "google" \
-    "SDK de push notifications detectado" \
-    "Push notifications podem envolver coleta de tokens de dispositivo. Declare na Data Safety se aplicável." \
-    "Se armazenar push tokens no servidor, declare 'Device or other IDs' na Data Safety Section." \
+    "Push notifications SDK detected" \
+    "Push notifications may involve collecting device tokens. Declare in the Data Safety Section if applicable." \
+    "If you store push tokens on the server, declare 'Device or other IDs' in the Data Safety Section." \
     "https://support.google.com/googleplay/android-developer/answer/10787469" \
     "package.json"
 fi
 
-# ─── DS-009: Verificação do formulário Data Safety ───────────────────────────
+# ─── DS-009: Data Safety form verification ───────────────────────────────────
 
-# Verificar se há evidência de que o formulário foi preenchido
-# (não temos como verificar diretamente, mas podemos checar se há documentação)
+# Check if there is evidence that the form has been filled out
+# (cannot verify directly, but can check for documentation)
 DATA_SAFETY_DOC="${PROJECT_DIR}/docs/data-safety.md"
 DATA_SAFETY_DOC2="${PROJECT_DIR}/DATA_SAFETY.md"
 
 if [ -f "$DATA_SAFETY_DOC" ] || [ -f "$DATA_SAFETY_DOC2" ]; then
-  ok "DS-009" "google" "Documentação de Data Safety encontrada no projeto" "" "docs/data-safety.md"
+  ok "DS-009" "google" "Data Safety documentation found in the project" "" "docs/data-safety.md"
 else
   info_r "DS-009" "google" \
-    "Nenhuma documentação de Data Safety no repositório" \
-    "É boa prática manter documentação interna do que foi declarado na Data Safety Section do Google Play." \
-    "Crie docs/data-safety.md documentando os dados coletados. Use o template em templates/data-safety-form.md." \
+    "No Data Safety documentation in the repository" \
+    "It is good practice to keep internal documentation of what was declared in the Google Play Data Safety Section." \
+    "Create docs/data-safety.md documenting the data collected. Use the template in templates/data-safety-form.md." \
     "https://support.google.com/googleplay/android-developer/answer/10787469" \
     "—"
 fi
@@ -263,7 +263,7 @@ for r in "${RESULTS[@]}"; do
 done
 
 if [ ${#RESULTS[@]} -eq 0 ]; then
-  ok "DS-000" "google" "Nenhum problema de Data Safety detectado" "" "—"
+  ok "DS-000" "google" "No Data Safety issues detected" "" "—"
   RESULTS_JSON="${RESULTS[0]}"
 fi
 

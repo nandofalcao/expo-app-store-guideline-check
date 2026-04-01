@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# check-privacy-manifest.sh — Verifica iOS Privacy Manifest (PrivacyInfo.xcprivacy)
-# Obrigatório desde maio de 2024 para todos os apps submetidos à App Store
-# Uso: bash check-privacy-manifest.sh [diretório-do-projeto]
-# Saída: JSON estruturado para stdout
+# check-privacy-manifest.sh — Checks iOS Privacy Manifest (PrivacyInfo.xcprivacy)
+# Mandatory since May 2024 for all apps submitted to the App Store
+# Usage: bash check-privacy-manifest.sh [project-directory]
+# Output: structured JSON to stdout
 set -uo pipefail
 
 PROJECT_DIR="${1:-.}"
@@ -35,15 +35,15 @@ APP_JSON="${PROJECT_DIR}/app.json"
 IOS_DIR="${PROJECT_DIR}/ios"
 PRIVACY_INFO_FILE=""
 
-# ─── Localizar PrivacyInfo.xcprivacy ─────────────────────────────────────────
+# ─── Locate PrivacyInfo.xcprivacy ────────────────────────────────────────────
 
-# Em projetos bare, procurar o arquivo
+# In bare projects, search for the file
 if [ -d "$IOS_DIR" ]; then
   FOUND=$(find "$IOS_DIR" -name "PrivacyInfo.xcprivacy" 2>/dev/null | head -1 || true)
   [ -n "$FOUND" ] && PRIVACY_INFO_FILE="$FOUND"
 fi
 
-# ─── PRIV-001: Existência do Privacy Manifest ─────────────────────────────────
+# ─── PRIV-001: Privacy Manifest existence ────────────────────────────────────
 
 HAS_EXPO_PRIVACY_MANIFEST=false
 if [ -f "$APP_JSON" ]; then
@@ -60,20 +60,20 @@ fi
 
 if [ "$HAS_EXPO_PRIVACY_MANIFEST" = false ] && [ -z "$PRIVACY_INFO_FILE" ]; then
   critical "PRIV-001" "apple" \
-    "Privacy Manifest (PrivacyInfo.xcprivacy) não encontrado" \
-    "A Apple exige Privacy Manifest para todos os apps desde maio de 2024. Sem ele, o app será rejeitado. No Expo Managed, configure via expo.ios.privacyManifests no app.json." \
-    "Adicione privacyManifests em expo.ios no app.json com as APIs utilizadas e seus motivos." \
+    "Privacy Manifest (PrivacyInfo.xcprivacy) not found" \
+    "Apple requires a Privacy Manifest for all apps since May 2024. Without it, the app will be rejected. In Expo Managed, configure via expo.ios.privacyManifests in app.json." \
+    "Add privacyManifests under expo.ios in app.json with the APIs used and their reasons." \
     "https://docs.expo.dev/guides/apple-privacy/" \
     "app.json"
 else
-  ok "PRIV-001" "apple" "Privacy Manifest configurado" "" \
+  ok "PRIV-001" "apple" "Privacy Manifest configured" "" \
     "${PRIVACY_INFO_FILE:-app.json}"
 fi
 
 # ─── PRIV-002: NSPrivacyAccessedAPITypes ─────────────────────────────────────
 
-# APIs que necessitam de declaração e os módulos que as usam
-# Formato: "API_TYPE|reason_recomendado|modulos_que_usam"
+# APIs requiring declaration and the modules that use them
+# Format: "API_TYPE|recommended_reason|modules_that_use_it"
 declare -a REQUIRED_APIS=(
   "NSPrivacyAccessedAPICategoryUserDefaults|C617.1|@react-native-async-storage/async-storage expo-secure-store react-native"
   "NSPrivacyAccessedAPICategoryFileTimestamp|C617.1|react-native expo-file-system expo-media-library"
@@ -84,7 +84,7 @@ declare -a REQUIRED_APIS=(
 for api_entry in "${REQUIRED_APIS[@]}"; do
   IFS='|' read -r api_type reason modules <<< "$api_entry"
 
-  # Verificar se algum módulo está no projeto
+  # Check if any module is in the project
   USES_API=false
   for mod in $modules; do
     if grep -q "\"$mod\"" "${PROJECT_DIR}/package.json" 2>/dev/null; then
@@ -95,7 +95,7 @@ for api_entry in "${REQUIRED_APIS[@]}"; do
 
   [ "$USES_API" = false ] && continue
 
-  # Verificar se está declarado no Privacy Manifest
+  # Check if it is declared in the Privacy Manifest
   DECLARED=false
 
   if [ "$HAS_EXPO_PRIVACY_MANIFEST" = true ] && [ -f "$APP_JSON" ]; then
@@ -122,19 +122,19 @@ for api_entry in "${REQUIRED_APIS[@]}"; do
 
   if [ "$DECLARED" = false ]; then
     critical "$CHECK_ID" "apple" \
-      "${api_type} não declarado no Privacy Manifest" \
-      "O módulo que usa esta API foi detectado mas não está declarado no Privacy Manifest. A Apple rejeitará o app." \
-      "Adicione ${api_type} com reason ${reason} em expo.ios.privacyManifests.NSPrivacyAccessedAPITypes no app.json." \
+      "${api_type} not declared in the Privacy Manifest" \
+      "The module using this API was detected but it is not declared in the Privacy Manifest. Apple will reject the app." \
+      "Add ${api_type} with reason ${reason} under expo.ios.privacyManifests.NSPrivacyAccessedAPITypes in app.json." \
       "https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api" \
       "app.json"
   else
-    ok "$CHECK_ID" "apple" "${api_type} declarado no Privacy Manifest" "" "app.json"
+    ok "$CHECK_ID" "apple" "${api_type} declared in the Privacy Manifest" "" "app.json"
   fi
 done
 
 # ─── PRIV-003: NSPrivacyTracking ─────────────────────────────────────────────
 
-# Verificar se usa tracking SDKs
+# Check if tracking SDKs are used
 USES_TRACKING=false
 TRACKING_SDKS="@react-native-firebase/analytics react-native-fbsdk-next @amplitude/analytics-react-native react-native-mixpanel"
 for sdk in $TRACKING_SDKS; do
@@ -145,7 +145,7 @@ for sdk in $TRACKING_SDKS; do
 done
 
 if [ "$USES_TRACKING" = true ]; then
-  # Verificar ATT implementation
+  # Check ATT implementation
   HAS_ATT=false
   if grep -q "expo-tracking-transparency\|AppTrackingTransparency" "${PROJECT_DIR}/package.json" 2>/dev/null; then
     HAS_ATT=true
@@ -157,13 +157,13 @@ if [ "$USES_TRACKING" = true ]; then
 
   if [ "$HAS_ATT" = false ]; then
     critical "PRIV-003" "apple" \
-      "App Tracking Transparency não implementado (tracking SDK detectado)" \
-      "SDKs de analytics/tracking foram detectados mas App Tracking Transparency (ATT) não está implementado. Obrigatório desde iOS 14.5." \
-      "Instale expo-tracking-transparency e solicite permissão antes de inicializar SDKs de tracking." \
+      "App Tracking Transparency not implemented (tracking SDK detected)" \
+      "Analytics/tracking SDKs were detected but App Tracking Transparency (ATT) is not implemented. Mandatory since iOS 14.5." \
+      "Install expo-tracking-transparency and request permission before initializing tracking SDKs." \
       "https://docs.expo.dev/versions/latest/sdk/tracking-transparency/" \
       "package.json"
   else
-    ok "PRIV-003" "apple" "App Tracking Transparency implementado" "" "—"
+    ok "PRIV-003" "apple" "App Tracking Transparency implemented" "" "—"
   fi
 
   # NSUserTrackingUsageDescription
@@ -179,20 +179,20 @@ if [ "$USES_TRACKING" = true ]; then
 
     if [ "$val" = "__MISSING__" ]; then
       critical "PRIV-004" "apple" \
-        "NSUserTrackingUsageDescription ausente (tracking detectado)" \
-        "SDKs de tracking foram detectados. NSUserTrackingUsageDescription é obrigatório para solicitar ATT." \
-        "Adicione NSUserTrackingUsageDescription em expo.ios.infoPlist no app.json." \
+        "NSUserTrackingUsageDescription missing (tracking detected)" \
+        "Tracking SDKs were detected. NSUserTrackingUsageDescription is required to request ATT." \
+        "Add NSUserTrackingUsageDescription under expo.ios.infoPlist in app.json." \
         "https://developer.apple.com/documentation/bundleresources/information_property_list/nsusertrackingusagedescription" \
         "app.json"
     else
-      ok "PRIV-004" "apple" "NSUserTrackingUsageDescription configurada" "" "app.json"
+      ok "PRIV-004" "apple" "NSUserTrackingUsageDescription configured" "" "app.json"
     fi
   fi
 fi
 
 # ─── PRIV-005: NSPrivacyCollectedDataTypes ────────────────────────────────────
 
-# Se tem Privacy Manifest, verificar se NSPrivacyCollectedDataTypes está preenchido
+# If there is a Privacy Manifest, check whether NSPrivacyCollectedDataTypes is filled in
 if [ "$HAS_EXPO_PRIVACY_MANIFEST" = true ] && [ -f "$APP_JSON" ]; then
   val=$(SCAN_FILE="$APP_JSON" node -e "
     try {
@@ -206,33 +206,33 @@ if [ "$HAS_EXPO_PRIVACY_MANIFEST" = true ] && [ -f "$APP_JSON" ]; then
 
   if [ "$val" = "no" ]; then
     info_r "PRIV-005" "apple" \
-      "NSPrivacyCollectedDataTypes não preenchido no Privacy Manifest" \
-      "Se o app coleta dados do usuário, declare-os em NSPrivacyCollectedDataTypes no Privacy Manifest." \
-      "Adicione NSPrivacyCollectedDataTypes em expo.ios.privacyManifests com os tipos de dados coletados." \
+      "NSPrivacyCollectedDataTypes not filled in the Privacy Manifest" \
+      "If the app collects user data, declare it in NSPrivacyCollectedDataTypes in the Privacy Manifest." \
+      "Add NSPrivacyCollectedDataTypes under expo.ios.privacyManifests with the types of data collected." \
       "https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests" \
       "app.json"
   else
-    ok "PRIV-005" "apple" "NSPrivacyCollectedDataTypes declarado no Privacy Manifest" "" "app.json"
+    ok "PRIV-005" "apple" "NSPrivacyCollectedDataTypes declared in the Privacy Manifest" "" "app.json"
   fi
 fi
 
-# ─── PRIV-006: Dependências que exigem Privacy Manifest ──────────────────────
+# ─── PRIV-006: Dependencies requiring Privacy Manifest ───────────────────────
 
-# SDKs conhecidos que têm seus próprios privacy manifest requirements
+# Known SDKs that have their own privacy manifest requirements
 KNOWN_PRIVACY_SDKS=(
-  "@sentry/react-native:Sentry coleta dados de crash e device"
-  "@react-native-firebase/crashlytics:Firebase Crashlytics coleta dados de crash"
-  "react-native-mmkv:MMKV usa NSUserDefaults — declarar NSPrivacyAccessedAPICategoryUserDefaults"
-  "react-native-device-info:DeviceInfo usa múltiplas APIs que precisam de declaração"
+  "@sentry/react-native:Sentry collects crash and device data"
+  "@react-native-firebase/crashlytics:Firebase Crashlytics collects crash data"
+  "react-native-mmkv:MMKV uses NSUserDefaults — declare NSPrivacyAccessedAPICategoryUserDefaults"
+  "react-native-device-info:DeviceInfo uses multiple APIs that require declaration"
 )
 
 for sdk_entry in "${KNOWN_PRIVACY_SDKS[@]}"; do
   IFS=':' read -r sdk_name sdk_note <<< "$sdk_entry"
   if grep -q "\"$sdk_name\"" "${PROJECT_DIR}/package.json" 2>/dev/null; then
     info_r "PRIV-$(echo "$sdk_name" | tr -d '@/-' | head -c 6 | tr '[:lower:]' '[:upper:]')" "apple" \
-      "SDK '${sdk_name}' requer declarações no Privacy Manifest" \
-      "${sdk_note}. Verifique a documentação do SDK para as declarações necessárias." \
-      "Consulte a documentação de ${sdk_name} sobre Privacy Manifest e adicione as declarações necessárias." \
+      "SDK '${sdk_name}' requires declarations in the Privacy Manifest" \
+      "${sdk_note}. Check the SDK documentation for the required declarations." \
+      "Consult the ${sdk_name} documentation on Privacy Manifest and add the necessary declarations." \
       "https://docs.expo.dev/guides/apple-privacy/#third-party-libraries" \
       "package.json"
   fi
@@ -246,7 +246,7 @@ for r in "${RESULTS[@]}"; do
 done
 
 if [ ${#RESULTS[@]} -eq 0 ]; then
-  ok "PRIV-000" "apple" "Nenhum problema no Privacy Manifest detectado" "" "—"
+  ok "PRIV-000" "apple" "No Privacy Manifest issues detected" "" "—"
   RESULTS_JSON="${RESULTS[0]}"
 fi
 

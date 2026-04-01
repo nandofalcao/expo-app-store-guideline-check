@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# scan-project.sh — Orquestrador principal do Mobile App Compliance Checker
-# Uso: bash scan-project.sh [diretório-do-projeto]
+# scan-project.sh — Main orchestrator for the Mobile App Compliance Checker
+# Usage: bash scan-project.sh [project-directory]
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,7 +11,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 REPORT_FILE="${REPORT_DIR}/report_${TIMESTAMP}.md"
 RESULTS_DIR="${REPORT_DIR}/results_${TIMESTAMP}"
 
-# Cores para output no terminal
+# Terminal output colors
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -25,7 +25,7 @@ log_warn()  { echo -e "${YELLOW}⚠️${NC}  $*"; }
 log_error() { echo -e "${RED}🔴${NC} $*"; }
 log_bold()  { echo -e "${BOLD}$*${NC}"; }
 
-# ─── Detecção de Tipo de Projeto ──────────────────────────────────────────────
+# ─── Project Type Detection ───────────────────────────────────────────────────
 
 detect_project_type() {
   local dir="$1"
@@ -35,7 +35,7 @@ detect_project_type() {
     return
   fi
 
-  # Expo Managed ou Bare
+  # Expo Managed or Bare
   if [ -f "${dir}/app.json" ]; then
     local has_expo_key
     has_expo_key=$(SCAN_FILE="${dir}/app.json" node -e "
@@ -61,7 +61,7 @@ detect_project_type() {
     return
   fi
 
-  # React Native puro
+  # Pure React Native
   if grep -q '"react-native"' "${dir}/package.json" 2>/dev/null; then
     echo "react-native"
     return
@@ -110,13 +110,13 @@ collect_basic_info() {
   PLATFORMS=""
   [ -d "${dir}/ios" ] && PLATFORMS="${PLATFORMS}ios "
   [ -d "${dir}/android" ] && PLATFORMS="${PLATFORMS}android"
-  # Para Expo Managed, assumir ambas se não houver pastas nativas
+  # For Expo Managed, assume both if no native folders exist
   if [ -z "$PLATFORMS" ] && [ "$PROJECT_TYPE" = "expo-managed" ]; then
     PLATFORMS="ios android"
   fi
 }
 
-# ─── Execução de Checks ───────────────────────────────────────────────────────
+# ─── Running Checks ───────────────────────────────────────────────────────────
 
 run_check() {
   local check_name="$1"
@@ -124,26 +124,26 @@ run_check() {
   local output_file="${RESULTS_DIR}/${check_name}.json"
 
   if [ ! -f "$script_file" ]; then
-    log_warn "Script não encontrado: $script_file"
+    log_warn "Script not found: $script_file"
     return
   fi
 
-  echo -n "  Verificando $check_name... "
+  echo -n "  Checking $check_name... "
   if bash "$script_file" "$PROJECT_DIR" > "$output_file" 2>/dev/null; then
     local critical warning
     critical=$(SCAN_FILE="$output_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.critical||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
     warning=$(SCAN_FILE="$output_file" node -e "try{const r=require(process.env.SCAN_FILE);console.log(r.summary.warning||0);}catch(e){console.log(0);}" 2>/dev/null || echo 0)
 
     if [ "${critical:-0}" -gt 0 ] 2>/dev/null; then
-      echo -e "${RED}${critical} crítico(s)${NC}"
+      echo -e "${RED}${critical} critical${NC}"
     elif [ "${warning:-0}" -gt 0 ] 2>/dev/null; then
-      echo -e "${YELLOW}${warning} alerta(s)${NC}"
+      echo -e "${YELLOW}${warning} warning(s)${NC}"
     else
       echo -e "${GREEN}OK${NC}"
     fi
   else
-    echo -e "${YELLOW}Aviso: check retornou erros${NC}"
-    # Criar JSON vazio válido para não quebrar o report
+    echo -e "${YELLOW}Warning: check returned errors${NC}"
+    # Create a valid empty JSON to avoid breaking the report
     echo '{"check":"'"$check_name"'","results":[],"summary":{"critical":0,"warning":0,"info":0,"ok":0}}' > "$output_file"
   fi
 }
@@ -154,43 +154,43 @@ main() {
   echo ""
   log_bold "📱 Mobile App Compliance Checker"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  log_info "Projeto: $PROJECT_DIR"
+  log_info "Project: $PROJECT_DIR"
 
-  # Verificar se é um projeto válido
+  # Check if it is a valid project
   if [ ! -f "${PROJECT_DIR}/package.json" ]; then
-    log_error "package.json não encontrado em: $PROJECT_DIR"
-    log_error "Execute este script na raiz do projeto React Native/Expo."
+    log_error "package.json not found in: $PROJECT_DIR"
+    log_error "Run this script from the root of the React Native/Expo project."
     exit 1
   fi
 
-  # Detectar tipo de projeto
+  # Detect project type
   PROJECT_TYPE=$(detect_project_type "$PROJECT_DIR")
-  log_info "Tipo de projeto detectado: ${BOLD}${PROJECT_TYPE}${NC}"
+  log_info "Project type detected: ${BOLD}${PROJECT_TYPE}${NC}"
 
   if [ "$PROJECT_TYPE" = "unknown" ]; then
-    log_warn "Não foi possível detectar o tipo de projeto. Continuando com verificações básicas."
+    log_warn "Could not detect the project type. Continuing with basic checks."
   fi
 
-  # Coletar informações básicas
+  # Collect basic information
   collect_basic_info "$PROJECT_DIR"
   log_info "App: ${BOLD}${APP_NAME}${NC} v${APP_VERSION}"
   [ "$APP_SDK_VERSION" != "Unknown" ] && log_info "Expo SDK: $APP_SDK_VERSION"
-  [ -n "$PLATFORMS" ] && log_info "Plataformas: $PLATFORMS"
+  [ -n "$PLATFORMS" ] && log_info "Platforms: $PLATFORMS"
 
-  # Criar diretórios de saída
+  # Create output directories
   mkdir -p "$RESULTS_DIR"
 
   echo ""
-  log_bold "🔍 Executando verificações..."
+  log_bold "🔍 Running checks..."
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  # Verificações core (sempre rodam)
+  # Core checks (always run)
   run_check "check-expo-config"
   run_check "check-permissions"
   run_check "check-security"
   run_check "check-dependencies"
 
-  # Verificações específicas de plataforma
+  # Platform-specific checks
   if echo "$PLATFORMS" | grep -q "ios"; then
     run_check "check-privacy-manifest"
   fi
@@ -198,9 +198,9 @@ main() {
     run_check "check-data-safety"
   fi
 
-  # Gerar relatório consolidado
+  # Generate consolidated report
   echo ""
-  log_bold "📊 Gerando relatório..."
+  log_bold "📊 Generating report..."
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   bash "${SCRIPT_DIR}/generate-report.sh" \
@@ -213,10 +213,10 @@ main() {
     "$PLATFORMS"
 
   echo ""
-  log_ok "Relatório gerado: ${BOLD}${REPORT_FILE}${NC}"
+  log_ok "Report generated: ${BOLD}${REPORT_FILE}${NC}"
   echo ""
 
-  # Mostrar resumo no terminal
+  # Show summary in the terminal
   TOTAL_CRITICAL=0
   TOTAL_WARNING=0
   TOTAL_INFO=0
@@ -234,18 +234,18 @@ main() {
     TOTAL_OK=$((TOTAL_OK + ${o:-0}))
   done
 
-  log_bold "📋 Resumo:"
-  [ "$TOTAL_CRITICAL" -gt 0 ] && log_error "Críticos: $TOTAL_CRITICAL"
-  [ "$TOTAL_WARNING" -gt 0 ] && log_warn "Alertas: $TOTAL_WARNING"
-  [ "$TOTAL_INFO" -gt 0 ] && log_info "Informações: $TOTAL_INFO"
+  log_bold "📋 Summary:"
+  [ "$TOTAL_CRITICAL" -gt 0 ] && log_error "Critical: $TOTAL_CRITICAL"
+  [ "$TOTAL_WARNING" -gt 0 ] && log_warn "Warnings: $TOTAL_WARNING"
+  [ "$TOTAL_INFO" -gt 0 ] && log_info "Info: $TOTAL_INFO"
   log_ok "OK: $TOTAL_OK"
 
   echo ""
   if [ "$TOTAL_CRITICAL" -gt 0 ]; then
-    log_error "Corrija os problemas CRÍTICOS antes de submeter às lojas."
+    log_error "Fix CRITICAL issues before submitting to the stores."
     exit 1
   else
-    log_ok "Nenhum problema crítico encontrado. Revise os alertas antes de submeter."
+    log_ok "No critical issues found. Review the warnings before submitting."
   fi
 }
 
